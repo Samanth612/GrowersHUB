@@ -9,7 +9,7 @@ import MeetOurGardeners from "../components/MeetOurGardeners";
 import { useSelector } from "react-redux";
 import BecomeSeller from "../components/BecomeSeller";
 
-const Home = () => {
+const Home: React.FC = () => {
   const AuthReducer = useSelector((Data: any) => Data.AuthReducer);
   console.log(AuthReducer, "AUth");
 

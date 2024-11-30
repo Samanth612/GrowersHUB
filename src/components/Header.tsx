@@ -3,6 +3,8 @@ import logo from "../assets/FooterLogo.png";
 import Modal from "./Modal";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { AlignJustify } from "lucide-react";
+import SidebarMenu from "./SidebarMenu";
 
 interface WrapperProps {
   children?: ReactNode;
@@ -10,6 +12,7 @@ interface WrapperProps {
 
 const Header: React.FC<WrapperProps> = ({ children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const AuthReducer = useSelector((state: any) => state.auth);
 
@@ -20,7 +23,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
 
   return (
     <div>
-      <header className="flex items-center justify-between px-6 lg:px-20 py-4 bg-white">
+      <header className="flex items-center justify-between px-5 lg:px-20 py-4 bg-white">
         <div className="flex items-center gap-16">
           <div
             onClick={() => {
@@ -80,7 +83,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
           <button
             className={`${
               !AuthReducer ? "px-11" : "px-6"
-            } py-3 font-medium text-black border-2 border-secondary rounded-lg hover:bg-gray-50`}
+            } py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50`}
             onClick={() => {
               navigate("/login");
             }}
@@ -94,6 +97,13 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
             Become a Seller
           </button>
         </div>
+        <div
+          className="flex items-center justify-center cursor-pointer font-medium xl:hidden"
+          onClick={() => setIsOpen(true)}
+        >
+          <AlignJustify size={25} strokeWidth={1.5} />
+        </div>
+        {isOpen && <SidebarMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
         {isModalOpen && <Modal onClose={closeModal} />}
       </header>
       {children}

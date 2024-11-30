@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { ArrowLeft, Mail } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import Icons from "../../Utilities/Icons";
 import { useNavigate } from "react-router-dom";
 import OTPVerification from "../VerifyOTP";
 
-const ForgotPassword = () => {
+const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
   const [verifyOTP, sendVerifyOTP] = useState(false);
   const handleSubmit = (e: any) => {
