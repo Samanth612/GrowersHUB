@@ -30,7 +30,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
           >
             <img src={logo} alt="Logo" className="h-16 -ml-1" />
           </div>
-          <nav>
+          <nav className="hidden xl:flex">
             <ul className="flex items-center gap-14">
               {navItems.map((item) => (
                 <li key={item}>
@@ -45,7 +45,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
             </ul>
           </nav>
         </div>
-        <div className="flex items-center gap-6">
+        <div className="items-center gap-6 hidden xl:flex">
           <div className="flex items-center justify-center px-6 py-0 border-2 rounded-[10px] border-[#EDEDED]  gap-6">
             <div className="flex flex-col items-start text-teritary">
               <span>04 August 2024</span>
