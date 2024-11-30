@@ -12,6 +12,9 @@ module.exports = {
       fontFamily: {
         jost: ["Jost", "sans-serif"], // Register "Jost" as a font option
       },
+      screens: {
+        xl: "1490px",
+      },
     },
   },
   plugins: [],

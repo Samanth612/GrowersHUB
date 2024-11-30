@@ -11,7 +11,7 @@ const BecomeSeller: React.FC = () => {
     <>
       <section className="flex flex-col items-center text-center mx-6 md:mx-20 px-4 py-12 bg-white md:flex-row md:text-left md:justify-between md:items-center">
         {/* Text Section */}
-        <div className="space-y-5 md:w-1/2">
+        <div className="space-y-5 text-start md:w-1/2">
           <h2 className="text-3xl md:text-5xl font-semibold text-secondary">
             Want to Become a Seller
           </h2>
