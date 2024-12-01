@@ -5,6 +5,7 @@ import JP1 from "../../assets/JP1.jpg";
 import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
+import Carousel from "../Carousel";
 
 const GardenMarketplace: React.FC = () => {
   const products = [
@@ -99,13 +100,13 @@ const GardenMarketplace: React.FC = () => {
     <div className="px-6 lg:px-20 py-4 bg-white">
       {/* Header */}
       <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-5xl font-semibold leading-normal">
+        <h1 className="text-3xl tabmd:text-5xl font-semibold leading-normal">
           Fresh from the Gardens of
           <div className="text-primary">Super Sellers</div>
         </h1>
 
         {/* Navigation Arrows */}
-        <div className="flex gap-10 mt-20">
+        <div className="hidden xl:flex gap-10 mt-20">
           <button
             className={`p-2 ${
               currentOffset === 0
@@ -135,7 +136,7 @@ const GardenMarketplace: React.FC = () => {
       <div className="overflow-hidden">
         <div
           ref={productContainerRef}
-          className="flex gap-6 transition-transform duration-500 ease-in-out"
+          className="hidden xl:flex gap-6 transition-transform duration-500 ease-in-out"
           style={{
             transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
           }}
@@ -146,6 +147,7 @@ const GardenMarketplace: React.FC = () => {
             </div>
           ))}
         </div>
+        <Carousel products={products} />
       </div>
     </div>
   );

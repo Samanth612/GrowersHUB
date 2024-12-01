@@ -6,7 +6,7 @@ import tomato from "../assets/Login/tomato.png";
 
 const UserLoginSignup = () => {
   return (
-    <div className="max-w-[40%] flex items-end w-full">
+    <div className="max-w-[40%] items-end w-full hidden xll:flex">
       {/* Grid Container */}
       <div className="grid grid-cols-2 gap-4 mb-8">
         {/* Top Left - Seedlings */}

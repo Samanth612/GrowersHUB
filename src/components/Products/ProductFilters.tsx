@@ -7,8 +7,8 @@ const ProductFilterBar = () => {
   const filters = ["All", "Plant", "Compost", "Freshly Sourced", "Produce"];
 
   return (
-    <div className="flex items-center justify-between w-full px-6 lg:px-20 py-12 bg-white">
-      <div className="flex items-center space-x-2">
+    <div className="flex flex-col items-center justify-between gap-5 w-full px-6 lg:px-20 py-12 bg-white tabmd:gap-0 tabmd:flex-row">
+      <div className="flex items-center space-x-2 order-2 tabmd:order-1 whitespace-nowrap">
         {filters.map((filter) => (
           <button
             key={filter}
@@ -25,7 +25,7 @@ const ProductFilterBar = () => {
         ))}
       </div>
 
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-4 order-1 tabmd:order-2">
         <div className="flex items-center space-x-2 border border-secondary rounded-full px-4 py-3">
           <span className="text-sm text-gray-500">Sort By</span>
           <select
