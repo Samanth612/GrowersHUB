@@ -1,12 +1,16 @@
 import React from "react";
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { LOGIN } from "../Utilities/constantLinks";
 
 interface SidebarMenuProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
 }
 const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
+  const navigate = useNavigate();
+
   const menuList = [
     { name: "Home", link: "/" },
     { name: "Products", link: "/products" },
@@ -43,7 +47,14 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
 
       {/* Buttons */}
       <div className="mt-8 px-6">
-        <button className="w-full py-2 font-medium border border-secondary rounded-md text-secondary hover:bg-gray-100">
+        <button
+          className="w-full py-2 font-medium border border-secondary rounded-md text-secondary hover:bg-gray-100"
+          onClick={() => {
+            if (!AuthReducer) {
+              navigate(LOGIN);
+            }
+          }}
+        >
           {!AuthReducer ? "Login" : "Create Album"}
         </button>
         <button className="w-full mt-4 py-2 bg-primary text-white font-medium rounded-md hover:bg-green-500">
