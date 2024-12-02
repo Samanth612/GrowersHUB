@@ -1,0 +1,252 @@
+import React, { useEffect, useState } from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import Icons from "../../Utilities/Icons";
+import { Flame, Heart, Share2 } from "lucide-react";
+import JP1 from "../../assets/JP1.jpg";
+import JP2 from "../../assets/JP2.jpg";
+import JP3 from "../../assets/JP3.jpg";
+import JP4 from "../../assets/JP4.jpg";
+
+const products = [
+  {
+    title: "Crassula small leaf plant",
+    image: JP1,
+  },
+  {
+    title: "Lemon",
+    image: JP2,
+  },
+  {
+    title: "Mint",
+    image: JP3,
+  },
+  {
+    title: "Betel leaf plants",
+    image: JP4,
+  },
+  {
+    title: "Crassula small leaf plant (Repeat)",
+    image: JP1,
+  },
+  {
+    title: "Lemon (Repeat)",
+    image: JP2,
+  },
+];
+
+const Product: React.FC = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
+  const totalSlides = products.length;
+
+  // Navigate to the next slide
+  const nextSlide = () => {
+    setActiveIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  };
+
+  // Reset timer on manual interaction
+  const handleControlClick = (newIndex: number) => {
+    setActiveIndex(newIndex);
+    setIsManualChange(true); // Mark as manual change
+  };
+
+  useEffect(() => {
+    if (isManualChange) {
+      const timeoutId = setTimeout(() => setIsManualChange(false), 5000);
+      return () => clearTimeout(timeoutId);
+    }
+
+    const intervalId = setInterval(nextSlide, 5000); // Auto-scroll interval
+    return () => clearInterval(intervalId);
+  }, [isManualChange, totalSlides]);
+  return (
+    <div className="px-6 lg:px-20 py-8 bg-white">
+      <a
+        href="/products"
+        className="flex gap-1 mb-4 text-sm text-secondary hover:underline"
+      >
+        <span>
+          <Icons variant="moveBackArrow" />
+        </span>{" "}
+        <span>Back to Product Listing</span>
+      </a>
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+        {/* Left Section: Image Gallery */}
+        <div>
+          <div className="relative h-full w-full overflow-hidden">
+            {/* Slides */}
+            <div
+              className="flex h-full w-full transition-transform duration-1000 ease-in-out"
+              style={{
+                transform: `translateX(-${activeIndex * 100}%)`,
+              }}
+            >
+              {products.map((product, index) => (
+                <div
+                  className="w-full flex-shrink-0 flex items-center justify-center"
+                  key={index}
+                >
+                  <div className="relative w-80 rounded-lg overflow-hidden bg-white shadow-md">
+                    <div className="relative">
+                      <img
+                        src={product?.image}
+                        alt={product?.title}
+                        className="w-full h-64 object-cover"
+                      />
+
+                      {/* Action Buttons */}
+                      <div className="absolute top-4 right-4 flex gap-2">
+                        <button className="p-2 bg-[rgba(255,255,255,0.8)] rounded-lg hover:bg-gray-100">
+                          <Share2 className="w-5 h-5" />
+                        </button>
+                        <button className="p-2 bg-[rgba(255,255,255,0.8)] rounded-lg hover:bg-gray-100">
+                          <Heart className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Carousel Indicators */}
+            <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 space-x-3">
+              {products.map((_, index) => (
+                <button
+                  key={index}
+                  className={`h-3 w-3 rounded-full ${
+                    activeIndex === index ? "bg-teritary" : "bg-gray-300"
+                  }`}
+                  onClick={() => handleControlClick(index)}
+                />
+              ))}
+            </div>
+
+            {/* Previous Button */}
+            <div className="absolute left-0 top-0 flex h-full items-center justify-center px-4">
+              <button
+                onClick={() =>
+                  handleControlClick(
+                    (activeIndex - 1 + totalSlides) % totalSlides
+                  )
+                }
+                className={`p-4 rounded-full ${
+                  activeIndex === 0
+                    ? "bg-teritary text-white cursor-not-allowed"
+                    : "bg-primary hover:bg-green-500 text-white"
+                }`}
+              >
+                <FaChevronLeft className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Next Button */}
+            <div className="absolute right-0 top-0 flex h-full items-center justify-center px-4">
+              <button
+                onClick={() =>
+                  handleControlClick((activeIndex + 1) % totalSlides)
+                }
+                className={`p-4 rounded-full ${
+                  activeIndex === totalSlides - 1
+                    ? "bg-teritary text-white cursor-not-allowed"
+                    : "bg-primary hover:bg-green-500 text-white"
+                }`}
+              >
+                <FaChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Section: Product Details */}
+        <div>
+          <div className="mb-4 flex space-x-2">
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+              Indoor
+            </span>
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+              Plant
+            </span>
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+              Freshly Sourced
+            </span>
+          </div>
+          <h1 className="mb-2 text-4xl font-semibold">Marble Queen Pothos</h1>
+          <div className="mb-4 flex items-center">
+            <div className="text-teritary flex flex-col">
+              <span className="flex items-center gap-1">
+                <svg
+                  width="14"
+                  height="15"
+                  viewBox="0 0 10 11"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M2.62404 4.5C2.62404 3.18832 3.68736 2.125 4.99904 2.125C6.31071 2.125 7.37404 3.18832 7.37404 4.5C7.37404 5.81168 6.31071 6.875 4.99904 6.875C3.68736 6.875 2.62404 5.81168 2.62404 4.5ZM4.99904 2.875C4.10157 2.875 3.37404 3.60254 3.37404 4.5C3.37404 5.39746 4.10157 6.125 4.99904 6.125C5.8965 6.125 6.62404 5.39746 6.62404 4.5C6.62404 3.60254 5.8965 2.875 4.99904 2.875Z"
+                    fill="#212529"
+                  />
+                  <path
+                    fillRule="evenodd"
+                    clipRule="evenodd"
+                    d="M0.761218 3.92843C0.938381 1.77912 2.73446 0.125 4.89105 0.125H5.10702C7.26362 0.125 9.05969 1.77912 9.23685 3.92843C9.33202 5.083 8.97538 6.22945 8.24206 7.12629L5.84552 10.0572C5.40802 10.5922 4.59005 10.5922 4.15255 10.0572L1.75602 7.12629C1.02269 6.22945 0.666048 5.083 0.761218 3.92843ZM4.89105 0.875C3.12478 0.875 1.65378 2.22974 1.50868 3.99004C1.42948 4.95096 1.7263 5.90512 2.33663 6.65154L4.73316 9.58243C4.87058 9.75048 5.1275 9.75048 5.26491 9.58243L7.66144 6.65153C8.27178 5.90512 8.5686 4.95096 8.48939 3.99004C8.34429 2.22974 6.87329 0.875 5.10702 0.875H4.89105Z"
+                    fill="#212529"
+                  />
+                </svg>
+                <span className="text-secondary text-sm font-medium">
+                  San Ramon, California
+                </span>
+              </span>
+              <span>20 Miles away</span>
+            </div>
+          </div>
+          <p className="text-teritary mb-12 w-[75%]">
+            Marble queen pothos is a popular houseplant that is known for its
+            beautiful foliage. It is a relatively easy plant to care for, making
+            it a good choice for beginners.
+          </p>
+          <div className="mb-12 flex items-center">
+            <img
+              src="https://via.placeholder.com/50"
+              alt="Seller Avatar"
+              className="h-12 w-12 rounded-full border border-gray-300"
+            />
+            <div className="ml-4">
+              <div className="flex items-center justify-center w-32 rounded-[4px] py-1 gap-2 bg-premiumgreen">
+                {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}
+                <Icons variant="SuperGrow" />
+                <span className="text-sm text-primary font-medium">
+                  Super Grower
+                </span>
+              </div>
+              <p className="text-2xl font-semibold">Eko Susiloanto</p>
+            </div>
+          </div>
+          <div className="mb-8 flex items-center gap-5">
+            <span className="text-3xl font-medium">
+              $350<span className="text-teritary font-normal">/unit</span>
+            </span>
+            <div className="flex items-center gap-1 text-orange-500 bg-[#FFB02E26] px-3 py-1 border-0 rounded-lg">
+              <Flame className="w-4 h-4" />
+              <span className="text-xs text-secondary font-medium">
+                Only 2 units left
+              </span>
+            </div>
+          </div>
+          <div className="flex flex-col gap-5 items-center sm:flex-row">
+            <button className="text-sm rounded-lg border border-secondary bg-white px-8 py-2 text-secondary font-semibold hover:bg-gray-200">
+              View Seller's Garden
+            </button>
+            <button className="text-sm rounded-lg bg-primary px-20 font-semibold py-2 text-white hover:bg-green-500">
+              Connect
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Product;
