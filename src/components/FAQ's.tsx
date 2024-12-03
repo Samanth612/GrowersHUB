@@ -31,12 +31,14 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white px-6 py-8 lg:px-20">
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+    <div className="bg-white px-6 py-12 lg:px-20">
+      <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
         {/* Left Section: Introduction */}
-        <div>
-          <h2 className="mb-4 text-3xl font-bold text-secondary">FAQs</h2>
-          <p className="mb-6 text-teritary">
+        <div className="w-full md:w-1/2">
+          <h2 className="text-3xl tabmd:text-5xl font-semibold leading-normal text-secondary mb-8">
+            FAQs
+          </h2>
+          <p className="mb-6 text-teritary w-[65%]">
             Find answers to common queries about plant care, growing conditions,
             plant produce, and more.
           </p>
@@ -49,7 +51,7 @@ const FAQSection: React.FC = () => {
         </div>
 
         {/* Right Section: FAQ List */}
-        <div className="md:col-span-2">
+        <div className="md:col-span-2 w-full md:w-1/2">
           <div className="divide-y divide-gray-200">
             {faqs.map((faq, index) => (
               <div key={index} className="py-4">
@@ -60,7 +62,7 @@ const FAQSection: React.FC = () => {
                   <h3 className="text-lg font-semibold text-secondary">
                     {faq.question}
                   </h3>
-                  <span className="text-teritary">
+                  <span className="text-secondary">
                     {openQuestion === index ? "−" : "+"}
                   </span>
                 </div>

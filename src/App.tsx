@@ -20,6 +20,8 @@ import ForgotPassword from "./components/Login/ForgotPassword";
 import UserLayout from "./Layouts/userLayout";
 import ProtectedLayout from "./Layouts/protectedLayout";
 import Products from "./components/Products/Products";
+import ProductDetails from "./components/Products/ProductDetails";
+import ViewSellersGarden from "./components/Products/ViewSellersGarden";
 
 const App: React.FC = () => {
   return (
@@ -55,7 +57,7 @@ const App: React.FC = () => {
           <Route element={<ProtectedLayout />}>
             <Route path={TERMS} element={<Terms />} />
             <Route path={ABOUTUS} element={<Aboutus />} />
-            <Route path={PRODUCTS} element={<Products />} />
+            <Route path={PRODUCTS} element={<ViewSellersGarden />} />
           </Route>
           <Route path={HOME} element={<Home />} />
         </Routes>

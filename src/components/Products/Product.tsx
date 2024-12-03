@@ -2,10 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Icons from "../../Utilities/Icons";
 import { Flame, Heart, Share2 } from "lucide-react";
-import JP1 from "../../assets/JP1.jpg";
-import JP2 from "../../assets/JP2.jpg";
-import JP3 from "../../assets/JP3.jpg";
-import JP4 from "../../assets/JP4.jpg";
+import JP1 from "../../assets/Product.png";
+import SG1 from "../../assets/SG1.jpg";
 
 const products = [
   {
@@ -14,15 +12,15 @@ const products = [
   },
   {
     title: "Lemon",
-    image: JP2,
+    image: JP1,
   },
   {
     title: "Mint",
-    image: JP3,
+    image: JP1,
   },
   {
     title: "Betel leaf plants",
-    image: JP4,
+    image: JP1,
   },
   {
     title: "Crassula small leaf plant (Repeat)",
@@ -30,7 +28,7 @@ const products = [
   },
   {
     title: "Lemon (Repeat)",
-    image: JP2,
+    image: JP1,
   },
 ];
 
@@ -60,17 +58,14 @@ const Product: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
   return (
-    <div className="px-6 lg:px-20 py-8 bg-white">
-      <a
-        href="/products"
-        className="flex gap-1 mb-4 text-sm text-secondary hover:underline"
-      >
+    <div className="px-6 lg:px-20 py-12 bg-white">
+      <a href="/products" className="flex gap-1 mb-4 text-sm text-secondary">
         <span>
           <Icons variant="moveBackArrow" />
         </span>{" "}
         <span>Back to Product Listing</span>
       </a>
-      <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+      <div className="grid grid-cols-1 gap-8 md:gap-20 lg:grid-cols-2">
         {/* Left Section: Image Gallery */}
         <div>
           <div className="relative h-full w-full overflow-hidden">
@@ -86,12 +81,12 @@ const Product: React.FC = () => {
                   className="w-full flex-shrink-0 flex items-center justify-center"
                   key={index}
                 >
-                  <div className="relative w-80 rounded-lg overflow-hidden bg-white shadow-md">
+                  <div className="relative w-[600px] rounded-lg overflow-hidden bg-white">
                     <div className="relative">
                       <img
                         src={product?.image}
                         alt={product?.title}
-                        className="w-full h-64 object-cover"
+                        className="w-full h-96 object-cover"
                       />
 
                       {/* Action Buttons */}
@@ -161,13 +156,13 @@ const Product: React.FC = () => {
         {/* Right Section: Product Details */}
         <div>
           <div className="mb-4 flex space-x-2">
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
               Indoor
             </span>
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
               Plant
             </span>
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs text-[#00701C]">
+            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
               Freshly Sourced
             </span>
           </div>
@@ -208,11 +203,13 @@ const Product: React.FC = () => {
             it a good choice for beginners.
           </p>
           <div className="mb-12 flex items-center">
-            <img
-              src="https://via.placeholder.com/50"
-              alt="Seller Avatar"
-              className="h-12 w-12 rounded-full border border-gray-300"
-            />
+            <div className="w-12 h-12 rounded-full overflow-hidden">
+              <img
+                src={SG1}
+                alt={"Gardener"}
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div className="ml-4">
               <div className="flex items-center justify-center w-32 rounded-[4px] py-1 gap-2 bg-premiumgreen">
                 {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}

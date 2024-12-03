@@ -1,11 +1,11 @@
 import React from "react";
 import Header from "../Header";
 import Footer from "../Footer";
-import AllSellers from "./AllSellers";
 import BecomeSeller from "../BecomeSeller";
 import Title from "../Title";
 import FAQSection from "../FAQ's";
 import Product from "./Product";
+import BestSellers from "./BestSellers";
 
 const ProductDetails: React.FC = () => {
   return (
@@ -14,7 +14,7 @@ const ProductDetails: React.FC = () => {
       <Title title={"Product"} description={"Marble Queen Pothos"} />
       <Product />
       <FAQSection />
-      <AllSellers />
+      <BestSellers />
       <BecomeSeller />
       <Footer />
     </div>
