@@ -127,7 +127,7 @@ const ViewSellersCard: React.FC = () => {
               className="w-full h-full object-cover"
             />
           </div>
-          <div className="ml-4">
+          <div className="ml-4 flex flex-col gap-2">
             <div className="flex items-center justify-center w-32 rounded-[4px] py-1 gap-2 bg-premiumgreen">
               {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}
               <Icons variant="SuperGrow" />
