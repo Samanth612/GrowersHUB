@@ -13,7 +13,7 @@ const MissionSection: React.FC = () => {
 
         {/* Main Heading */}
         <div className="mb-8 space-y-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-medium leading-snug md:leading-normal lg:leading-relaxed">
+          <h1 className="text-4xl lg:text-5xl font-semibold leading-snug md:leading-normal lg:leading-snug">
             <span className="text-secondary">Cultivating </span>
             <span className="text-primary">Connections</span>
             <span className="text-secondary">,</span>

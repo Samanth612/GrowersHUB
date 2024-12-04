@@ -22,6 +22,7 @@ import ProtectedLayout from "./Layouts/protectedLayout";
 import Products from "./components/Products/Products";
 import ProductDetails from "./components/Products/ProductDetails";
 import ViewSellersGarden from "./components/Products/ViewSellersGarden";
+import DashboardLayout from "./Pages/Dashboard";
 
 const App: React.FC = () => {
   return (

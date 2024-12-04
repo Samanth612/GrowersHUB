@@ -7,7 +7,7 @@ const HeroSection: React.FC = () => {
       <section className="relative flex flex-col items-start justify-center w-full py-5 h-[100vh]">
         {/* Left half - Image */}
         <div className="z-10 flex flex-col items-start justify-center space-y-6 w-[50%] ml-14 sm:ml-28">
-          <h1 className="text-4xl leading-relaxed md:text-6xl md:leading-loose font-jost font-bold text-secondary">
+          <h1 className="text-4xl leading-relaxed md:text-6xl md:leading-relaxed font-jost font-bold text-secondary">
             Where <span className="text-primary">Gardens</span> <br />
             Grow & Communities <br />
             Thrive
