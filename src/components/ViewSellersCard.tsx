@@ -143,7 +143,7 @@ const ViewSellersCard: React.FC = () => {
             <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">
               {currentProducts.map((product, index) => (
                 <div
-                  className="flex items-center justify-center sm:justify-start sm:items-start"
+                  className="flex items-center justify-center tabsm:justify-start sm:items-start"
                   key={index}
                 >
                   <CarouselCard {...product} />
