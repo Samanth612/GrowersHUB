@@ -1,88 +1,82 @@
-import React, { useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import Icons from "../../Utilities/Icons";
-import InboxMessages from "./InboxMessages";
-import Chat from "./Chat";
+import { useLocation, useNavigate } from "react-router-dom";
 
-const Dashboard: React.FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [selectedChat, setSelectedChat] = useState(false);
+interface DashboardProps {
+  children: ReactNode;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ children }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const menuItems = [
     {
       title: "Inbox",
-      icon: (
-        <Icons
-          variant="Inbox"
-          strokeColor={selectedIndex === 0 ? "#00701C" : "#808080"}
-        />
-      ),
-      color: `${
-        selectedIndex === 0 ? "text-primary font-bold" : "text-teritary"
-      }`,
+      icon: "Inbox",
+      route: "inbox",
     },
     {
       title: "Create Album",
-      icon: (
-        <Icons
-          variant="CreateAlbum"
-          strokeColor={selectedIndex === 1 ? "#00701C" : "#808080"}
-        />
-      ),
-      color: `${
-        selectedIndex === 1 ? "text-primary font-bold" : "text-teritary"
-      }`,
+      icon: "CreateAlbum",
+      route: "createalbum",
     },
     {
       title: "Your Album",
-      icon: (
-        <Icons
-          variant="YourAlbum"
-          strokeColor={selectedIndex === 2 ? "#00701C" : "#808080"}
-        />
-      ),
-      color: `${
-        selectedIndex === 2 ? "text-primary font-bold" : "text-teritary"
-      }`,
+      icon: "YourAlbum",
+      route: "youralbum",
     },
     {
       title: "Subscriptions",
-      icon: (
-        <Icons
-          variant="Subscriptions"
-          strokeColor={selectedIndex === 3 ? "#00701C" : "#808080"}
-        />
-      ),
-      color: `${
-        selectedIndex === 3 ? "text-primary font-bold" : "text-teritary"
-      }`,
+      icon: "Subscriptions",
+      route: "subscriptions",
     },
   ];
+
+  // Determine selected index based on location
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    menuItems.findIndex((item) => location.pathname.includes(item.route))
+  );
+
+  useEffect(() => {
+    const index = menuItems.findIndex((item) =>
+      location.pathname.includes(item.route)
+    );
+    setSelectedIndex(index);
+  }, [location.pathname]);
 
   return (
     <div className="flex bg-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-inner border-r">
+      <aside className="w-[19%] min-h-[88vh] bg-white shadow-inner border-r">
         <nav className="p-4">
           <ul className="space-y-4">
             {menuItems.map((item, index) => (
               <li key={index}>
                 <a
-                  href="#"
-                  onClick={() => setSelectedIndex(index)}
-                  className={`flex items-center gap-3 p-4 rounded-lg transition-colors duration-200 
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`/${item.route}`);
+                  }}
+                  className={`flex items-center cursor-pointer gap-3 p-4 rounded-lg transition-colors duration-200 
                     ${
-                      selectedIndex === index
+                      location.pathname.includes(item.route)
                         ? "bg-[#6FEE8F21] text-primary font-semibold"
                         : "hover:bg-[#6FEE8F21] text-teritary"
                     }
                   `}
                 >
                   <span className={`${index === 0 && "-translate-x-0.5"}`}>
-                    {item.icon}
+                    <Icons
+                      variant={item.icon}
+                      strokeColor={
+                        selectedIndex === index ? "#00701C" : "#808080"
+                      }
+                    />
                   </span>
                   <span
                     className={`${index === 1 ? "ml-3" : "ml-2"} ${
-                      selectedIndex === index
+                      location.pathname.includes(item.route)
                         ? "text-primary font-bold"
                         : "font-medium"
                     }`}
@@ -97,16 +91,7 @@ const Dashboard: React.FC = () => {
       </aside>
 
       {/* Main Content */}
-      <main className="w-full">
-        {selectedChat ? (
-          <Chat selectedIndex={selectedIndex} />
-        ) : (
-          <InboxMessages
-            setSelectedChat={setSelectedChat}
-            setSelectedIndex={setSelectedIndex}
-          />
-        )}
-      </main>
+      <main className="w-full">{children}</main>
     </div>
   );
 };

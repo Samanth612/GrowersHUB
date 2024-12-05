@@ -5,6 +5,8 @@ import Home from "./Pages/Home";
 import Terms from "./Pages/Terms";
 import {
   ABOUTUS,
+  COMMUNITY,
+  CREATEALBUM,
   FORGOTPASSWORD,
   HOME,
   INBOX,
@@ -12,8 +14,10 @@ import {
   PRODUCT,
   PRODUCTS,
   SIGNUP,
+  SUBSCRIPTIONS,
   TERMS,
   VIEWSELLERSGARDEN,
+  YOURALBUM,
 } from "./Utilities/constantLinks";
 import Aboutus from "./Pages/Aboutus";
 import Login from "./Pages/Login";
@@ -26,6 +30,10 @@ import Products from "./components/Products/Products";
 import ProductDetails from "./components/Products/ProductDetails";
 import ViewSellersGarden from "./components/Products/ViewSellersGarden";
 import DashboardLayout from "./Pages/Dashboard";
+import CreateAlbumLayout from "./components/CreateAlbum/CreateAlbumLayout";
+import YourAlbumLayout from "./components/YourAlbum/YourAlbumLayout";
+import SubscriptionsLayout from "./components/Subscriptions/SubscriptionsLayout";
+import CommunityLayout from "./components/Community/Community";
 
 const App: React.FC = () => {
   return (
@@ -65,8 +73,12 @@ const App: React.FC = () => {
             <Route path={PRODUCT} element={<ProductDetails />} />
             <Route path={VIEWSELLERSGARDEN} element={<ViewSellersGarden />} />
             <Route path={INBOX} element={<DashboardLayout />} />
+            <Route path={CREATEALBUM} element={<CreateAlbumLayout />} />
+            <Route path={YOURALBUM} element={<YourAlbumLayout />} />
+            <Route path={SUBSCRIPTIONS} element={<SubscriptionsLayout />} />
           </Route>
           <Route path={HOME} element={<Home />} />
+          <Route path={COMMUNITY} element={<CommunityLayout />} />
         </Routes>
       </BrowserRouter>
     </div>

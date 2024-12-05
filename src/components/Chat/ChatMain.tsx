@@ -28,8 +28,8 @@ const ChatMain: React.FC<ChatMainProps> = ({ messages }) => {
                 <img src={SG1} alt="Seller" className="w-8 h-8 rounded-lg" />
               )}
               <div
-                className={`bg-${
-                  message.sender === "user" ? "green-50" : "[#F1F1F1]"
+                className={`${
+                  message.sender === "user" ? "bg-green-50" : "bg-[#F1F1F1]"
                 } rounded-xl px-4 py-2`}
               >
                 <p>{message.text}</p>

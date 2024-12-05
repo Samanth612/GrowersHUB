@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
 import JP1 from "../../assets/JP1.jpg";
 import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
+import CarouselCard from "../../Utilities/CarouselCard";
 import Pagination from "../../Utilities/Pagination";
 
-const AllSellers: React.FC = () => {
+const CommunityDetails: React.FC = () => {
   const products = [
     {
       title: "Crassula small leaf plant",
@@ -107,24 +107,16 @@ const AllSellers: React.FC = () => {
   }, []);
 
   return (
-    <div className="px-6 lg:px-20 py-8 bg-white">
-      {/* Header */}
-      <div className="mb-8 flex justify-between items-center">
-        <h1 className="text-3xl tabmd:text-5xl font-semibold leading-normal">
-          All Products
-        </h1>
-      </div>
-
-      {/* Product Grid with Smooth Sliding */}
+    <div className="px-6 lg:px-20 py-12 bg-white">
       <div className="flex flex-col justify-between h-full">
         <div className="w-full transition-all duration-300 ease-in ">
           <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">
             {currentProducts.map((product, index) => (
               <div
-                className="flex items-center justify-center sm:justify-start sm:items-start"
+                className="flex items-center justify-center tabsm:justify-start sm:items-start"
                 key={index}
               >
-                <ProductCard {...product} />
+                <CarouselCard {...product} />
               </div>
             ))}
           </div>
@@ -143,4 +135,4 @@ const AllSellers: React.FC = () => {
   );
 };
 
-export default AllSellers;
+export default CommunityDetails;

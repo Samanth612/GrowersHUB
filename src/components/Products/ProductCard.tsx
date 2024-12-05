@@ -24,7 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const navigate = useNavigate();
 
   return (
-    <div className="relative w-80 rounded-lg overflow-hidden bg-white shadow-md">
+    <div className="relative w-96 rounded-lg overflow-hidden bg-white shadow-md">
       <div className="relative" onClick={() => navigate(PRODUCT)}>
         <img src={image} alt={title} className="w-full h-64 object-cover" />
 

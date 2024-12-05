@@ -18,8 +18,6 @@ const CarouselCard: React.FC<ProductCardProps> = ({
   location,
   price,
   unitInfo,
-  stock,
-  image,
 }) => {
   const products = [
     {
