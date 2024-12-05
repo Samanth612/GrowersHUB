@@ -23,7 +23,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
 
   return (
     <div>
-      <header className="flex items-center justify-between px-5 lg:px-20 py-4 bg-white">
+      <header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-5 lg:px-20 py-4 bg-white">
         <div className="flex items-center gap-16">
           <div
             onClick={() => {
@@ -106,7 +106,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
         {isOpen && <SidebarMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
         {isModalOpen && <Modal onClose={closeModal} />}
       </header>
-      {children}
+      <main className="mt-[95px]">{children}</main>
     </div>
   );
 };

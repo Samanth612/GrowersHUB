@@ -48,7 +48,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   return (
     <div className="flex bg-white">
       {/* Sidebar */}
-      <aside className="w-[19%] min-h-[88vh] bg-white shadow-inner border-r">
+      <aside className="w-[22%] min-h-[88vh] bg-white shadow-inner border-r">
         <nav className="p-4">
           <ul className="space-y-4">
             {menuItems.map((item, index) => (

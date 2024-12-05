@@ -182,7 +182,7 @@ const MediaUpload: React.FC = () => {
           </div>
 
           {/* Post Button */}
-          <button className="w-44 bg-primary text-white rounded-lg py-3 font-medium hover:bg-green-500">
+          <button className="w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500">
             Post
           </button>
         </div>
@@ -195,7 +195,7 @@ const MediaUpload: React.FC = () => {
                 Preview
               </h2>
             </div>
-            <div className="flex items-start justify-center border h-[78vh]">
+            <div className="flex items-start justify-center border h-[90vh]">
               <PreviewCarousel uploadedFiles={uploadedFiles} />
             </div>
           </div>

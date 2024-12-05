@@ -16,7 +16,7 @@ const ProductFilterBar: React.FC = () => {
             className={`whitespace-nowrap rounded-lg px-4 py-2 text-sm transition-colors
               ${
                 selectedFilter === filter
-                  ? "border border-green-600 bg-green-100 font-medium text-green-800"
+                  ? "bg-green-100 font-medium text-green-800"
                   : "border-primary border hover:bg-gray-50"
               }`}
           >
