@@ -5,3 +5,6 @@ export const FORGOTPASSWORD = "/forgotpassword";
 export const ABOUTUS = "/aboutus";
 export const TERMS = "/terms-conditions";
 export const PRODUCTS = "/products";
+export const INBOX = "/inbox";
+export const PRODUCT = "/product";
+export const VIEWSELLERSGARDEN = "/sellersgarden";

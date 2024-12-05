@@ -1,6 +1,8 @@
 import React from "react";
 import { Share2, Heart, MapPin, Flame } from "lucide-react";
 import Icons from "../../Utilities/Icons";
+import { useNavigate } from "react-router-dom";
+import { INBOX, PRODUCT } from "../../Utilities/constantLinks";
 
 interface ProductCardProps {
   title: string;
@@ -19,9 +21,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   stock,
   image,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <div className="relative w-80 rounded-lg overflow-hidden bg-white shadow-md">
-      <div className="relative">
+      <div className="relative" onClick={() => navigate(PRODUCT)}>
         <img src={image} alt={title} className="w-full h-64 object-cover" />
 
         {/* Super Grower Badge */}
@@ -49,13 +53,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
       {/* Product Details */}
       <div className="p-4">
         <h3 className="text-xl font-semibold mb-2 w-72 truncate">{title}</h3>
-        <div className="flex items-center gap-1 text-teritary mb-3">
+        <div
+          className="flex items-center gap-1 text-teritary mb-3"
+          onClick={() => navigate(PRODUCT)}
+        >
           <MapPin className="w-4 h-4" />
           <span className="text-sm">{location}</span>
         </div>
 
         {/* Price and Stock Info */}
-        <div className="flex items-center gap-3 mb-4">
+        <div
+          className="flex items-center gap-3 mb-4"
+          onClick={() => navigate(PRODUCT)}
+        >
           <div className="flex items-center gap-2">
             <span className="text-xl font-bold">${price}</span>
             {unitInfo && <span className="text-teritary">/{unitInfo}</span>}
@@ -71,7 +81,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Connect Button */}
-        <button className="w-full bg-primary text-white py-3 rounded-lg hover:bg-green-500 transition">
+        <button
+          className="w-full bg-primary text-white py-3 rounded-lg hover:bg-green-500 transition"
+          onClick={() => navigate(INBOX)}
+        >
           Connect
         </button>
       </div>

@@ -4,7 +4,8 @@ import InboxMessages from "./InboxMessages";
 import Chat from "./Chat";
 
 const Dashboard: React.FC = () => {
-  const [selectedIndex, setSelectedIndex] = useState(0); // Default to the first menu item
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [selectedChat, setSelectedChat] = useState(false);
 
   const menuItems = [
     {
@@ -97,8 +98,14 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="w-full">
-        {/* <InboxMessages /> */}
-        <Chat />
+        {selectedChat ? (
+          <Chat selectedIndex={selectedIndex} />
+        ) : (
+          <InboxMessages
+            setSelectedChat={setSelectedChat}
+            setSelectedIndex={setSelectedIndex}
+          />
+        )}
       </main>
     </div>
   );

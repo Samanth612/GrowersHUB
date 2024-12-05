@@ -4,6 +4,8 @@ import Icons from "../../Utilities/Icons";
 import { Flame, Heart, Share2 } from "lucide-react";
 import JP1 from "../../assets/Product.png";
 import SG1 from "../../assets/SG1.jpg";
+import { useNavigate } from "react-router-dom";
+import { INBOX, VIEWSELLERSGARDEN } from "../../Utilities/constantLinks";
 
 const products = [
   {
@@ -33,6 +35,7 @@ const products = [
 ];
 
 const Product: React.FC = () => {
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
   const totalSlides = products.length;
@@ -233,10 +236,16 @@ const Product: React.FC = () => {
             </div>
           </div>
           <div className="flex flex-col gap-5 items-center sm:flex-row">
-            <button className="text-sm rounded-lg border border-secondary bg-white px-8 py-2 text-secondary font-semibold hover:bg-gray-200">
+            <button
+              className="text-sm rounded-lg border border-secondary bg-white px-8 py-2 text-secondary font-semibold hover:bg-gray-200"
+              onClick={() => navigate(VIEWSELLERSGARDEN)}
+            >
               View Seller's Garden
             </button>
-            <button className="text-sm rounded-lg bg-primary px-20 font-semibold py-2 text-white hover:bg-green-500">
+            <button
+              className="text-sm rounded-lg bg-primary px-20 font-semibold py-2 text-white hover:bg-green-500"
+              onClick={() => navigate(INBOX)}
+            >
               Connect
             </button>
           </div>

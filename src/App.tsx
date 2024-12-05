@@ -7,10 +7,13 @@ import {
   ABOUTUS,
   FORGOTPASSWORD,
   HOME,
+  INBOX,
   LOGIN,
+  PRODUCT,
   PRODUCTS,
   SIGNUP,
   TERMS,
+  VIEWSELLERSGARDEN,
 } from "./Utilities/constantLinks";
 import Aboutus from "./Pages/Aboutus";
 import Login from "./Pages/Login";
@@ -58,7 +61,10 @@ const App: React.FC = () => {
           <Route element={<ProtectedLayout />}>
             <Route path={TERMS} element={<Terms />} />
             <Route path={ABOUTUS} element={<Aboutus />} />
-            <Route path={PRODUCTS} element={<ViewSellersGarden />} />
+            <Route path={PRODUCTS} element={<Products />} />
+            <Route path={PRODUCT} element={<ProductDetails />} />
+            <Route path={VIEWSELLERSGARDEN} element={<ViewSellersGarden />} />
+            <Route path={INBOX} element={<DashboardLayout />} />
           </Route>
           <Route path={HOME} element={<Home />} />
         </Routes>

@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import JP1 from "../../assets/Product.png";
 import ChatDetails from "./ChatDetails";
 import ChatMain from "./ChatMain";
 import ChatList from "./ChatList";
+
+interface ChatProps {
+  selectedIndex: any;
+}
 
 type ChatMessage = {
   id: number;
@@ -14,7 +18,7 @@ type ChatMessage = {
   messages: { text: string; sender: "user" | "seller" }[];
 };
 
-const Chat: React.FC = () => {
+const Chat: React.FC<ChatProps> = ({ selectedIndex }) => {
   const [selectedChatId, setSelectedChatId] = useState<number>(1);
 
   const chatMessages: ChatMessage[] = [
@@ -82,6 +86,10 @@ const Chat: React.FC = () => {
       ],
     },
   ];
+
+  useEffect(() => {
+    setSelectedChatId(selectedIndex + 1);
+  }, [selectedIndex]);
 
   const selectedChat = chatMessages.find((chat) => chat.id === selectedChatId);
 

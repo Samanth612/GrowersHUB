@@ -2,6 +2,11 @@ import React, { useState, useEffect } from "react";
 import MessageItem from "./MessageItem";
 import JP1 from "../../assets/Product.png";
 
+interface InboxMessagesProps {
+  setSelectedChat: any;
+  setSelectedIndex: any;
+}
+
 interface MessageAction {
   type: string;
   label: string;
@@ -16,7 +21,10 @@ interface Message {
   actions: MessageAction[];
 }
 
-const InboxMessages: React.FC = () => {
+const InboxMessages: React.FC<InboxMessagesProps> = ({
+  setSelectedChat,
+  setSelectedIndex,
+}) => {
   const [messages] = useState<Message[]>([
     {
       id: 1,
@@ -281,14 +289,21 @@ const InboxMessages: React.FC = () => {
 
       {/* Message List */}
       <div className="px-8 max-h-[75vh] h-full overflow-y-auto">
-        {searchedMessages.map((message) => (
-          <MessageItem
-            key={message.id}
-            message={message}
-            isMenuOpen={menuOpenId === message.id}
-            onMenuToggle={handleMenuToggle}
-            onAction={handleAction}
-          />
+        {searchedMessages.map((message, index) => (
+          <div
+            onClick={() => {
+              setSelectedChat(true);
+              setSelectedIndex(index);
+            }}
+          >
+            <MessageItem
+              key={message.id}
+              message={message}
+              isMenuOpen={menuOpenId === message.id}
+              onMenuToggle={handleMenuToggle}
+              onAction={handleAction}
+            />
+          </div>
         ))}
       </div>
     </div>
