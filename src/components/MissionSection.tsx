@@ -5,7 +5,7 @@ import SeedPlant from "../assets/SeedPlant.jpg";
 const MissionSection: React.FC = () => {
   return (
     <div className="relative w-screen">
-      <section className="realtive flex flex-col justify-center z-50 items-center bg-white max-w-full mx-6 md:mx-12 py-12 text-center">
+      <section className="realtive flex flex-col justify-center items-center bg-white max-w-full mx-6 md:mx-12 py-12 text-center">
         {/* Mission Header */}
         <div className="mb-4">
           <h2 className="text-primary font-semibold text-lg">Our Mission</h2>
@@ -33,7 +33,7 @@ const MissionSection: React.FC = () => {
         </div>
 
         {/* Image Section */}
-        <div className="relative max-w-full">
+        <div className="relative max-w-full z-10">
           <img
             src={SeedPlant}
             alt="Hand holding plant"
@@ -48,7 +48,7 @@ const MissionSection: React.FC = () => {
           <div className="absolute -z-20 w-[100%] h-full top-8 -left-4 bg-premiumgray rounded"></div> */}
         </div>
       </section>
-      <div className="absolute bottom-12 left-0 w-screen h-64 bg-premiumgray -z-50"></div>
+      <div className="absolute bottom-2 tabsm:bottom-1 tabxl:bottom-0 left-0 w-screen max-h-32 tabsm:max-h-36 tabxl:max-h-64  h-full bg-premiumgray z-0"></div>
     </div>
   );
 };
