@@ -7,7 +7,7 @@ const CommunityRBAC: React.FC = () => {
   const AuthReducer = useSelector((state: any) => state.auth);
   const navigate = useNavigate();
   return (
-    <div className="px-6 lg:px-20 pt-12">
+    <div className="px-6 lg:px-12 pt-12">
       <div className="rounded-[30px] bg-premiumgreen p-10">
         <div className="flex items-center justify-between">
           {!AuthReducer ? (

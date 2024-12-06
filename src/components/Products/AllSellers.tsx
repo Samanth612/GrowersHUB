@@ -107,7 +107,7 @@ const AllSellers: React.FC = () => {
   }, []);
 
   return (
-    <div className="px-6 lg:px-20 py-8 bg-white">
+    <div className="px-6 lg:px-12 py-8 bg-white">
       {/* Header */}
       <div className="mb-8 flex justify-between items-center">
         <h1 className="text-3xl tabmd:text-5xl font-semibold leading-normal">

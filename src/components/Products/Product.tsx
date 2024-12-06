@@ -61,7 +61,7 @@ const Product: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
   return (
-    <div className="px-6 lg:px-20 py-12 bg-white">
+    <div className="px-6 lg:px-12 py-12 bg-white">
       <a href="/products" className="flex gap-1 mb-4 text-sm text-secondary">
         <span>
           <Icons variant="moveBackArrow" />
@@ -243,7 +243,7 @@ const Product: React.FC = () => {
               View Seller's Garden
             </button>
             <button
-              className="text-sm rounded-lg bg-primary px-20 font-semibold py-2 text-white hover:bg-green-500"
+              className="text-sm rounded-lg bg-primary px-12 font-semibold py-2 text-white hover:bg-green-500"
               onClick={() => navigate(INBOX)}
             >
               Connect

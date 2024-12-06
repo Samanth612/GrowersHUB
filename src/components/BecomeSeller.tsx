@@ -9,7 +9,7 @@ const BecomeSeller: React.FC = () => {
 
   return (
     <>
-      <section className="flex flex-col items-center text-center mx-6 tabxl:mx-20 py-12 bg-white tabxl:flex-row tabxl:text-left tabxl:justify-between tabxl:items-center">
+      <section className="flex flex-col items-center text-center mx-6 tabxl:mx-12 py-12 bg-white tabxl:flex-row tabxl:text-left tabxl:justify-between tabxl:items-center">
         {/* Text Section */}
         <div className="space-y-5 text-start tabxl:w-1/2">
           <h2 className="text-3xl md:text-5xl font-semibold text-secondary">

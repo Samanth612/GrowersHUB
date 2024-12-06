@@ -107,7 +107,7 @@ const CommunityDetails: React.FC = () => {
   }, []);
 
   return (
-    <div className="px-6 lg:px-20 py-12 bg-white">
+    <div className="px-6 lg:px-12 py-12 bg-white">
       <div className="flex flex-col justify-between h-full">
         <div className="w-full transition-all duration-300 ease-in ">
           <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">

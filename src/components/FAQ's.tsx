@@ -31,7 +31,7 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <div className="bg-white px-6 py-12 lg:px-20">
+    <div className="bg-white px-6 py-12 lg:px-12">
       <div className="flex flex-col items-center justify-between gap-8 md:flex-row">
         {/* Left Section: Introduction */}
         <div className="w-full md:w-1/2">

@@ -113,7 +113,7 @@ const ViewSellersCard: React.FC = () => {
   }, []);
 
   return (
-    <div className="px-6 lg:px-20 py-12 bg-white">
+    <div className="px-6 lg:px-12 py-12 bg-white">
       <button
         className="flex items-center text-secondary mb-12 gap-3"
         onClick={() => navigate(-1)}

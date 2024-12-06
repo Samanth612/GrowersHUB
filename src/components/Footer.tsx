@@ -8,7 +8,7 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   return (
-    <footer className="max-w-full px-5 md:px-20 py-12 bg-premiumgray">
+    <footer className="max-w-full px-5 md:px-12 py-12 bg-premiumgray">
       <div className="flex flex-col gap-5 lg:gap-0 lg:flex-row justify-between items-center h-auto">
         {/* Logo */}
         <div className="flex-shrink-0">
