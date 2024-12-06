@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AlignJustify } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
+import { CREATEALBUM, LOGIN } from "../Utilities/constantLinks";
 
 interface WrapperProps {
   children?: ReactNode;
@@ -85,7 +86,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
               !AuthReducer ? "px-11" : "px-6"
             } py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50`}
             onClick={() => {
-              navigate("/login");
+              !AuthReducer ? navigate(LOGIN) : navigate(CREATEALBUM);
             }}
           >
             {!AuthReducer ? "Login" : "Create Album"}
