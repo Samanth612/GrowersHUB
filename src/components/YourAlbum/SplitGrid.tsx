@@ -4,17 +4,9 @@ import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
 import Pagination from "../../Utilities/Pagination";
-import PlantCard from "./PlantCard";
+import SplitCard from "./SplitCard";
 
-interface PlantGridProps {
-  setSplitCards: any;
-  setCardName: any;
-}
-
-const PlantGrid: React.FC<PlantGridProps> = ({
-  setSplitCards,
-  setCardName,
-}) => {
+const SplitGrid: React.FC = () => {
   const products = [
     {
       title: "Crassula small leaf plant",
@@ -124,11 +116,7 @@ const PlantGrid: React.FC<PlantGridProps> = ({
                 className="flex items-center justify-center tabsm:justify-start sm:items-start"
                 key={index}
               >
-                <PlantCard
-                  title={product?.title}
-                  setSplitCards={setSplitCards}
-                  setCardName={setCardName}
-                />
+                <SplitCard />
               </div>
             ))}
           </div>
@@ -147,4 +135,4 @@ const PlantGrid: React.FC<PlantGridProps> = ({
   );
 };
 
-export default PlantGrid;
+export default SplitGrid;
