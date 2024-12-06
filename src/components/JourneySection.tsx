@@ -36,7 +36,7 @@ const JourneySection = () => {
 
   return (
     <>
-      <div className="max-w-full mx-6 md:mx-20 px-4 py-12">
+      <div className="max-w-full mx-6 md:mx-12 py-12">
         {/* Heading Section */}
         <div className="mb-12">
           <h1 className="text-4xl md:text-4xl lg:text-5xl font-semibold text-secondary mb-6 leading-snug md:leading-normal lg:leading-relaxed">

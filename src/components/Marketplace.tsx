@@ -43,7 +43,7 @@ const products: Product[] = [
 
 const Marketplace = () => {
   return (
-    <div className="max-w-full mx-6 md:mx-20 px-4 py-12">
+    <div className="max-w-full mx-6 md:mx-12 py-12">
       {/* Header Section */}
       <div className="mb-12 space-y-6">
         <div className="text-primary font-medium text-xl">Marketplace</div>

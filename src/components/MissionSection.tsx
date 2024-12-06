@@ -5,7 +5,7 @@ import SeedPlant from "../assets/SeedPlant.jpg";
 const MissionSection: React.FC = () => {
   return (
     <>
-      <section className="realtive flex flex-col justify-center items-center bg-white max-w-full mx-6 md:mx-20 px-4 py-12 text-center">
+      <section className="realtive flex flex-col justify-center items-center bg-white max-w-full mx-6 md:mx-12 py-12 text-center">
         {/* Mission Header */}
         <div className="mb-4">
           <h2 className="text-primary font-semibold text-lg">Our Mission</h2>
