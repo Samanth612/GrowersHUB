@@ -60,6 +60,7 @@ const Product: React.FC = () => {
     const intervalId = setInterval(nextSlide, 5000); // Auto-scroll interval
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
+
   return (
     <div className="px-6 lg:px-12 py-12 bg-white">
       <a href="/products" className="flex gap-1 mb-4 text-sm text-secondary">
