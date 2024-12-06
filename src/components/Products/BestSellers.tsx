@@ -75,7 +75,7 @@ const BestSellers: React.FC = () => {
   }, []);
 
   // Define the number of products visible at once (4 in this case)
-  const visibleCards = 4;
+  const visibleCards = 3;
 
   // Total width of one product card including the gap
   const totalWidthPerCard = productWidth + gap;

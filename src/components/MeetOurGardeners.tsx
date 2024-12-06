@@ -123,7 +123,7 @@ const GardenersShowcase = () => {
   return (
     <div className="max-w-full mx-6 md:mx-12 py-12">
       {/* Header Section */}
-      <div className="mb-12 space-y-6">
+      <div className="space-y-6">
         <div className="text-primary font-medium text-xl mb-2">Community</div>
         <h1 className="text-4xl md:text-5xl font-semibold mb-4">
           Meet Our Gardeners
