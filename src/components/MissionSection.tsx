@@ -4,8 +4,8 @@ import SeedPlant from "../assets/SeedPlant.jpg";
 
 const MissionSection: React.FC = () => {
   return (
-    <>
-      <section className="realtive flex flex-col justify-center items-center bg-white max-w-full mx-6 md:mx-12 py-12 text-center">
+    <div className="relative w-screen">
+      <section className="realtive flex flex-col justify-center z-50 items-center bg-white max-w-full mx-6 md:mx-12 py-12 text-center">
         {/* Mission Header */}
         <div className="mb-4">
           <h2 className="text-primary font-semibold text-lg">Our Mission</h2>
@@ -48,7 +48,8 @@ const MissionSection: React.FC = () => {
           <div className="absolute -z-20 w-[100%] h-full top-8 -left-4 bg-premiumgray rounded"></div> */}
         </div>
       </section>
-    </>
+      <div className="absolute bottom-12 left-0 w-screen h-64 bg-premiumgray -z-50"></div>
+    </div>
   );
 };
 
