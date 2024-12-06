@@ -25,8 +25,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
   return (
     <div className="relative w-96 rounded-lg overflow-hidden bg-white shadow-md">
-      <div className="relative" onClick={() => navigate(PRODUCT)}>
-        <img src={image} alt={title} className="w-full h-64 object-cover" />
+      <div className="relative">
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-64 object-cover cursor-pointer"
+          onClick={() => navigate(PRODUCT)}
+        />
 
         {/* Super Grower Badge */}
         <div className="absolute top-4 left-4 bg-white px-3 py-1 rounded-lg">
@@ -52,9 +57,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
       {/* Product Details */}
       <div className="p-4">
-        <h3 className="text-xl font-semibold mb-2 w-72 truncate">{title}</h3>
+        <h3
+          className="text-xl font-semibold mb-2 w-72 truncate cursor-pointer"
+          onClick={() => navigate(PRODUCT)}
+        >
+          {title}
+        </h3>
         <div
-          className="flex items-center gap-1 text-teritary mb-3"
+          className="flex items-center gap-1 text-teritary mb-3 cursor-pointer"
           onClick={() => navigate(PRODUCT)}
         >
           <MapPin className="w-4 h-4" />
@@ -63,7 +73,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {/* Price and Stock Info */}
         <div
-          className="flex items-center gap-3 mb-4"
+          className="flex items-center gap-3 mb-4 cursor-pointer"
           onClick={() => navigate(PRODUCT)}
         >
           <div className="flex items-center gap-2">
