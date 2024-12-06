@@ -1,9 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
 import CP1 from "../assets/CP1.jpg";
 import CP2 from "../assets/CP2.jpg";
 import CP3 from "../assets/CP3.jpg";
 import SG1 from "../assets/SG1.jpg";
+import GardenersCard from "./GardenersCard";
+import GardenersCarouselCard from "./GardenersCarouselCard";
 
 interface Gardener {
   id: number;
@@ -13,6 +15,8 @@ interface Gardener {
   profileImage: string;
   name: string;
   badge: string;
+  location: string;
+  price: string;
 }
 
 const gardeners: Gardener[] = [
@@ -24,6 +28,8 @@ const gardeners: Gardener[] = [
     profileImage: SG1,
     name: "Eko Susiloanto",
     badge: "Super Grower",
+    location: "San Ramon, California, 20miles away",
+    price: "122",
   },
   {
     id: 2,
@@ -33,6 +39,8 @@ const gardeners: Gardener[] = [
     profileImage: SG1,
     name: "Eko Susiloanto",
     badge: "Super Grower",
+    location: "San Ramon, California, 20miles away",
+    price: "122",
   },
   {
     id: 3,
@@ -42,6 +50,8 @@ const gardeners: Gardener[] = [
     profileImage: SG1,
     name: "Eko Susiloanto",
     badge: "Newbie",
+    location: "San Ramon, California, 20miles away",
+    price: "122",
   },
   {
     id: 4,
@@ -51,6 +61,8 @@ const gardeners: Gardener[] = [
     profileImage: SG1,
     name: "Eko Susiloanto",
     badge: "Newbie",
+    location: "San Ramon, California, 20miles away",
+    price: "122",
   },
   {
     id: 5,
@@ -60,64 +72,53 @@ const gardeners: Gardener[] = [
     profileImage: SG1,
     name: "Eko Susiloanto",
     badge: "Newbie",
+    location: "San Ramon, California, 20miles away",
+    price: "122",
   },
 ];
 
-const GardenersShowcase = () => {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [slidesPerView, setSlidesPerView] = useState(3);
+const GardenersShowcase: React.FC = () => {
+  // State for the current offset of the products
+  const [currentOffset, setCurrentOffset] = useState(0);
 
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
+  // Ref to the product container to calculate the width of a single product card
+  const productContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Dynamically calculate the width of a product card
+  const [productWidth, setProductWidth] = useState(0);
+
+  // Gap size in pixels (based on Tailwind's gap-6)
+  const gap = 24;
 
   useEffect(() => {
-    // Function to update slidesPerView based on window size
-    const updateSlidesPerView = () => {
-      if (window.innerWidth < 768) {
-        setSlidesPerView(1); // Mobile size (1 item per view)
-      } else if (window.innerWidth >= 768 && window.innerWidth < 1024) {
-        setSlidesPerView(2); // Tablet size (2 items per view)
-      } else {
-        setSlidesPerView(3); // Desktop size (3 items per view)
-      }
-    };
-
-    // Call on initial load
-    updateSlidesPerView();
-
-    // Add event listener for resizing the window
-    window.addEventListener("resize", updateSlidesPerView);
-
-    // Clean up event listener on component unmount
-    return () => {
-      window.removeEventListener("resize", updateSlidesPerView);
-    };
+    // Calculate product width once the component is mounted
+    if (productContainerRef.current) {
+      setProductWidth(
+        productContainerRef.current.children[0].getBoundingClientRect().width
+      );
+    }
   }, []);
 
-  // Calculate the max slides available for each screen size
-  const maxSlides = gardeners.length - slidesPerView;
+  // Define the number of products visible at once (4 in this case)
+  const visibleCards = 3;
 
-  // Handle next slide
-  const handleNext = () => {
-    setCurrentSlide((prev) => Math.min(prev + 1, maxSlides)); // Ensure it doesn't go beyond max slides
+  // Total width of one product card including the gap
+  const totalWidthPerCard = productWidth + gap;
+
+  const maxOffset = -(gardeners.length - visibleCards) * totalWidthPerCard;
+
+  // Move to the next 4 products
+  const nextProducts = () => {
+    if (currentOffset > maxOffset) {
+      setCurrentOffset(currentOffset - totalWidthPerCard);
+    }
   };
 
-  // Handle previous slide
-  const handlePrev = () => {
-    setCurrentSlide((prev) => Math.max(prev - 1, 0)); // Ensure it doesn't go below 0
-  };
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.touches[0].clientX);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.touches[0].clientX);
-  };
-
-  const handleTouchEnd = () => {
-    if (touchStart - touchEnd > 50) handleNext();
-    if (touchStart - touchEnd < -50) handlePrev();
+  // Move to the previous 4 products
+  const prevProducts = () => {
+    if (currentOffset < 0) {
+      setCurrentOffset(currentOffset + totalWidthPerCard);
+    }
   };
 
   return (
@@ -137,26 +138,26 @@ const GardenersShowcase = () => {
       </div>
 
       {/* Navigation Buttons */}
-      <div className="flex justify-end gap-10 mb-6">
+      <div className="justify-end gap-10 mb-6 hidden xl:flex">
         <button
           className={`p-4 rounded-full ${
-            currentSlide === 0
+            currentOffset === 0
               ? "bg-teritary text-white cursor-not-allowed"
               : "bg-primary hover:bg-primary text-white"
           }`}
-          onClick={handlePrev}
-          disabled={currentSlide === 0}
+          onClick={prevProducts}
+          disabled={currentOffset === 0}
         >
           <FaChevronLeft className="w-4 h-4" />
         </button>
         <button
           className={`p-4 rounded-full ${
-            currentSlide === maxSlides
+            currentOffset <= maxOffset
               ? "bg-teritary text-white cursor-not-allowed"
               : "bg-primary hover:bg-primary text-white"
           }`}
-          onClick={handleNext}
-          disabled={currentSlide === maxSlides}
+          onClick={nextProducts}
+          disabled={currentOffset <= maxOffset}
         >
           <FaChevronRight className="w-4 h-4" />
         </button>
@@ -165,79 +166,21 @@ const GardenersShowcase = () => {
       {/* Cards Grid with Sliding Animation */}
       <div className="overflow-hidden">
         <div
-          className="flex transition-transform duration-500 ease-in-out"
+          ref={productContainerRef}
+          className="hidden xl:flex gap-6 transition-transform duration-500 ease-in-out"
           style={{
-            // Adjust the transform for proper slide movement based on screen size
-            transform: `translateX(-${(currentSlide * 100) / slidesPerView}%)`,
+            transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
           }}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
         >
-          {gardeners.map((gardener) => (
-            <div
-              key={gardener.id}
-              className="flex-shrink-0 w-full bg-white rounded-lg overflow-hidden shadow-lg"
-              style={{ width: `calc(100% / ${slidesPerView})` }} // Ensure each card takes the correct width
-            >
-              <div className="relative h-64">
-                <img
-                  src={gardener.image}
-                  alt={gardener.title}
-                  className="w-full h-full object-cover border rounded-3xl"
-                />
-              </div>
-              <div className="p-6">
-                <h3 className="text-2xl font-bold mb-2">{gardener.title}</h3>
-                <p className="text-teritary mb-6">{gardener.description}</p>
-
-                {/* Profile Section */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-full overflow-hidden">
-                      <img
-                        src={gardener.profileImage}
-                        alt={gardener.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        {gardener.badge === "Super Grower" && (
-                          <div className="flex items-center gap-1">
-                            <div className="w-4 h-4 text-green-700">✓</div>
-                            <span className="text-green-700 text-sm">
-                              Super Grower
-                            </span>
-                          </div>
-                        )}
-                        {gardener.badge === "Newbie" && (
-                          <span className="text-gray-600 text-sm">Newbie</span>
-                        )}
-                      </div>
-                      <div className="font-medium">{gardener.name}</div>
-                    </div>
-                  </div>
-                  <button className="p-2 rounded-full bg-gray-900 text-white hover:bg-gray-700">
-                    <FaChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+          {gardeners.map((product, index) => (
+            <div className="flex-none" key={index}>
+              <GardenersCard {...product} />
             </div>
           ))}
         </div>
-      </div>
-      {/* Dots indicator for mobile */}
-      <div className="flex justify-center gap-2 mt-4 md:hidden">
-        {Array.from({ length: maxSlides + 1 }).map((_, index) => (
-          <button
-            key={index}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              currentSlide === index ? "bg-primary" : "bg-gray-300"
-            }`}
-            onClick={() => setCurrentSlide(index)}
-          />
-        ))}
+        <div>
+          <GardenersCarouselCard products={gardeners} />
+        </div>
       </div>
     </div>
   );

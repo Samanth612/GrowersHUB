@@ -12,7 +12,7 @@ const HeroSection: React.FC = () => {
     <>
       <section className="relative flex flex-col items-start justify-center w-full py-5 h-[100vh]">
         {/* Left half - Image */}
-        <div className="z-10 flex flex-col items-start justify-center space-y-6 w-[55%] ml-14 sm:ml-28">
+        <div className="z-10 flex flex-col items-start justify-center space-y-6 w-[55%] ml-14 tabmd:ml-28">
           <h1 className="text-4xl leading-relaxed md:text-6xl md:leading-relaxed font-jost font-bold text-secondary">
             Where <span className="text-primary">Gardens</span> <br />
             Grow & Communities <br />
@@ -32,24 +32,20 @@ const HeroSection: React.FC = () => {
           className="absolute h-full w-full object-cover"
         />
 
-        <div className="absolute left-28 bottom-24 z-10  flex gap-4 justify-center">
-          <div className="inline-flex rounded-md shadow">
-            <button
-              type="button"
-              className="px-12 py-3 text-lg font-medium text-white bg-primary rounded-lg hover:bg-green-500 transition-colors"
-            >
-              Start Shopping
-            </button>
-          </div>
-          <div className="ml-3 inline-flex">
-            <button
-              type="button"
-              className="px-12 py-3 text-lg font-medium border border-secondary text-secondary bg-white rounded-lg transition-colors"
-              onClick={openModal}
-            >
-              Join the Waitlist
-            </button>
-          </div>
+        <div className="z-10 mt-8 flex flex-col items-center gap-4 justify-center ml-12 tabmd:ml-28 sm:flex-row">
+          <button
+            type="button"
+            className="px-12 py-3 text-lg font-medium text-white bg-primary rounded-lg hover:bg-green-500 transition-colors"
+          >
+            Start Shopping
+          </button>
+          <button
+            type="button"
+            className="px-12 py-3 text-lg font-medium border border-secondary text-secondary bg-white rounded-lg transition-colors"
+            onClick={openModal}
+          >
+            Join the Waitlist
+          </button>
         </div>
       </section>
       {isModalOpen && <Modal onClose={closeModal} />}
