@@ -23,7 +23,7 @@ const MissionSection: React.FC = () => {
         </div>
 
         {/* Mission Description */}
-        <div className="w-full lg:w-[58%] mb-16">
+        <div className="w-full lg:w-[70%] mb-16">
           <p className="text-teritary text-lg md:text-xl leading-relaxed">
             At Growers Hub, we believe in sustainability and minimizing waste.
             We're convinced that when neighbors come together to share their
