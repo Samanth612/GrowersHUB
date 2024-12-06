@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import Header from "../Header";
 import Dashboard from "../Chat/Dashboard";
 import CreateAlbum from "../CreateAlbum/CreateAlbum";
-import MediaUpload from "../CreateAlbum/UploadSection";
 import YourAlbum from "./YourAlbum";
 
 const YourAlbumLayout: React.FC = () => {

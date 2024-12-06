@@ -8,14 +8,15 @@ import {
   COMMUNITY,
   CREATEALBUM,
   FORGOTPASSWORD,
+  HELP,
   HOME,
   INBOX,
   LOGIN,
+  PRIVACYPOLICY,
   PRODUCT,
   PRODUCTS,
   SIGNUP,
   SUBSCRIPTIONS,
-  TERMS,
   VIEWSELLERSGARDEN,
   YOURALBUM,
 } from "./Utilities/constantLinks";
@@ -34,6 +35,7 @@ import CreateAlbumLayout from "./components/CreateAlbum/CreateAlbumLayout";
 import YourAlbumLayout from "./components/YourAlbum/YourAlbumLayout";
 import SubscriptionsLayout from "./components/Subscriptions/SubscriptionsLayout";
 import CommunityLayout from "./components/Community/Community";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 const App: React.FC = () => {
   return (
@@ -67,8 +69,6 @@ const App: React.FC = () => {
             />
           </Route>
           <Route element={<ProtectedLayout />}>
-            <Route path={TERMS} element={<Terms />} />
-            <Route path={ABOUTUS} element={<Aboutus />} />
             <Route path={PRODUCTS} element={<Products />} />
             <Route path={PRODUCT} element={<ProductDetails />} />
             <Route path={VIEWSELLERSGARDEN} element={<ViewSellersGarden />} />
@@ -79,6 +79,9 @@ const App: React.FC = () => {
           </Route>
           <Route path={HOME} element={<Home />} />
           <Route path={COMMUNITY} element={<CommunityLayout />} />
+          <Route path={PRIVACYPOLICY} element={<PrivacyPolicy />} />
+          <Route path={HELP} element={<Terms />} />
+          <Route path={ABOUTUS} element={<Aboutus />} />
         </Routes>
       </BrowserRouter>
     </div>

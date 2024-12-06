@@ -2,9 +2,9 @@ import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/FooterLogo.png";
-import { ABOUTUS, TERMS } from "../Utilities/constantLinks";
+import { ABOUTUS, HELP, PRIVACYPOLICY } from "../Utilities/constantLinks";
 
-const Navbar = () => {
+const Footer: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -36,14 +36,14 @@ const Navbar = () => {
             About
           </a>
           <a
-            href="#"
             className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            onClick={() => navigate(HELP)}
           >
             Help
           </a>
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(TERMS)}
+            onClick={() => navigate(PRIVACYPOLICY)}
           >
             Privacy & Terms
           </a>
@@ -66,4 +66,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export default Footer;
