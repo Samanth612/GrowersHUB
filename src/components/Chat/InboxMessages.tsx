@@ -295,6 +295,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
               setSelectedChat(true);
               setSelectedIndex(index);
             }}
+            key={index}
           >
             <MessageItem
               key={message.id}
