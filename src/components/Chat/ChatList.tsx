@@ -76,7 +76,7 @@ const ChatList: React.FC<ChatListProps> = ({
             <div className="flex-1">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-2">
-                  <span className="font-medium text-sm whitespace-nowrap">
+                  <span className="font-medium text-sm whitespace-nowrap text-pretty">
                     {name}
                   </span>
                   {unreadCount > 0 && (

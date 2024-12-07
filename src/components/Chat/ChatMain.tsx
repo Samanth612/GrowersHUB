@@ -59,7 +59,7 @@ const ChatMain: React.FC<ChatMainProps> = ({ messages }) => {
               </button>
             </div>
           </div>
-          <button className="px-6 py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50">
+          <button className="px-6 py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50 hidden xll:block">
             Mark as FAQ
           </button>
         </div>

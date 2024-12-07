@@ -33,7 +33,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({ chat }) => {
           </div>
         </div>
       </div>
-      <button className="px-6 py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50">
+      <button className="px-6 py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50 hidden xll:block">
         More Details
       </button>
     </div>

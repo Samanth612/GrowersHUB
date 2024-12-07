@@ -45,7 +45,7 @@ const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
   return (
     <div className="flex h-[87vh] bg-white shadow-inner">
       {/* Chat List */}
-      <div className="w-[30%] border-r">
+      <div className="w-[30%] border-r hidden xll:block">
         <div className="p-[27.5px] border-b">
           <div className="flex items-center justify-center gap-3">
             <h1 className="text-xl font-semibold">Inbox</h1>

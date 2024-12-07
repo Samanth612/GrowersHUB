@@ -24,7 +24,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
 
   return (
     <div>
-      <header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-5 lg:px-11 py-4 bg-white">
+      <header className="fixed top-0 right-0 left-0 z-20 flex items-center justify-between px-5 lg:px-11 py-4 bg-white">
         <div className="flex items-center gap-16">
           <img
             src={logo}
@@ -104,9 +104,9 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
         >
           <AlignJustify size={25} strokeWidth={1.5} />
         </div>
-        {isOpen && <SidebarMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
         {isModalOpen && <Modal onClose={closeModal} />}
       </header>
+      {isOpen && <SidebarMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
       <main className="mt-[95px]">{children}</main>
     </div>
   );
