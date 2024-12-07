@@ -32,7 +32,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
             }}
             className="cursor-pointer flex-shrink-0"
           >
-            <img src={logo} alt="Logo" className="h-16 -ml-1" />
+            <img src={logo} alt="Logo" className="h-16 -ml-2.5" />
           </div>
           <nav className="hidden xl:flex">
             <ul className="flex items-center gap-14">
