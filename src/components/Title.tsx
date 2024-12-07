@@ -5,8 +5,6 @@ interface TitleProps {
   description?: string;
 }
 const Title: React.FC<TitleProps> = ({ title, description }) => {
-  console.log(description, "ddd");
-
   return (
     <header className="flex items-center justify-start w-full h-32 bg-premiumgray">
       <div className="flex items-center max-w-7xl px-4 sm:px-6 lg:px-12">

@@ -10,7 +10,7 @@ interface FormErrors {
   confirmPassword: string;
 }
 
-const PasswordResetForm = () => {
+const PasswordResetForm: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     password: "",
     confirmPassword: "",
