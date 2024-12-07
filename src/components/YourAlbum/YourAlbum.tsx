@@ -12,7 +12,7 @@ const YourAlbum: React.FC = () => {
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
       {splitCards ? (
         <>
-          <div className="flex items-center justify-between py-[17.20px] px-12 border-b shadow-inner">
+          <div className="flex flex-wrap gap-3 items-center justify-between py-[17.20px] px-6 sm:px-12 border-b shadow-inner">
             <div className="flex items-center gap-3">
               <button
                 className="flex items-center text-secondary"

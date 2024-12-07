@@ -52,7 +52,7 @@ const PricingSection: React.FC = () => {
   ];
 
   return (
-    <div className="max-w-5xl mx-6 md:mx-20 py-16">
+    <div className="max-w-5xl mx-6 lg:mx-20 py-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {pricingData.map((plan, index) => (
           <PricingCard key={index} {...plan} />
