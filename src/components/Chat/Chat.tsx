@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from "react";
-import JP1 from "../../assets/Product.png";
+import React, { useEffect, useState, useMemo } from "react";
 import ChatDetails from "./ChatDetails";
 import ChatMain from "./ChatMain";
 import ChatList from "./ChatList";
 
 interface ChatProps {
-  selectedIndex: any;
+  selectedIndex: number;
+  chatMessages: ChatMessage[];
+}
+
+interface MessageAction {
+  type: string;
+  label: string;
 }
 
 type ChatMessage = {
@@ -15,83 +20,27 @@ type ChatMessage = {
   showBadge: boolean;
   profileImage: string;
   name: string;
+  unreadCount: number;
+  actions: MessageAction[];
   messages: { text: string; sender: "user" | "seller" }[];
 };
 
-const Chat: React.FC<ChatProps> = ({ selectedIndex }) => {
+const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
   const [selectedChatId, setSelectedChatId] = useState<number>(1);
-
-  const chatMessages: ChatMessage[] = [
-    {
-      id: 1,
-      message: "Do you Have Questions?",
-      timestamp: "12m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Marble Queen Pothos",
-      messages: [
-        {
-          text: "Hi, I would Like to buy this. Is it Organic?",
-          sender: "user",
-        },
-        { text: "Yes it is", sender: "seller" },
-        {
-          text: "It's Home grown and here are the price details.",
-          sender: "seller",
-        },
-        { text: "You can also check its growth here:", sender: "seller" },
-      ],
-    },
-    {
-      id: 2,
-      message: "Here to assist you!",
-      timestamp: "15m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "Marble Queen Pothos",
-      messages: [
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-        { text: "How can I help you?", sender: "seller" },
-      ],
-    },
-    {
-      id: 3,
-      message: "Let me know your thoughts.",
-      timestamp: "20m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Marble Queen Pothos",
-      messages: [
-        { text: "Do you have any bulk discounts?", sender: "user" },
-        {
-          text: "Yes, we offer discounts on orders above $500.",
-          sender: "seller",
-        },
-      ],
-    },
-  ];
 
   useEffect(() => {
     setSelectedChatId(selectedIndex + 1);
   }, [selectedIndex]);
 
-  const selectedChat = chatMessages.find((chat) => chat.id === selectedChatId);
+  const selectedChat = useMemo(
+    () => chatMessages.find((chat) => chat.id === selectedChatId),
+    [selectedChatId, chatMessages]
+  );
+
+  const unreadCount = useMemo(
+    () => chatMessages.filter((chat) => chat.showBadge).length,
+    [chatMessages]
+  );
 
   return (
     <div className="flex h-[87vh] bg-white shadow-inner">
@@ -101,7 +50,7 @@ const Chat: React.FC<ChatProps> = ({ selectedIndex }) => {
           <div className="flex items-center justify-center gap-3">
             <h1 className="text-xl font-semibold">Inbox</h1>
             <span className="bg-gray-100 px-2 py-1 font-semibold rounded text-sm">
-              12
+              {unreadCount}
             </span>
           </div>
         </div>

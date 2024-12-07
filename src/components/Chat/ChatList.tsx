@@ -8,6 +8,7 @@ type ChatMessage = {
   showBadge: boolean;
   profileImage: string;
   name: string;
+  unreadCount: number;
 };
 
 type ChatListProps = {
@@ -22,6 +23,16 @@ const ChatList: React.FC<ChatListProps> = ({
   onSelectChat,
 }) => {
   const [filter, setFilter] = useState<string>("all");
+  const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
+
+  const handleMenuToggle = (chatId: number) => {
+    setMenuOpenId(menuOpenId === chatId ? null : chatId);
+  };
+
+  const handleAction = (chatId: number, action: string) => {
+    console.log(`Performing ${action} on chat ${chatId}`);
+    setMenuOpenId(null); // Close the menu after the action
+  };
 
   return (
     <div className="p-4 max-h-[74.281vh] h-full overflow-y-auto">
@@ -49,7 +60,15 @@ const ChatList: React.FC<ChatListProps> = ({
         ))}
       </div>
       {chats.map(
-        ({ id, message, timestamp, showBadge, profileImage, name }) => (
+        ({
+          id,
+          message,
+          timestamp,
+          showBadge,
+          profileImage,
+          name,
+          unreadCount,
+        }) => (
           <div
             key={id}
             className={`flex items-start space-x-3 p-3 rounded-[10px] cursor-pointer ${
@@ -70,7 +89,7 @@ const ChatList: React.FC<ChatListProps> = ({
                   </span>
                   {showBadge && (
                     <span className="bg-premiumgreen text-primary text-xs font-medium px-2 py-0.5 rounded-full">
-                      3
+                      {unreadCount}
                     </span>
                   )}
                 </div>
@@ -78,9 +97,51 @@ const ChatList: React.FC<ChatListProps> = ({
               </div>
               <p className="text-xs text-gray-500">{message}</p>
             </div>
-            <button className="p-1 hover:bg-gray-100 rounded">
-              <MoreVertical className="w-5 h-5 text-secondary" />
-            </button>
+
+            {/* More Vertical Menu Button */}
+            <div className="relative">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent closing the menu when clicking this button
+                  handleMenuToggle(id);
+                }}
+                className="p-1 hover:bg-gray-100 rounded"
+              >
+                <MoreVertical className="w-5 h-5 text-secondary" />
+              </button>
+
+              {/* Dropdown Menu */}
+              {menuOpenId === id && (
+                <div className="absolute right-0 mt-2 w-40 bg-white rounded-md shadow-lg border border-gray-200 z-20">
+                  <div className="py-2">
+                    <button
+                      onClick={() => handleAction(id, "archive")}
+                      className="block w-full text-left px-4 py-2 text-sm text-teritary"
+                    >
+                      Archive
+                    </button>
+                    <button
+                      onClick={() => handleAction(id, "mark-read")}
+                      className="block w-full text-left px-4 py-2 text-sm text-teritary"
+                    >
+                      Mark as Read
+                    </button>
+                    <button
+                      onClick={() => handleAction(id, "pin")}
+                      className="block w-full text-left px-4 py-2 text-sm text-teritary"
+                    >
+                      Pin to top
+                    </button>
+                    <button
+                      onClick={() => handleAction(id, "delete")}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-600"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         )
       )}

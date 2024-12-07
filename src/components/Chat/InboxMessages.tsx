@@ -1,215 +1,34 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import MessageItem from "./MessageItem";
-import JP1 from "../../assets/Product.png";
-
-interface InboxMessagesProps {
-  setSelectedChat: any;
-  setSelectedIndex: any;
-}
 
 interface MessageAction {
   type: string;
   label: string;
 }
 
-interface Message {
+type ChatMessage = {
   id: number;
-  title: string;
-  subtitle: string;
-  image?: string;
+  message: string;
+  timestamp: string;
+  showBadge: boolean;
+  profileImage: string;
+  name: string;
   unreadCount: number;
   actions: MessageAction[];
+  messages: { text: string; sender: "user" | "seller" }[];
+};
+
+interface InboxMessagesProps {
+  setSelectedChat: any;
+  setSelectedIndex: any;
+  messages: ChatMessage[];
 }
 
 const InboxMessages: React.FC<InboxMessagesProps> = ({
   setSelectedChat,
   setSelectedIndex,
+  messages,
 }) => {
-  const [messages] = useState<Message[]>([
-    {
-      id: 1,
-      title: "Marble Queen Pothos",
-      subtitle: "Do you Have Questions?",
-      image: JP1,
-      unreadCount: 3,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Snake Plant",
-      subtitle: "Care Tips Inside!",
-      image: JP1,
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 3,
-      title: "Fiddle Leaf Fig",
-      subtitle: "Brighten Your Room",
-      image: JP1,
-      unreadCount: 5,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 4,
-      title: "Monstera Deliciosa",
-      subtitle: "Let it Shine!",
-      image: JP1,
-      unreadCount: 2,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 5,
-      title: "Peace Lily",
-      subtitle: "Low Light, No Problem",
-      image: JP1,
-      unreadCount: 1,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 6,
-      title: "ZZ Plant",
-      subtitle: "Perfect for Beginners",
-      image: JP1,
-      unreadCount: 4,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 7,
-      title: "Golden Pothos",
-      subtitle: "Vibrant and Easy",
-      image: JP1,
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 8,
-      title: "Calathea Medallion",
-      subtitle: "Beauty in Patterns",
-      image: JP1,
-      unreadCount: 3,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 9,
-      title: "Spider Plant",
-      subtitle: "Classic Indoor Plant",
-      image: JP1,
-      unreadCount: 6,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 10,
-      title: "Philodendron Brasil",
-      subtitle: "Colorful and Bold",
-      image: JP1,
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 11,
-      title: "Chinese Money Plant",
-      subtitle: "Unique and Stylish",
-      image: JP1,
-      unreadCount: 2,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 12,
-      title: "Jade Plant",
-      subtitle: "Good Luck Charm",
-      image: JP1,
-      unreadCount: 1,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 13,
-      title: "Aloe Vera",
-      subtitle: "Medicinal and Hardy",
-      image: JP1,
-      unreadCount: 5,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-    {
-      id: 14,
-      title: "Pilea Peperomioides",
-      subtitle: "Quirky and Fun",
-      image: JP1,
-      unreadCount: 4,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-    },
-  ]);
-
   const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
   const [filter, setFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -235,17 +54,22 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
     setMenuOpenId(null); // Close the menu after action
   };
 
-  const filteredMessages = messages.filter((message) => {
-    if (filter === "all") return true;
-    // Example filtering logic (customize as per your needs)
-    if (filter === "buying") return message.title.toLowerCase().includes("buy");
-    if (filter === "selling")
-      return message.title.toLowerCase().includes("sell");
-    return true;
-  });
+  const filteredMessages = useMemo(() => {
+    let filtered = messages;
+    if (filter !== "all") {
+      filtered = messages.filter((message) =>
+        filter === "buying"
+          ? message.name.toLowerCase().includes("buy")
+          : message.name.toLowerCase().includes("sell")
+      );
+    }
+    return filtered.filter((message) =>
+      message.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [filter, searchQuery, messages]);
 
   const searchedMessages = filteredMessages.filter((message) =>
-    message.title.toLowerCase().includes(searchQuery.toLowerCase())
+    message.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (

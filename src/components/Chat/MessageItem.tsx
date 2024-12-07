@@ -6,17 +6,20 @@ interface MessageAction {
   label: string;
 }
 
-interface Message {
+type ChatMessage = {
   id: number;
-  title: string;
-  subtitle: string;
-  image?: string;
+  message: string;
+  timestamp: string;
+  showBadge: boolean;
+  profileImage: string;
+  name: string;
   unreadCount: number;
   actions: MessageAction[];
-}
+  messages: { text: string; sender: "user" | "seller" }[];
+};
 
 interface MessageItemProps {
-  message: Message;
+  message: ChatMessage;
   isMenuOpen: boolean;
   onMenuToggle: (messageId: number) => void;
   onAction: (messageId: number, actionType: string) => void;
@@ -32,22 +35,22 @@ const MessageItem: React.FC<MessageItemProps> = ({
     {/* Image */}
     <div className="flex-shrink-0 mr-4">
       <img
-        src={message.image || "/api/placeholder/48/48"}
-        alt={message.title}
-        className="w-12 h-12 rounded-lg object-cover"
+        src={message.profileImage || "/api/placeholder/48/48"}
+        alt={message.name}
+        className="w-12 h-12 rounded-full object-cover"
       />
     </div>
     {/* Message Content */}
     <div className="flex-1 min-w-0">
       <div className="flex items-center">
-        <h3 className="text-sm font-medium text-secondary">{message.title}</h3>
+        <h3 className="text-sm font-medium text-secondary">{message.name}</h3>
         {message.unreadCount > 0 && (
           <span className="ml-2 bg-premiumgreen text-primary text-xs font-medium px-2 py-0.5 rounded-full">
             {message.unreadCount}
           </span>
         )}
       </div>
-      <p className="text-sm text-gray-500 truncate">{message.subtitle}</p>
+      <p className="text-sm text-gray-500 truncate">{message.message}</p>
     </div>
     {/* Action Menu */}
     <div className="relative">
