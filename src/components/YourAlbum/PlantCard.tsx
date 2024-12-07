@@ -68,7 +68,7 @@ const PlantCard: React.FC<ProductCardProps> = ({
     <div className="relative w-full max-w-96 rounded-lg overflow-hidden bg-white">
       <div className="relative">
         <div
-          className="relative h-72 w-full overflow-hidden"
+          className="relative h-72 cursor-pointer w-full overflow-hidden"
           onClick={() => {
             setSplitCards(true);
             setCardName(title);
@@ -113,7 +113,7 @@ const PlantCard: React.FC<ProductCardProps> = ({
       </div>
 
       <h3
-        className="text-xl font-semibold mt-4 mb-4 w-72 truncate"
+        className="text-xl font-semibold cursor-pointer mt-4 mb-4 w-72 truncate"
         onClick={() => setSplitCards(true)}
       >
         {title}
