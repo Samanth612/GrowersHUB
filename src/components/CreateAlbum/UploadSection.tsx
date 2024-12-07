@@ -116,7 +116,7 @@ const MediaUpload: React.FC = () => {
               </div>
               <button
                 onClick={() => document.getElementById("fileInput")?.click()}
-                className="text-green-600 hover:underline"
+                className="text-green-600"
               >
                 Click here
               </button>
