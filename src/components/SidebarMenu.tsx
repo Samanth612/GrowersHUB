@@ -2,7 +2,7 @@ import React from "react";
 import { X } from "lucide-react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { LOGIN } from "../Utilities/constantLinks";
+import { CREATEALBUM, LOGIN } from "../Utilities/constantLinks";
 
 interface SidebarMenuProps {
   isOpen: boolean;
@@ -52,6 +52,8 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
           onClick={() => {
             if (!AuthReducer) {
               navigate(LOGIN);
+            } else {
+              navigate(CREATEALBUM);
             }
           }}
         >

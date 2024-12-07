@@ -17,7 +17,7 @@ const CreateAlbum: React.FC<CreateAlbumProps> = ({
 
   return (
     <div className="max-w-full mx-auto bg-white">
-      <div className="flex items-center justify-between py-3 px-12 border-b shadow-inner">
+      <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-12 border-b shadow-inner">
         <h1 className="text-xl font-semibold">{albumName} Album</h1>
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center">

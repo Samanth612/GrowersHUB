@@ -40,7 +40,7 @@ const YourAlbum: React.FC = () => {
         </>
       ) : (
         <>
-          <div className="flex items-center justify-between py-3 px-12 border-b shadow-inner">
+          <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-12 border-b shadow-inner">
             <div className="flex items-center gap-3">
               <h1 className="text-xl font-semibold">Your Album</h1>
               <span className="bg-gray-100 px-2 py-1 font-semibold rounded-full text-sm">

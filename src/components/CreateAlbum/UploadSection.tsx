@@ -50,7 +50,7 @@ const MediaUpload: React.FC = () => {
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
-      <div className="flex items-center justify-between py-3 px-12 border-b shadow-inner">
+      <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-12 border-b shadow-inner">
         <h1 className="text-xl font-semibold">Create Album</h1>
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center">
@@ -75,9 +75,9 @@ const MediaUpload: React.FC = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-between pl-12 gap-8">
+      <div className="flex justify-between px-6 sm:pl-12 gap-8">
         {/* Left Section */}
-        <div className="w-[50%] py-6">
+        <div className="w-full sm:w-[50%] py-6">
           <div className="mb-6 flex items-center">
             <div className="w-12 h-12 rounded-full overflow-hidden">
               <img
@@ -182,7 +182,7 @@ const MediaUpload: React.FC = () => {
           </div>
 
           {/* Post Button */}
-          <button className="w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500">
+          <button className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500">
             Post
           </button>
         </div>
