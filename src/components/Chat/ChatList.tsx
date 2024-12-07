@@ -60,15 +60,7 @@ const ChatList: React.FC<ChatListProps> = ({
         ))}
       </div>
       {chats.map(
-        ({
-          id,
-          message,
-          timestamp,
-          showBadge,
-          profileImage,
-          name,
-          unreadCount,
-        }) => (
+        ({ id, message, timestamp, profileImage, name, unreadCount }) => (
           <div
             key={id}
             className={`flex items-start space-x-3 p-3 rounded-[10px] cursor-pointer ${
@@ -87,7 +79,7 @@ const ChatList: React.FC<ChatListProps> = ({
                   <span className="font-medium text-sm whitespace-nowrap">
                     {name}
                   </span>
-                  {showBadge && (
+                  {unreadCount > 0 && (
                     <span className="bg-premiumgreen text-primary text-xs font-medium px-2 py-0.5 rounded-full">
                       {unreadCount}
                     </span>

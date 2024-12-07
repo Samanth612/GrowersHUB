@@ -46,53 +46,56 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   }, [location.pathname]);
 
   return (
-    <div className="flex bg-white">
-      {/* Sidebar */}
-      <aside className="w-[22%] min-h-[88vh] bg-white shadow-inner border-r">
-        <nav className="p-4">
-          <ul className="space-y-4">
-            {menuItems.map((item, index) => (
-              <li key={index}>
-                <a
-                  onClick={(e) => {
-                    e.preventDefault();
-                    navigate(`/${item.route}`);
-                  }}
-                  className={`flex items-center cursor-pointer gap-3 p-4 rounded-lg transition-colors duration-200 
+    <>
+      <div className="bg-white hidden xll:flex">
+        {/* Sidebar */}
+        <aside className="w-[22%] min-h-[88vh] bg-white shadow-inner border-r">
+          <nav className="p-4">
+            <ul className="space-y-4">
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/${item.route}`);
+                    }}
+                    className={`flex items-center cursor-pointer gap-3 p-4 rounded-lg transition-colors duration-200 
                     ${
                       location.pathname.includes(item.route)
                         ? "bg-[#6FEE8F21] text-primary font-semibold"
                         : "hover:bg-[#6FEE8F21] text-teritary"
                     }
                   `}
-                >
-                  <span className={`${index === 0 && "-translate-x-0.5"}`}>
-                    <Icons
-                      variant={item.icon}
-                      strokeColor={
-                        selectedIndex === index ? "#00701C" : "#808080"
-                      }
-                    />
-                  </span>
-                  <span
-                    className={`${index === 1 ? "ml-3" : "ml-2"} ${
-                      location.pathname.includes(item.route)
-                        ? "text-primary font-bold"
-                        : "font-medium"
-                    }`}
                   >
-                    {item.title}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </aside>
+                    <span className={`${index === 0 && "-translate-x-0.5"}`}>
+                      <Icons
+                        variant={item.icon}
+                        strokeColor={
+                          selectedIndex === index ? "#00701C" : "#808080"
+                        }
+                      />
+                    </span>
+                    <span
+                      className={`${index === 1 ? "ml-3" : "ml-2"} ${
+                        location.pathname.includes(item.route)
+                          ? "text-primary font-bold"
+                          : "font-medium"
+                      }`}
+                    >
+                      {item.title}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
 
-      {/* Main Content */}
-      <main className="w-full">{children}</main>
-    </div>
+        {/* Main Content */}
+        <main className="w-full">{children}</main>
+      </div>
+      <main className="w-full xll:hidden">{children}</main>
+    </>
   );
 };
 

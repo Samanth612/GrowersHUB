@@ -37,8 +37,8 @@ const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
     [selectedChatId, chatMessages]
   );
 
-  const unreadCount = useMemo(
-    () => chatMessages.filter((chat) => chat.showBadge).length,
+  const totalUnreadCount = useMemo(
+    () => chatMessages.reduce((total, chat) => total + chat.unreadCount, 0),
     [chatMessages]
   );
 
@@ -50,7 +50,7 @@ const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
           <div className="flex items-center justify-center gap-3">
             <h1 className="text-xl font-semibold">Inbox</h1>
             <span className="bg-gray-100 px-2 py-1 font-semibold rounded text-sm">
-              {unreadCount}
+              {totalUnreadCount}
             </span>
           </div>
         </div>

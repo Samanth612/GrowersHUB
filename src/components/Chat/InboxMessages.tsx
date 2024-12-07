@@ -72,15 +72,21 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
     message.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Calculate total unread count
+  const totalUnreadCount = messages.reduce(
+    (total, message) => total + message.unreadCount,
+    0
+  );
+
   return (
     <div className="max-w-full mx-auto bg-white">
       {/* Header */}
-      <div className="flex items-center justify-between py-4 px-12 border-b shadow-inner">
+      <div className="flex flex-wrap items-center justify-between py-4 px-6 sm:px-12 border-b shadow-inner gap-3">
         <div className="flex items-center gap-10">
           <div className="flex">
             <h1 className="text-xl text-secondary font-semibold">Inbox</h1>
             <span className="ml-2 bg-premiumgray text-secondary text-sm px-2 py-0.5 rounded-full">
-              {messages.length}
+              {totalUnreadCount} {/* Show total unread count */}
             </span>
           </div>
           {/* Search Bar */}
@@ -89,7 +95,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search messages"
-            className="w-[320px] px-4 py-3 bg-premiumgray rounded-lg placeholder:text-teritary focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full max-w-[250px] sm:min-w-[320px]  px-4 py-3 bg-premiumgray rounded-lg placeholder:text-teritary focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
 
@@ -112,7 +118,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
       </div>
 
       {/* Message List */}
-      <div className="px-8 max-h-[75vh] h-full overflow-y-auto">
+      <div className="px-4 sm:px-8 max-h-[75vh] h-full overflow-y-auto">
         {searchedMessages.map((message, index) => (
           <div
             onClick={() => {

@@ -94,6 +94,132 @@ const DashboardLayout: React.FC = () => {
         },
       ],
     },
+    {
+      id: 4,
+      message: "New plant available for purchase!",
+      timestamp: "30m",
+      showBadge: false,
+      profileImage: JP1,
+      name: "Aloe Vera",
+      unreadCount: 2,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        { text: "Hello! Is this plant easy to care for?", sender: "user" },
+        { text: "Yes, it's very low maintenance.", sender: "seller" },
+      ],
+    },
+    {
+      id: 5,
+      message: "Order shipped, tracking info",
+      timestamp: "35m",
+      showBadge: true,
+      profileImage: JP1,
+      name: "Spider Plant",
+      unreadCount: 0,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        {
+          text: "My order shipped? Could you share the tracking number?",
+          sender: "user",
+        },
+        {
+          text: "Your order is on the way! Tracking number: 123456789",
+          sender: "seller",
+        },
+      ],
+    },
+    {
+      id: 6,
+      message: "Promo code available now!",
+      timestamp: "40m",
+      showBadge: false,
+      profileImage: JP1,
+      name: "Peace Lily",
+      unreadCount: 1,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        { text: "Is there a discount on plants?", sender: "user" },
+        { text: "Yes, use code PEACE20 for 20% off!", sender: "seller" },
+      ],
+    },
+    {
+      id: 7,
+      message: "Looking for new arrivals?",
+      timestamp: "45m",
+      showBadge: false,
+      profileImage: JP1,
+      name: "ZZ Plant",
+      unreadCount: 0,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        { text: "Do you have any new plant arrivals?", sender: "user" },
+        { text: "Yes! Our new shipment just arrived today.", sender: "seller" },
+      ],
+    },
+    {
+      id: 8,
+      message: "Customer support is here!",
+      timestamp: "50m",
+      showBadge: true,
+      profileImage: JP1,
+      name: "Cactus",
+      unreadCount: 0,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        { text: "I need help with my order.", sender: "user" },
+        { text: "How can we assist you today?", sender: "seller" },
+      ],
+    },
+    {
+      id: 9,
+      message: "Plant care tips just for you!",
+      timestamp: "55m",
+      showBadge: false,
+      profileImage: JP1,
+      name: "Bird of Paradise",
+      unreadCount: 1,
+      actions: [
+        { type: "archive", label: "Archive" },
+        { type: "mark-read", label: "Mark as Read" },
+        { type: "pin", label: "Pin to top" },
+        { type: "delete", label: "Delete" },
+      ],
+      messages: [
+        {
+          text: "How often should I water my Bird of Paradise?",
+          sender: "user",
+        },
+        {
+          text: "Water it once a week. Make sure the soil is dry before watering.",
+          sender: "seller",
+        },
+      ],
+    },
   ];
 
   return (
