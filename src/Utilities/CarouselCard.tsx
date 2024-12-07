@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Share2, Heart, MapPin } from "lucide-react";
-import JP1 from "../assets/JP1.jpg";
 import Icons from "./Icons";
 import SG1 from "../assets/SG1.jpg";
 
@@ -11,6 +10,9 @@ interface ProductCardProps {
   unitInfo?: string;
   stock?: string;
   image: string;
+  products: { image: string }[];
+  name: string;
+  setSelectedAlbum: any;
 }
 
 const CarouselCard: React.FC<ProductCardProps> = ({
@@ -18,36 +20,14 @@ const CarouselCard: React.FC<ProductCardProps> = ({
   location,
   price,
   unitInfo,
+  products,
+  name,
+  setSelectedAlbum,
 }) => {
-  const products = [
-    {
-      title: "Crassula small leaf plant",
-      image: JP1,
-    },
-    {
-      title: "Lemon",
-      image: JP1,
-    },
-    {
-      title: "Mint",
-      image: JP1,
-    },
-    {
-      title: "Betel leaf plants",
-      image: JP1,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      image: JP1,
-    },
-  ];
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
-  const totalSlides = products.length;
+  const [isManualChange, setIsManualChange] = useState(false);
+  const [clickedItems, setClickedItems] = useState([]);
+  const totalSlides = products?.length;
 
   // Navigate to the next slide
   const nextSlide = () => {
@@ -60,6 +40,21 @@ const CarouselCard: React.FC<ProductCardProps> = ({
     setIsManualChange(true); // Mark as manual change
   };
 
+  const handleImageClick = () => {
+    const productData: any = [
+      {
+        title,
+        location,
+        price,
+        unitInfo,
+        products,
+        name,
+      },
+    ];
+
+    setClickedItems(productData);
+  };
+
   useEffect(() => {
     if (isManualChange) {
       const timeoutId = setTimeout(() => setIsManualChange(false), 5000);
@@ -69,6 +64,11 @@ const CarouselCard: React.FC<ProductCardProps> = ({
     const intervalId = setInterval(nextSlide, 5000); // Auto-scroll interval
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
+
+  useEffect(() => {
+    setSelectedAlbum(clickedItems);
+  }, [clickedItems]);
+
   return (
     <div className="relative w-full max-w-96 rounded-lg overflow-hidden bg-white shadow-md">
       <div className="relative">
@@ -84,8 +84,9 @@ const CarouselCard: React.FC<ProductCardProps> = ({
               <div key={index} className="w-full flex-shrink-0">
                 <img
                   src={product?.image}
-                  alt={product?.title}
-                  className="w-full h-full object-cover rounded-lg"
+                  alt={"Gardener"}
+                  className="w-full h-full cursor-pointer object-cover rounded-lg"
+                  onClick={handleImageClick}
                 />
               </div>
             ))}
@@ -136,17 +137,18 @@ const CarouselCard: React.FC<ProductCardProps> = ({
         </div>
 
         {/* Price Badge */}
-
-        <div className="flex items-center gap-1 mt-2">
-          <img
-            src={SG1}
-            alt={"Gardener"}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-          <div className="flex gap-0.5">
-            <span className="text-xl font-medium whitespace-nowrap">
-              {"Joanna Wellick"}
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          <div className="flex items-center">
+            <img
+              src={SG1}
+              alt={"Gardener"}
+              className="w-8 h-8 rounded-full object-cover mr-1"
+            />
+            <span className="text-xl w-[130px] truncate font-medium whitespace-nowrap">
+              {name || "Joanna Wellick"}
             </span>
+          </div>
+          <div>
             <div className="flex bg-premiumgreen px-2 py-1 rounded-lg ml-2">
               <div className="flex items-center gap-2 whitespace-nowrap">
                 {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}

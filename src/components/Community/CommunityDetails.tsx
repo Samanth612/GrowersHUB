@@ -6,7 +6,13 @@ import JP4 from "../../assets/JP4.jpg";
 import CarouselCard from "../../Utilities/CarouselCard";
 import Pagination from "../../Utilities/Pagination";
 
-const CommunityDetails: React.FC = () => {
+interface CommunityDetailsProps {
+  setSelectedAlbum: any;
+}
+
+const CommunityDetails: React.FC<CommunityDetailsProps> = ({
+  setSelectedAlbum,
+}) => {
   const products = [
     {
       title: "Crassula small leaf plant",
@@ -15,18 +21,45 @@ const CommunityDetails: React.FC = () => {
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Lemon",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Mint",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Betel leaf plants",
@@ -35,6 +68,15 @@ const CommunityDetails: React.FC = () => {
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Crassula small leaf plant (Repeat)",
@@ -43,24 +85,60 @@ const CommunityDetails: React.FC = () => {
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Lemon (Repeat)",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Lemon",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Mint",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Betel leaf plants",
@@ -69,6 +147,15 @@ const CommunityDetails: React.FC = () => {
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Crassula small leaf plant (Repeat)",
@@ -77,12 +164,30 @@ const CommunityDetails: React.FC = () => {
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
     {
       title: "Lemon (Repeat)",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
     },
   ];
 
@@ -116,7 +221,10 @@ const CommunityDetails: React.FC = () => {
                 className="flex items-center justify-center tabsm:justify-start sm:items-start"
                 key={index}
               >
-                <CarouselCard {...product} />
+                <CarouselCard
+                  {...product}
+                  setSelectedAlbum={setSelectedAlbum}
+                />
               </div>
             ))}
           </div>
