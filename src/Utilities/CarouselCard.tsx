@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Share2, Heart, MapPin } from "lucide-react";
 import Icons from "./Icons";
 import SG1 from "../assets/SG1.jpg";
+import { useNavigate } from "react-router-dom";
+import { VIEWSELLERSGARDEN } from "./constantLinks";
 
 interface ProductCardProps {
   title: string;
@@ -28,6 +30,7 @@ const CarouselCard: React.FC<ProductCardProps> = ({
   const [isManualChange, setIsManualChange] = useState(false);
   const [clickedItems, setClickedItems] = useState([]);
   const totalSlides = products?.length;
+  const navigate = useNavigate();
 
   // Navigate to the next slide
   const nextSlide = () => {
@@ -138,7 +141,10 @@ const CarouselCard: React.FC<ProductCardProps> = ({
 
         {/* Price Badge */}
         <div className="flex flex-wrap items-center gap-2 mt-2">
-          <div className="flex items-center">
+          <div
+            className="flex items-center"
+            onClick={() => navigate(VIEWSELLERSGARDEN)}
+          >
             <img
               src={SG1}
               alt={"Gardener"}

@@ -3,6 +3,8 @@ import { Heart, MapPin } from "lucide-react";
 import JP1 from "../assets/JP1.jpg";
 import SG1 from "../assets/SG1.jpg";
 import Icons from "../Utilities/Icons";
+import { useNavigate } from "react-router-dom";
+import { VIEWSELLERSGARDEN } from "../Utilities/constantLinks";
 
 interface ProductCardProps {
   title: string;
@@ -47,7 +49,8 @@ const GardenersCard: React.FC<ProductCardProps> = ({
   ];
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
-  const totalSlides = products.length;
+  const totalSlides = products?.length;
+  const navigate = useNavigate();
 
   // Navigate to the next slide
   const nextSlide = () => {
@@ -135,16 +138,21 @@ const GardenersCard: React.FC<ProductCardProps> = ({
 
         {/* Price Badge */}
 
-        <div className="flex items-center gap-1 mt-2">
-          <img
-            src={SG1}
-            alt={"Gardener"}
-            className="w-8 h-8 rounded-full object-cover"
-          />
-          <div className="flex gap-0.5">
-            <span className="text-xl font-medium whitespace-nowrap">
+        <div className="flex flex-wrap items-center gap-2 mt-2">
+          <div
+            className="flex items-center"
+            onClick={() => navigate(VIEWSELLERSGARDEN)}
+          >
+            <img
+              src={SG1}
+              alt={"Gardener"}
+              className="w-8 h-8 rounded-full object-cover mr-1"
+            />
+            <span className="text-xl w-[130px] truncate font-medium whitespace-nowrap">
               {"Joanna Wellick"}
             </span>
+          </div>
+          <div>
             <div className="flex bg-premiumgreen px-2 py-1 rounded-lg ml-2">
               <div className="flex items-center gap-2 whitespace-nowrap">
                 {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}

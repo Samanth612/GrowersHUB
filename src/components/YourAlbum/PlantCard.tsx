@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import JP1 from "../../assets/JP1.jpg";
 import Icons from "../../Utilities/Icons";
+import { CREATEALBUM } from "../../Utilities/constantLinks";
+import { useNavigate } from "react-router-dom";
 
 interface ProductCardProps {
   title: string;
@@ -39,6 +41,7 @@ const PlantCard: React.FC<ProductCardProps> = ({
       image: JP1,
     },
   ];
+  const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
   const totalSlides = products.length;
@@ -119,7 +122,10 @@ const PlantCard: React.FC<ProductCardProps> = ({
         {title}
       </h3>
       <div className="flex gap-4">
-        <button className="px-6 py-2 w-52 font-medium border border-secondary rounded-lg bg-white text-secondary text-lg">
+        <button
+          className="px-6 py-2 w-52 font-medium border border-secondary rounded-lg bg-white text-secondary text-lg"
+          onClick={() => navigate(CREATEALBUM)}
+        >
           Edit
         </button>
         <button className="px-6 py-2 w-52 font-medium border rounded-lg bg-primary hover:bg-green-500 text-white text-lg">
