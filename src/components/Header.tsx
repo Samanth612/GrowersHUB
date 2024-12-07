@@ -26,16 +26,16 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
     <div>
       <header className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between px-5 lg:px-11 py-4 bg-white">
         <div className="flex items-center gap-16">
-          <div
+          <img
+            src={logo}
+            alt="Logo"
+            className="h-14 cursor-pointer -ml-2.5"
             onClick={() => {
               navigate("/");
             }}
-            className="cursor-pointer flex-shrink-0"
-          >
-            <img src={logo} alt="Logo" className="h-16 -ml-2.5" />
-          </div>
+          />
           <nav className="hidden xl:flex">
-            <ul className="flex items-center gap-14">
+            <ul className="flex items-center gap-14 mt-2.5">
               {navItems.map((item) => (
                 <li key={item}>
                   <a
