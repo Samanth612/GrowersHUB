@@ -140,7 +140,7 @@ const GardenersCard: React.FC<ProductCardProps> = ({
 
         <div className="flex flex-wrap items-center gap-2 mt-2">
           <div
-            className="flex items-center"
+            className="flex items-center cursor-pointer"
             onClick={() => navigate(VIEWSELLERSGARDEN)}
           >
             <img
