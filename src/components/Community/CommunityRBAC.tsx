@@ -9,7 +9,7 @@ const CommunityRBAC: React.FC = () => {
   return (
     <div className="px-6 lg:px-12 pt-12">
       <div className="rounded-[30px] bg-premiumgreen p-10">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap gap-3 items-center justify-between">
           {!AuthReducer ? (
             <div>
               <h1 className="text-4xl font-bold text-gray-900 mb-4">

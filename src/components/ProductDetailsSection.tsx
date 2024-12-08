@@ -54,11 +54,11 @@ const ProductDetailsSection: React.FC<CommunityDetailsProps> = ({
   return (
     <div className="px-6 lg:px-12 py-12 bg-white">
       <button
-        className="flex items-start text-secondary mb-12 gap-3"
+        className="flex items-start text-secondary mb-6 sm:mb-12 gap-3"
         onClick={() => setSelectedAlbum([])}
       >
         <ArrowLeft className="w-5 h-5 mr-1 mt-1" strokeWidth={1.5} />
-        <div className="flex items-start gap-6">
+        <div className="flex flex-wrap items-start gap-6">
           <div className="flex flex-col items-start gap-1">
             <div className="text-xl font-semibold">
               {selectedAlbum[0]?.title || "Crassula small leaf plant"}
@@ -70,7 +70,7 @@ const ProductDetailsSection: React.FC<CommunityDetailsProps> = ({
               </span>
             </div>
           </div>
-          <div className="flex items-center gap-2 bg-premiumgray px-3 py-2 rounded-lg">
+          <div className="hidden items-center gap-2 bg-premiumgray px-3 py-2 rounded-lg sm:flex">
             <Icons variant="PriceBadge" />
             <span className="text-xl font-medium">
               ${selectedAlbum[0]?.price || 122}
@@ -84,7 +84,7 @@ const ProductDetailsSection: React.FC<CommunityDetailsProps> = ({
         </div>
       </button>
       <div className="flex flex-col">
-        <div className="mb-12 flex items-center justify-between">
+        <div className="mb-12 flex flex-wrap gap-4 items-center justify-between">
           <div className="flex">
             <div className="w-12 h-12 rounded-full overflow-hidden">
               <img
