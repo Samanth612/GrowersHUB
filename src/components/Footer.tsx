@@ -24,13 +24,13 @@ const Footer: React.FC = () => {
         {/* Navigation Links */}
         <div className="grid grid-cols-2 md:grid-cols-5 order-2 lg:order-1 items-center justify-center gap-8">
           <a
-            className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
             onClick={() => navigate(PRODUCTS)}
           >
             Products
           </a>
           <a
-            className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
             onClick={() => navigate(COMMUNITY)}
           >
             Community
@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
             About
           </a>
           <a
-            className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
             onClick={() => navigate(HELP)}
           >
             Help
