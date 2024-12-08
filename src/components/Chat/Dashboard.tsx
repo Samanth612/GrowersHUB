@@ -99,7 +99,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
         {/* Main Content */}
         <main className="w-full">{children}</main>
       </div>
-      <main className="w-full min-h-screen pb-[72px] overflow-y-auto xll:hidden">
+      <main className="w-full min-h-screen pb-20 overflow-y-auto xll:hidden">
         {children}
       </main>
       <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-premiumgray xll:hidden">
