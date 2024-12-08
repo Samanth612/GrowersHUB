@@ -3,6 +3,7 @@ import { ArrowLeft, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
 import PreviewCarousel from "./PreviewCarousel";
 import { useNavigate } from "react-router-dom";
+import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
 
 interface UploadedFile {
   file: File;
@@ -94,8 +95,8 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           <div className="flex items-center gap-1 font-semibold">
             <span className="text-[16px]">Get Unlimited albums & more.</span>
             <a
-              href="#"
               className="text-[16px] text-primary font-medium hover:text-green-500"
+              onClick={() => navigate(SUBSCRIPTIONS)}
             >
               Subscribe
             </a>

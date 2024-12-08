@@ -106,7 +106,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
       <main className="w-full min-h-screen pb-20 overflow-y-auto xll:hidden">
         {children}
       </main>
-      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-premiumgray xll:hidden">
+      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-white shadow-lg xll:hidden">
         <nav>
           <ul className="flex items-center gap-8">
             {menuItems.map((item, index) => (

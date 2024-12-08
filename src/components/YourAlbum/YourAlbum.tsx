@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Icons from "../../Utilities/Icons";
 import SplitGrid from "./SplitGrid";
 import { useNavigate } from "react-router-dom";
+import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
 
 interface YourAlbumProps {
   setuploadButtonClicked: any;
@@ -92,8 +93,8 @@ const YourAlbum: React.FC<YourAlbumProps> = ({ setuploadButtonClicked }) => {
                   Get Unlimited albums & more.
                 </span>
                 <a
-                  href="#"
                   className="text-[16px] text-primary font-medium hover:text-green-500"
+                  onClick={() => navigate(SUBSCRIPTIONS)}
                 >
                   Subscribe
                 </a>

@@ -2,6 +2,7 @@ import React from "react";
 import Icons from "../../Utilities/Icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
+import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
 
 interface CreateAlbumProps {
   setuploadButtonClicked: any;
@@ -55,8 +56,8 @@ const CreateAlbum: React.FC<CreateAlbumProps> = ({
           <div className="flex items-center gap-1 font-semibold">
             <span className="text-[16px]">Get Unlimited albums & more.</span>
             <a
-              href="#"
               className="text-[16px] text-primary font-medium hover:text-green-500"
+              onClick={() => navigate(SUBSCRIPTIONS)}
             >
               Subscribe
             </a>
