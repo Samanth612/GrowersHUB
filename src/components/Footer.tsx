@@ -2,7 +2,13 @@ import React from "react";
 import { FaFacebookF, FaTwitter, FaInstagram } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import logo from "../assets/FooterLogo.png";
-import { ABOUTUS, HELP, PRIVACYPOLICY } from "../Utilities/constantLinks";
+import {
+  ABOUTUS,
+  COMMUNITY,
+  HELP,
+  PRIVACYPOLICY,
+  PRODUCTS,
+} from "../Utilities/constantLinks";
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
@@ -18,14 +24,14 @@ const Footer: React.FC = () => {
         {/* Navigation Links */}
         <div className="grid grid-cols-2 md:grid-cols-5 order-2 lg:order-1 items-center justify-center gap-8">
           <a
-            href="#"
             className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            onClick={() => navigate(PRODUCTS)}
           >
             Products
           </a>
           <a
-            href="#"
             className="text-secondary hover:text-gray-900 flex items-center justify-center"
+            onClick={() => navigate(COMMUNITY)}
           >
             Community
           </a>

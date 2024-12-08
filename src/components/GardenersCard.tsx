@@ -157,7 +157,7 @@ const GardenersCard: React.FC<ProductCardProps> = ({
             </span>
           </div>
           <div>
-            <div className="flex bg-premiumgreen px-2 py-1 rounded-lg ml-2">
+            <div className="flex bg-premiumgreen px-2 py-1 rounded-lg">
               <div className="flex items-center gap-2 whitespace-nowrap">
                 {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}
                 <Icons variant="SuperGrow" />

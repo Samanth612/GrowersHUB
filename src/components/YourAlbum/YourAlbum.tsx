@@ -3,8 +3,14 @@ import PlantGrid from "./PlantGrid";
 import { ArrowLeft } from "lucide-react";
 import Icons from "../../Utilities/Icons";
 import SplitGrid from "./SplitGrid";
+import { useNavigate } from "react-router-dom";
 
-const YourAlbum: React.FC = () => {
+interface YourAlbumProps {
+  setuploadButtonClicked: any;
+}
+
+const YourAlbum: React.FC<YourAlbumProps> = ({ setuploadButtonClicked }) => {
+  const navigate = useNavigate();
   const [splitCards, setSplitCards] = useState(false);
   const [cardName, setCardName] = useState("");
 
@@ -40,8 +46,28 @@ const YourAlbum: React.FC = () => {
         </>
       ) : (
         <>
-          <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-12 border-b shadow-inner">
-            <div className="flex items-center gap-3">
+          <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-6 lg:px-12 border-b shadow-inner">
+            <div className="flex flex-col gap-3 sm:hidden">
+              <button
+                className="flex items-center text-secondary mb-4 gap-3 xll:hidden"
+                onClick={() => setuploadButtonClicked(false)}
+              >
+                <ArrowLeft className="w-5 h-5 mr-1" />
+                <span className="font-semibold">Back</span>
+              </button>
+              <h1 className="text-xl font-semibold">Your Album</h1>
+              <span className="bg-gray-100 px-2 py-1 font-semibold rounded-full text-sm">
+                3
+              </span>
+            </div>
+            <div className="hidden items-center gap-5 sm:flex">
+              <button
+                className="flex items-center text-secondary gap-3 xll:hidden"
+                onClick={() => setuploadButtonClicked(false)}
+              >
+                <ArrowLeft className="w-5 h-5 mr-1" />
+                <span className="font-semibold">Back</span>
+              </button>
               <h1 className="text-xl font-semibold">Your Album</h1>
               <span className="bg-gray-100 px-2 py-1 font-semibold rounded-full text-sm">
                 3

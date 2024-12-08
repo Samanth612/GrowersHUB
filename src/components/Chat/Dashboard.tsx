@@ -13,27 +13,30 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const menuItems = [
     {
       title: "Inbox",
+      shortTitle: "Inbox",
       icon: "Inbox",
       route: "inbox",
     },
     {
       title: "Create Album",
+      shortTitle: "Create",
       icon: "CreateAlbum",
       route: "createalbum",
     },
     {
       title: "Your Album",
+      shortTitle: "Album",
       icon: "YourAlbum",
       route: "youralbum",
     },
     {
       title: "Subscriptions",
+      shortTitle: "Subscriptions",
       icon: "Subscriptions",
       route: "subscriptions",
     },
   ];
 
-  // Determine selected index based on location
   const [selectedIndex, setSelectedIndex] = useState<number>(
     menuItems.findIndex((item) => location.pathname.includes(item.route))
   );
@@ -82,7 +85,9 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                           : "font-medium"
                       }`}
                     >
-                      {item.title}
+                      {["createalbum", "youralbum"].includes(item.route)
+                        ? item.shortTitle
+                        : item.title}
                     </span>
                   </a>
                 </li>
@@ -95,6 +100,49 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
         <main className="w-full">{children}</main>
       </div>
       <main className="w-full xll:hidden">{children}</main>
+      <div className="flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-premiumgray xll:hidden">
+        <nav>
+          <ul className="flex items-center gap-8">
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`/${item.route}`);
+                  }}
+                  className={`flex flex-col items-center cursor-pointer gap-3 p-2 rounded-lg transition-colors duration-200 
+                    ${
+                      location.pathname.includes(item.route)
+                        ? "bg-[#6FEE8F21] text-primary font-semibold"
+                        : "hover:bg-[#6FEE8F21] text-teritary"
+                    }
+                  `}
+                >
+                  <span className={`${index === 0 && "-translate-x-0.5"}`}>
+                    <Icons
+                      variant={item.icon}
+                      strokeColor={
+                        selectedIndex === index ? "#00701C" : "#808080"
+                      }
+                    />
+                  </span>
+                  <span
+                    className={`${
+                      location.pathname.includes(item.route)
+                        ? "text-primary font-bold"
+                        : "font-medium"
+                    } text-xs`}
+                  >
+                    {["createalbum", "youralbum"].includes(item.route)
+                      ? item.shortTitle
+                      : item.title}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
     </>
   );
 };

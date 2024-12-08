@@ -1,14 +1,22 @@
 import React, { useState, DragEvent, ChangeEvent } from "react";
-import { X } from "lucide-react";
+import { ArrowLeft, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
 import PreviewCarousel from "./PreviewCarousel";
+import { useNavigate } from "react-router-dom";
 
 interface UploadedFile {
   file: File;
   preview: string;
 }
 
-const MediaUpload: React.FC = () => {
+interface MediaUploadProps {
+  setuploadButtonClicked: any;
+}
+
+const MediaUpload: React.FC<MediaUploadProps> = ({
+  setuploadButtonClicked,
+}) => {
+  const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [albumName, setAlbumName] = useState<string>("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
@@ -50,8 +58,27 @@ const MediaUpload: React.FC = () => {
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
-      <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-12 border-b shadow-inner">
-        <h1 className="text-xl font-semibold">Create Album</h1>
+      <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-6 lg:px-12 border-b shadow-inner">
+        <div className="flex flex-col gap-3 sm:hidden">
+          <button
+            className="flex items-center text-secondary mb-4 gap-3 xll:hidden"
+            onClick={() => setuploadButtonClicked(false)}
+          >
+            <ArrowLeft className="w-5 h-5 mr-1" />
+            <span className="font-semibold">Back</span>
+          </button>
+          <h1 className="text-xl font-semibold">Create Album</h1>
+        </div>
+        <div className="hidden items-center gap-5 sm:flex">
+          <button
+            className="flex items-center text-secondary gap-3 xll:hidden"
+            onClick={() => setuploadButtonClicked(false)}
+          >
+            <ArrowLeft className="w-5 h-5 mr-1" />
+            <span className="font-semibold">Back</span>
+          </button>
+          <h1 className="text-xl font-semibold">Create Album</h1>
+        </div>
         <div className="flex flex-col items-start gap-2">
           <div className="flex items-center">
             <div className="w-60 h-2 bg-green-100 rounded">

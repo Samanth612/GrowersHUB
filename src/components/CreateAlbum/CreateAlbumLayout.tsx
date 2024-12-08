@@ -11,7 +11,7 @@ const CreateAlbumLayout: React.FC = () => {
       <Header />
       <Dashboard>
         {uploadButtonClicked ? (
-          <MediaUpload />
+          <MediaUpload setuploadButtonClicked={setuploadButtonClicked} />
         ) : (
           <CreateAlbum setuploadButtonClicked={setuploadButtonClicked} />
         )}

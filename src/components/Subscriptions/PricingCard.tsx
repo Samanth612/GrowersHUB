@@ -91,7 +91,7 @@ const PricingCard: React.FC<PricingCardProps> = ({
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
         >
-          <g clip-path="url(#clip0_543_20656)">
+          <g clipPath="url(#clip0_543_20656)">
             <rect
               x="0.238281"
               y="0.214844"
@@ -100,13 +100,13 @@ const PricingCard: React.FC<PricingCardProps> = ({
               rx="2.70696"
               fill="#F2F2F2"
             />
-            <g clip-path="url(#clip1_543_20656)">
+            <g clipPath="url(#clip1_543_20656)">
               <path
                 d="M4.58594 8.67357L7.52318 11.6108L13.3977 5.73633"
                 stroke="#AFAFAF"
-                stroke-width="1.35348"
-                stroke-linecap="round"
-                stroke-linejoin="round"
+                strokeWidth="1.35348"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               />
             </g>
           </g>
