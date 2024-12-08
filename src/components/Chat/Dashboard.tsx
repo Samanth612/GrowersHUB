@@ -48,6 +48,8 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
     setSelectedIndex(index);
   }, [location.pathname]);
 
+  console.log(window.innerWidth);
+
   return (
     <>
       <div className="bg-white hidden xll:flex">
@@ -85,7 +87,9 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                           : "font-medium"
                       }`}
                     >
-                      {["createalbum", "youralbum"].includes(item.route)
+                      {window.innerWidth >= 1180
+                        ? item.title
+                        : ["createalbum", "youralbum"].includes(item.route)
                         ? item.shortTitle
                         : item.title}
                     </span>
