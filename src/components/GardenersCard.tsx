@@ -13,6 +13,10 @@ interface ProductCardProps {
   unitInfo?: string;
   stock?: string;
   image: string;
+  profileImage: string;
+  products: { image: string }[];
+  name: string;
+  setSelectedAlbum: any;
 }
 
 const GardenersCard: React.FC<ProductCardProps> = ({
@@ -20,35 +24,14 @@ const GardenersCard: React.FC<ProductCardProps> = ({
   location,
   price,
   unitInfo,
+  products,
+  name,
+  profileImage,
+  setSelectedAlbum,
 }) => {
-  const products = [
-    {
-      title: "Crassula small leaf plant",
-      image: JP1,
-    },
-    {
-      title: "Lemon",
-      image: JP1,
-    },
-    {
-      title: "Mint",
-      image: JP1,
-    },
-    {
-      title: "Betel leaf plants",
-      image: JP1,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      image: JP1,
-    },
-  ];
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
+  const [clickedItems, setClickedItems] = useState([]);
   const totalSlides = products?.length;
   const navigate = useNavigate();
 
@@ -63,6 +46,22 @@ const GardenersCard: React.FC<ProductCardProps> = ({
     setIsManualChange(true); // Mark as manual change
   };
 
+  const handleImageClick = () => {
+    const productData: any = [
+      {
+        title,
+        location,
+        price,
+        unitInfo,
+        products,
+        profileImage,
+        name,
+      },
+    ];
+
+    setClickedItems(productData);
+  };
+
   useEffect(() => {
     if (isManualChange) {
       const timeoutId = setTimeout(() => setIsManualChange(false), 5000);
@@ -72,6 +71,10 @@ const GardenersCard: React.FC<ProductCardProps> = ({
     const intervalId = setInterval(nextSlide, 5000); // Auto-scroll interval
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
+
+  useEffect(() => {
+    setSelectedAlbum(clickedItems);
+  }, [clickedItems]);
 
   return (
     <div className="relative w-full max-w-96 rounded-lg overflow-hidden bg-white">
@@ -88,8 +91,9 @@ const GardenersCard: React.FC<ProductCardProps> = ({
               <div key={index} className="w-full flex-shrink-0">
                 <img
                   src={product?.image}
-                  alt={product?.title}
-                  className="w-full h-full object-cover rounded-lg"
+                  alt={"Gardener"}
+                  className="w-full h-full object-cover rounded-lg cursor-pointer"
+                  onClick={handleImageClick}
                 />
               </div>
             ))}
@@ -144,12 +148,12 @@ const GardenersCard: React.FC<ProductCardProps> = ({
             onClick={() => navigate(VIEWSELLERSGARDEN)}
           >
             <img
-              src={SG1}
+              src={profileImage || SG1}
               alt={"Gardener"}
               className="w-8 h-8 rounded-full object-cover mr-1"
             />
             <span className="text-xl w-[130px] truncate font-medium whitespace-nowrap">
-              {"Joanna Wellick"}
+              {name || "Joanna Wellick"}
             </span>
           </div>
           <div>

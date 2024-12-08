@@ -1,83 +1,209 @@
 import React, { useState, useEffect, useRef } from "react";
 import { FaChevronRight, FaChevronLeft } from "react-icons/fa";
-import CP1 from "../assets/CP1.jpg";
-import CP2 from "../assets/CP2.jpg";
-import CP3 from "../assets/CP3.jpg";
+import JP1 from "../assets/JP1.jpg";
+import JP2 from "../assets/JP2.jpg";
+import JP3 from "../assets/JP3.jpg";
+import JP4 from "../assets/JP4.jpg";
 import SG1 from "../assets/SG1.jpg";
-import GardenersCard from "./GardenersCard";
 import GardenersCarouselCard from "./GardenersCarouselCard";
+import GardenersCard from "./GardenersCard";
 
-interface Gardener {
-  id: number;
-  title: string;
-  description: string;
-  image: string;
-  profileImage: string;
-  name: string;
-  badge: string;
-  location: string;
-  price: string;
+interface GardenersShowcaseProps {
+  setSelectedAlbum: any;
 }
 
-const gardeners: Gardener[] = [
-  {
-    id: 1,
-    title: "Indoor-Outdoor Green Retreat",
-    description: "Create a green sanctuary at home, indoors or out...",
-    image: CP1,
-    profileImage: SG1,
-    name: "Eko Susiloanto",
-    badge: "Super Grower",
-    location: "San Ramon, California, 20miles away",
-    price: "122",
-  },
-  {
-    id: 2,
-    title: "Your Indoor-Outdoor Garden Oasis",
-    description: "Design a cozy garden retreat, inside and out...",
-    image: CP2,
-    profileImage: SG1,
-    name: "Eko Susiloanto",
-    badge: "Super Grower",
-    location: "San Ramon, California, 20miles away",
-    price: "122",
-  },
-  {
-    id: 3,
-    title: "Garden Spaces",
-    description: "Bring your garden dreams to life, indoors and outdoors...",
-    image: CP3,
-    profileImage: SG1,
-    name: "Eko Susiloanto",
-    badge: "Newbie",
-    location: "San Ramon, California, 20miles away",
-    price: "122",
-  },
-  {
-    id: 4,
-    title: "Home Garden Haven",
-    description: "Craft a serene garden escape, indoors or outdoors...",
-    image: CP3,
-    profileImage: SG1,
-    name: "Eko Susiloanto",
-    badge: "Newbie",
-    location: "San Ramon, California, 20miles away",
-    price: "122",
-  },
-  {
-    id: 5,
-    title: "Your Perfect Home Garden",
-    description: "Your ideal garden retreat, wherever you are...",
-    image: CP3,
-    profileImage: SG1,
-    name: "Eko Susiloanto",
-    badge: "Newbie",
-    location: "San Ramon, California, 20miles away",
-    price: "122",
-  },
-];
+const GardenersShowcase: React.FC<GardenersShowcaseProps> = ({
+  setSelectedAlbum,
+}) => {
+  const products = [
+    {
+      title: "Crassula small leaf plant",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Mint",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP3,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Betel leaf plants",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "unit",
+      stock: "1 Unit left",
+      image: JP4,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Crassula small leaf plant (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Mint",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP3,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Betel leaf plants",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "unit",
+      stock: "1 Unit left",
+      image: JP4,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Crassula small leaf plant (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+  ];
 
-const GardenersShowcase: React.FC = () => {
   // State for the current offset of the products
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -100,12 +226,12 @@ const GardenersShowcase: React.FC = () => {
   }, []);
 
   // Define the number of products visible at once (4 in this case)
-  const visibleCards = 3;
+  const visibleCards = 2;
 
   // Total width of one product card including the gap
   const totalWidthPerCard = productWidth + gap;
 
-  const maxOffset = -(gardeners.length - visibleCards) * totalWidthPerCard;
+  const maxOffset = -(products.length - visibleCards) * totalWidthPerCard;
 
   // Move to the next 4 products
   const nextProducts = () => {
@@ -172,14 +298,17 @@ const GardenersShowcase: React.FC = () => {
             transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
           }}
         >
-          {gardeners.map((product, index) => (
+          {products.map((product, index) => (
             <div className="flex-none" key={index}>
-              <GardenersCard {...product} />
+              <GardenersCard {...product} setSelectedAlbum={setSelectedAlbum} />
             </div>
           ))}
         </div>
         <div>
-          <GardenersCarouselCard products={gardeners} />
+          <GardenersCarouselCard
+            products={products}
+            setSelectedAlbum={setSelectedAlbum}
+          />
         </div>
       </div>
     </div>

@@ -1,21 +1,29 @@
 import { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import CarouselCard from "../Utilities/CarouselCard";
 import GardenersCard from "./GardenersCard";
 
 interface Product {
   title: string;
   location: string;
-  price: string;
+  price: string | number;
   unitInfo?: string;
   stock?: string;
   image: string;
+  profileImage: string;
+  products: { image: string }[];
+  name: string;
 }
 
 interface CarouselProps {
   products: Product[];
+  setSelectedAlbum: any;
 }
 
-const GardenersCarouselCard = ({ products }: CarouselProps) => {
+const GardenersCarouselCard: React.FC<CarouselProps> = ({
+  products,
+  setSelectedAlbum,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
   const totalSlides = products.length;
@@ -56,7 +64,7 @@ const GardenersCarouselCard = ({ products }: CarouselProps) => {
               className="w-full flex-shrink-0 flex items-center justify-center"
               key={index}
             >
-              <GardenersCard {...product} />
+              <GardenersCard {...product} setSelectedAlbum={setSelectedAlbum} />
             </div>
           ))}
         </div>
