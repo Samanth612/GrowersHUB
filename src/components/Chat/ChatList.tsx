@@ -23,6 +23,7 @@ const ChatList: React.FC<ChatListProps> = ({
   onSelectChat,
 }) => {
   const [filter, setFilter] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
   const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
 
   const handleMenuToggle = (chatId: number) => {
@@ -34,16 +35,34 @@ const ChatList: React.FC<ChatListProps> = ({
     setMenuOpenId(null); // Close the menu after the action
   };
 
+  // Filter chats based on search query and active filter
+  const filteredChats = chats.filter((chat) => {
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "buying" && chat.message.includes("buy")) ||
+      (filter === "selling" && chat.message.includes("sell"));
+
+    const matchesSearch =
+      chat.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      chat.message.toLowerCase().includes(searchQuery.toLowerCase());
+
+    return matchesFilter && matchesSearch;
+  });
+
   return (
     <div className="p-4 max-h-[74.281vh] h-full overflow-y-auto">
+      {/* Search Input */}
       <div className="bg-gray-100 rounded-xl py-[10px] px-5 mb-4">
         <input
           type="text"
           placeholder="Search messages"
           className="w-full bg-transparent outline-none placeholder:text-teritary"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)} // Update search query
         />
       </div>
 
+      {/* Filter Buttons */}
       <div className="flex space-x-2 mb-4">
         {["all", "buying", "selling"].map((filterType) => (
           <button
@@ -59,7 +78,9 @@ const ChatList: React.FC<ChatListProps> = ({
           </button>
         ))}
       </div>
-      {chats.map(
+
+      {/* Chat List */}
+      {filteredChats.map(
         ({ id, message, timestamp, profileImage, name, unreadCount }) => (
           <div
             key={id}
