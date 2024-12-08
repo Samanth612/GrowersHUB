@@ -222,12 +222,18 @@ const DashboardLayout: React.FC = () => {
     },
   ];
 
+  console.log(selectedChat);
+
   return (
     <div>
       <Header />
       <Dashboard>
         {selectedChat ? (
-          <Chat selectedIndex={selectedIndex} chatMessages={chatMessages} />
+          <Chat
+            selectedIndex={selectedIndex}
+            setSelectedChat={setSelectedChat}
+            chatMessages={chatMessages}
+          />
         ) : (
           <InboxMessages
             setSelectedChat={setSelectedChat}

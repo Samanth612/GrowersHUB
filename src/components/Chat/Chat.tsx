@@ -6,6 +6,7 @@ import ChatList from "./ChatList";
 interface ChatProps {
   selectedIndex: number;
   chatMessages: ChatMessage[];
+  setSelectedChat: any;
 }
 
 interface MessageAction {
@@ -25,7 +26,11 @@ type ChatMessage = {
   messages: { text: string; sender: "user" | "seller" }[];
 };
 
-const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
+const Chat: React.FC<ChatProps> = ({
+  selectedIndex,
+  chatMessages,
+  setSelectedChat,
+}) => {
   const [selectedChatId, setSelectedChatId] = useState<number>(1);
 
   useEffect(() => {
@@ -65,7 +70,7 @@ const Chat: React.FC<ChatProps> = ({ selectedIndex, chatMessages }) => {
       {selectedChat && (
         <div className="flex-1 flex flex-col">
           {/* Chat Details */}
-          <ChatDetails chat={selectedChat} />
+          <ChatDetails chat={selectedChat} setSelectedChat={setSelectedChat} />
           {/* Chat Main */}
           <ChatMain messages={selectedChat.messages} />
         </div>

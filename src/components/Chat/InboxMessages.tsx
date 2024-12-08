@@ -118,7 +118,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
       </div>
 
       {/* Message List */}
-      <div className="px-4 sm:px-8 max-h-[75vh] h-full overflow-y-auto">
+      <div className="px-0 sm:px-8 max-h-[75vh] h-full overflow-y-auto">
         {searchedMessages.map((message, index) => (
           <div
             onClick={() => {
