@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import heroPlant from "../assets/HeroPlant.png";
 import Modal from "./Modal";
+import JoinWaitList from "./JoinWaitList";
 
 const HeroSection: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -48,7 +49,9 @@ const HeroSection: React.FC = () => {
           </button>
         </div>
       </section>
-      {isModalOpen && <Modal onClose={closeModal} />}
+      {isModalOpen && (
+        <Modal children={<JoinWaitList onClose={closeModal} />} />
+      )}
     </>
   );
 };

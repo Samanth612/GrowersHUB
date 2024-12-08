@@ -4,6 +4,7 @@ import JP2 from "../assets/JP2.jpg";
 import JP3 from "../assets/JP3.jpg";
 import JP4 from "../assets/JP4.jpg";
 import Modal from "./Modal";
+import JoinWaitList from "./JoinWaitList";
 
 const stages = [
   {
@@ -79,7 +80,9 @@ const JourneySection = () => {
           Join Waitlist
         </button>
       </div>
-      {isModalOpen && <Modal onClose={closeModal} />}
+      {isModalOpen && (
+        <Modal children={<JoinWaitList onClose={closeModal} />} />
+      )}
     </>
   );
 };

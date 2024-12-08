@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
+import JoinWaitList from "./JoinWaitList";
 
 const BecomeSeller: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -35,7 +36,9 @@ const BecomeSeller: React.FC = () => {
           </button>
         </div>
       </section>
-      {isModalOpen && <Modal onClose={closeModal} />}
+      {isModalOpen && (
+        <Modal children={<JoinWaitList onClose={closeModal} />} />
+      )}
     </>
   );
 };

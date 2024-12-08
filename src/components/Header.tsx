@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { AlignJustify } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
 import { CREATEALBUM, LOGIN } from "../Utilities/constantLinks";
+import JoinWaitList from "./JoinWaitList";
 
 interface WrapperProps {
   children?: ReactNode;
@@ -104,7 +105,9 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
         >
           <AlignJustify size={25} strokeWidth={1.5} />
         </div>
-        {isModalOpen && <Modal onClose={closeModal} />}
+        {isModalOpen && (
+          <Modal children={<JoinWaitList onClose={closeModal} />} />
+        )}
       </header>
       {isOpen && <SidebarMenu isOpen={isOpen} setIsOpen={setIsOpen} />}
       <main className="mt-[95px]">{children}</main>
