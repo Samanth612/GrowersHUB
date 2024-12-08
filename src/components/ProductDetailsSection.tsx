@@ -88,7 +88,7 @@ const ProductDetailsSection: React.FC<CommunityDetailsProps> = ({
           <div className="flex">
             <div className="w-12 h-12 rounded-full overflow-hidden">
               <img
-                src={SG1}
+                src={selectedAlbum[0]?.profileImage || SG1}
                 alt={"Gardener"}
                 className="w-full h-full object-cover"
               />

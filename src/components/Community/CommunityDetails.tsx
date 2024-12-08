@@ -3,6 +3,7 @@ import JP1 from "../../assets/JP1.jpg";
 import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
+import SG1 from "../../assets/SG1.jpg";
 import CarouselCard from "../../Utilities/CarouselCard";
 import Pagination from "../../Utilities/Pagination";
 
@@ -21,6 +22,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -36,6 +38,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -51,6 +54,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -68,6 +72,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -85,6 +90,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -100,6 +106,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -115,6 +122,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -130,6 +138,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -147,6 +156,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -164,6 +174,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -179,6 +190,7 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },

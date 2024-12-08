@@ -12,6 +12,7 @@ interface ProductCardProps {
   unitInfo?: string;
   stock?: string;
   image: string;
+  profileImage: string;
   products: { image: string }[];
   name: string;
   setSelectedAlbum: any;
@@ -24,6 +25,7 @@ const CarouselCard: React.FC<ProductCardProps> = ({
   unitInfo,
   products,
   name,
+  profileImage,
   setSelectedAlbum,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -51,6 +53,7 @@ const CarouselCard: React.FC<ProductCardProps> = ({
         price,
         unitInfo,
         products,
+        profileImage,
         name,
       },
     ];
@@ -146,7 +149,7 @@ const CarouselCard: React.FC<ProductCardProps> = ({
             onClick={() => navigate(VIEWSELLERSGARDEN)}
           >
             <img
-              src={SG1}
+              src={profileImage || SG1}
               alt={"Gardener"}
               className="w-8 h-8 rounded-full object-cover mr-1"
             />

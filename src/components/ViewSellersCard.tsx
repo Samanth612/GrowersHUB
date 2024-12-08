@@ -25,6 +25,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -40,6 +41,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -55,6 +57,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -72,6 +75,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -89,6 +93,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -104,6 +109,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -119,6 +125,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -134,6 +141,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -151,6 +159,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -168,6 +177,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
@@ -183,6 +193,7 @@ const ViewSellersCard: React.FC<ViewSellersCardProps> = ({
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
+      profileImage: SG1,
       name: "Joanna Wellick",
       products: [
         { image: JP1 },
