@@ -22,7 +22,7 @@ const CreateAlbum: React.FC<CreateAlbumProps> = ({
       <div className="flex flex-wrap gap-3 items-center justify-between py-3 px-6 lg:px-12 border-b shadow-inner">
         <div className="flex flex-col gap-3 sm:hidden">
           <button
-            className="flex items-center text-secondary mb-4 gap-3 xll:hidden"
+            className="flex items-center text-secondary gap-3 xll:hidden"
             onClick={() => navigate(-1)}
           >
             <ArrowLeft className="w-5 h-5 mr-1" />
