@@ -9,7 +9,7 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const seller = false;
+  const seller = true;
 
   const allMenuItems = [
     {
