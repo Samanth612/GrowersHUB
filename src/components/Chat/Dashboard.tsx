@@ -9,8 +9,15 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const seller = false;
 
-  const menuItems = [
+  const allMenuItems = [
+    {
+      title: "Your Listings",
+      shortTitle: "Listings",
+      icon: "Listing",
+      route: "listing",
+    },
     {
       title: "Inbox",
       shortTitle: "Inbox",
@@ -37,6 +44,10 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
     },
   ];
 
+  const menuItems = seller
+    ? allMenuItems
+    : allMenuItems.filter((item) => item.route !== "listing");
+
   const [selectedIndex, setSelectedIndex] = useState<number>(
     menuItems.findIndex((item) => location.pathname.includes(item.route))
   );
@@ -47,8 +58,6 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
     );
     setSelectedIndex(index);
   }, [location.pathname]);
-
-  console.log(window.innerWidth);
 
   return (
     <>
@@ -64,7 +73,9 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                       e.preventDefault();
                       navigate(`/${item.route}`);
                     }}
-                    className={`flex items-center cursor-pointer gap-3 p-4 rounded-lg transition-colors duration-200 
+                    className={`flex items-center cursor-pointer ${
+                      seller ? "gap-1" : "gap-3"
+                    } p-4 rounded-lg transition-colors duration-200 
                     ${
                       location.pathname.includes(item.route)
                         ? "bg-[#6FEE8F21] text-primary font-semibold"
@@ -81,7 +92,15 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                       />
                     </span>
                     <span
-                      className={`${index === 1 ? "ml-3" : "ml-2"} ${
+                      className={`${
+                        seller
+                          ? index === 2
+                            ? "ml-5"
+                            : "ml-4"
+                          : index === 1
+                          ? "ml-3"
+                          : "ml-2"
+                      } ${
                         location.pathname.includes(item.route)
                           ? "text-primary font-bold"
                           : "font-medium"
@@ -89,7 +108,9 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                     >
                       {window.innerWidth >= 1180
                         ? item.title
-                        : ["createalbum", "youralbum"].includes(item.route)
+                        : ["createalbum", "youralbum", "listing"].includes(
+                            item.route
+                          )
                         ? item.shortTitle
                         : item.title}
                     </span>
@@ -108,7 +129,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
       </main>
       <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-white shadow-lg xll:hidden">
         <nav>
-          <ul className="flex items-center gap-8">
+          <ul className={`flex items-center ${seller ? "gap-3" : "gap-8"}`}>
             {menuItems.map((item, index) => (
               <li key={index}>
                 <a
@@ -139,7 +160,11 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                         : "font-medium"
                     } text-xs`}
                   >
-                    {["createalbum", "youralbum"].includes(item.route)
+                    {window.innerWidth >= 1180
+                      ? item.title
+                      : ["createalbum", "youralbum", "listing"].includes(
+                          item.route
+                        )
                       ? item.shortTitle
                       : item.title}
                   </span>

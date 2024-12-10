@@ -13,3 +13,4 @@ export const YOURALBUM = "/youralbum";
 export const SUBSCRIPTIONS = "/subscriptions";
 export const PRODUCT = "/product";
 export const VIEWSELLERSGARDEN = "/sellersgarden";
+export const LISTINGPRODUCT = "/listing";

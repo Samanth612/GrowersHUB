@@ -11,6 +11,7 @@ import {
   HELP,
   HOME,
   INBOX,
+  LISTINGPRODUCT,
   LOGIN,
   PRIVACYPOLICY,
   PRODUCT,
@@ -36,6 +37,7 @@ import YourAlbumLayout from "./components/YourAlbum/YourAlbumLayout";
 import SubscriptionsLayout from "./components/Subscriptions/SubscriptionsLayout";
 import CommunityLayout from "./components/Community/Community";
 import PrivacyPolicy from "./components/PrivacyPolicy";
+import SellersDashboardLayout from "./components/SellersDashboard/SellersDashboardLayout";
 
 const App: React.FC = () => {
   return (
@@ -76,6 +78,7 @@ const App: React.FC = () => {
             <Route path={CREATEALBUM} element={<CreateAlbumLayout />} />
             <Route path={YOURALBUM} element={<YourAlbumLayout />} />
             <Route path={SUBSCRIPTIONS} element={<SubscriptionsLayout />} />
+            <Route path={LISTINGPRODUCT} element={<SellersDashboardLayout />} />
           </Route>
           <Route path={HOME} element={<Home />} />
           <Route path={COMMUNITY} element={<CommunityLayout />} />
