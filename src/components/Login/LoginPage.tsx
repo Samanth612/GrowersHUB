@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import axios from "axios";
 import Icons from "../../Utilities/Icons";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -13,12 +14,60 @@ const LoginPage: React.FC<LoginPageProps> = ({
   setShowPassword,
   setLoginSuccess,
 }) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const validateEmail = (email: string) => {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Reset previous errors
+    setError("");
+
+    // Validations
+    if (!email) {
+      setError("Email is required.");
+      return;
+    }
+    if (!validateEmail(email)) {
+      setError("Invalid email format.");
+      return;
+    }
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await axios.post(
+        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/auth/login",
+        { email, password }
+      );
+
+      if (response.data.status) {
+        setLoginSuccess(true);
+      } else {
+        setError(response.data.message || "Login failed.");
+      }
+    } catch (err) {
+      setError("An error occurred while logging in. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <h1 className="text-4xl font-bold mb-2 text-secondary">Login</h1>
       <p className="text-teritary mb-8">Login to continue</p>
 
-      <form className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div>
           <label className="block text-lg font-medium mb-2 text-secondary">
             Email/User ID
@@ -26,6 +75,8 @@ const LoginPage: React.FC<LoginPageProps> = ({
           <div className="relative">
             <input
               type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter registered email"
               className="w-full p-3 pl-10 rounded-lg border border-[#DBD8D8] focus:outline-none focus:border-primary"
             />
@@ -42,6 +93,8 @@ const LoginPage: React.FC<LoginPageProps> = ({
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter Password"
               className="w-full p-3 pl-10 pr-10 rounded-lg border border-[#DBD8D8] focus:outline-none focus:border-primary"
             />
@@ -58,6 +111,8 @@ const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
+        {error && <p className="text-red-500 text-sm">{error}</p>}
+
         <div className="flex items-center justify-between">
           <label className="flex items-center">
             <input
@@ -73,12 +128,12 @@ const LoginPage: React.FC<LoginPageProps> = ({
 
         <button
           type="submit"
-          className="w-full font-medium text-xl bg-primary text-white p-3 rounded-lg hover:bg-green-500"
-          onClick={() => {
-            setLoginSuccess(true);
-          }}
+          disabled={loading}
+          className={`w-full font-medium text-xl bg-primary text-white p-3 rounded-lg hover:bg-green-500 ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          Log in
+          {loading ? "Logging in..." : "Log in"}
         </button>
 
         <div className="text-center text-teritary">Or</div>
@@ -96,9 +151,9 @@ const LoginPage: React.FC<LoginPageProps> = ({
         </button>
 
         <p className="text-start font-medium">
-          New User ?{" "}
+          New User?{" "}
           <a href="/signup" className="text-primary">
-            &nbsp; Sign Up
+            &nbsp;Sign Up
           </a>
         </p>
       </form>
