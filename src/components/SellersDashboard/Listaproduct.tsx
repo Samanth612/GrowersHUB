@@ -381,7 +381,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
         </div>
 
         {/* Right Preview Section */}
-        {uploadedFiles?.length > 0 && (
+        {/* {uploadedFiles?.length > 0 && (
           <div className="w-80">
             <div className="border border-t-0 p-4">
               <h2 className="text-xl text-center font-semibold py-2">
@@ -392,7 +392,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               <PreviewCarousel uploadedFiles={uploadedFiles} />
             </div>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );
