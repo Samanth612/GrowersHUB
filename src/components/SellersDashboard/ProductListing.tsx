@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Pagination from "../../Utilities/Pagination";
-import { useNavigate } from "react-router-dom";
 import JP1 from "../../assets/JP1.jpg";
 import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
@@ -8,7 +7,15 @@ import JP4 from "../../assets/JP4.jpg";
 import SG1 from "../../assets/SG1.jpg";
 import SellersCard from "./SellersCard";
 
-const ProductListings: React.FC = () => {
+interface MediaUploadProps {
+  setuploadButtonClicked: any;
+  setEditing: any;
+}
+
+const ProductListings: React.FC<MediaUploadProps> = ({
+  setuploadButtonClicked,
+  setEditing,
+}) => {
   const [filter, setFilter] = useState<string>("all");
   const products = [
     {
@@ -73,8 +80,6 @@ const ProductListings: React.FC = () => {
     },
   ];
 
-  const navigate = useNavigate();
-
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4); // Fixed at 4 items per page
 
@@ -105,20 +110,32 @@ const ProductListings: React.FC = () => {
             className="w-full max-w-[250px] sm:min-w-[320px] px-4 py-3 bg-premiumgray rounded-lg placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
-        <div className="flex gap-2">
-          {["all", "available", "sold out"].map((filterType) => (
-            <button
-              key={filterType}
-              onClick={() => setFilter(filterType)}
-              className={`px-4 py-1 rounded-md ${
-                filter === filterType
-                  ? "text-primary font-medium bg-premiumgreen"
-                  : "text-secondary border border-primary hover:bg-premiumgray"
-              }`}
-            >
-              {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-4">
+          <div className="flex gap-2">
+            {["all", "available", "sold out"].map((filterType) => (
+              <button
+                key={filterType}
+                onClick={() => setFilter(filterType)}
+                className={`px-4 py-1 rounded-md ${
+                  filter === filterType
+                    ? "text-primary font-medium bg-premiumgreen"
+                    : "text-secondary border border-primary hover:bg-premiumgray"
+                }`}
+              >
+                {filterType.charAt(0).toUpperCase() + filterType.slice(1)}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="px-12 py-2 text-lg font-medium text-white bg-primary rounded-lg hover:bg-green-500 transition-colors"
+            onClick={() => {
+              setuploadButtonClicked(true);
+              setEditing(false);
+            }}
+          >
+            Add Product
+          </button>
         </div>
       </div>
 
@@ -126,7 +143,12 @@ const ProductListings: React.FC = () => {
         <div className="w-full transition-all duration-300 ease-in">
           <div className="grid grid-rows-1 sm:grid-rows-2 lg:grid-rows-4 gap-5 pb-4 mb-10">
             {currentProducts.map((product, index) => (
-              <SellersCard key={index} product={product} />
+              <SellersCard
+                key={index}
+                product={product}
+                setEditing={setEditing}
+                setuploadButtonClicked={setuploadButtonClicked}
+              />
             ))}
           </div>
         </div>

@@ -10,7 +10,11 @@ interface Product {
   categories: string[];
 }
 
-const SellersCard: React.FC<{ product: Product }> = ({ product }) => {
+const SellersCard: React.FC<{
+  product: Product;
+  setEditing: any;
+  setuploadButtonClicked: any;
+}> = ({ product, setEditing, setuploadButtonClicked }) => {
   const [unitsSold, setUnitsSold] = useState(5);
   const maxUnits = 10;
 
@@ -73,16 +77,21 @@ const SellersCard: React.FC<{ product: Product }> = ({ product }) => {
       </div>
 
       {/* Units Sold */}
-      <div className="hidden flex-col items-end gap-8 sm:flex">
+      <div className="hidden flex-col items-end gap-2 sm:flex">
         <div className="flex items-center gap-12 pr-5">
           <button>
             <Icons variant="Delete" />
           </button>
-          <button>
+          <button
+            onClick={() => {
+              setEditing(true);
+              setuploadButtonClicked(true);
+            }}
+          >
             <Icons variant="Edit" />
           </button>
         </div>
-        <div className="flex items-center gap-3 pr-4">
+        <div className="flex items-center gap-3 px-4 pt-4 pb-2">
           <div className="flex flex-col gap-1">
             <div className="text-sm text-teritary font-semibold">
               Mark units sold

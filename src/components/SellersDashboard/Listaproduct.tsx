@@ -1,8 +1,7 @@
 import React, { useState, DragEvent, ChangeEvent } from "react";
 import { ArrowLeft, Check, Minus, Plus, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
-import { useNavigate } from "react-router-dom";
-import PreviewCarousel from "../CreateAlbum/PreviewCarousel";
+import Icons from "../../Utilities/Icons";
 
 interface UploadedFile {
   file: File;
@@ -11,12 +10,13 @@ interface UploadedFile {
 
 interface MediaUploadProps {
   setuploadButtonClicked: any;
+  editing: any;
 }
 
 const ListProduct: React.FC<MediaUploadProps> = ({
   setuploadButtonClicked,
+  editing,
 }) => {
-  const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
@@ -93,6 +93,8 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     }
   };
 
+  const title = editing ? "Edit Listing" : "List a Product";
+
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
       <div className="flex flex-wrap gap-3 items-center justify-between py-6 px-6 lg:px-12 border-b shadow-inner">
@@ -102,7 +104,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               className="w-5 h-5 mr-1"
               onClick={() => setuploadButtonClicked(false)}
             />
-            <span className="font-semibold">List a Product</span>
+            <span className="font-semibold">{title}</span>
           </button>
         </div>
         <div className="hidden items-center gap-5 sm:flex">
@@ -111,9 +113,17 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             onClick={() => setuploadButtonClicked(false)}
           >
             <ArrowLeft className="w-5 h-5 mr-1" />
-            <span className="font-semibold text-xl">List a Product</span>
+            <span className="font-semibold text-xl">{title}</span>
           </button>
         </div>
+        {editing && (
+          <div>
+            <button className="flex items-center gap-2">
+              <Icons variant="Delete" />
+              <span className=" text-red-500">Delete Listing</span>
+            </button>
+          </div>
+        )}
       </div>
       <div className="flex justify-between px-6 sm:px-12 xll:pl-12 xll:pr-0 gap-8">
         {/* Left Section */}
