@@ -29,6 +29,19 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     "Freshly sourced",
   ]);
   const [isChecked, setIsChecked] = useState(false);
+  const availableCategories = [
+    "Technology",
+    "Health",
+    "Finance",
+    "Education",
+    "Travel",
+  ];
+
+  const addCategory = (category: any) => {
+    if (!selectedCategories.includes(category)) {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -227,19 +240,48 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             <label className="block text-sm font-semibold mb-2">
               Product Category
             </label>
-            <div className="border border-[#DBD8D8] rounded-lg p-3">
-              <div className="flex flex-wrap gap-2 mb-2">
-                {selectedCategories.map((category, index) => (
-                  <span
-                    key={index}
-                    className="bg-green-50 text-secondary px-3 py-1 rounded-[4px] flex items-center gap-2"
-                  >
-                    {category}
-                    <button onClick={() => removeCategory(category)}>
-                      <X className="w-4 h-4" />
-                    </button>
-                  </span>
-                ))}
+
+            {/* Selection Field */}
+            <div className="mb-3">
+              <div className="border border-[#DBD8D8] rounded-lg p-3 w-full">
+                <div className="flex flex-wrap gap-2">
+                  {selectedCategories.map((category, index) => (
+                    <span
+                      key={index}
+                      className="bg-green-50 text-secondary px-3 py-1 rounded-[4px] flex items-center gap-2"
+                    >
+                      {category}
+                      <button onClick={() => removeCategory(category)}>
+                        <X className="w-4 h-4" />
+                      </button>
+                    </span>
+                  ))}
+                  {availableCategories.filter(
+                    (category) => !selectedCategories.includes(category)
+                  ).length > 0 && (
+                    <select
+                      className="border-none outline-none bg-transparent px-3 py-1"
+                      value=""
+                      onChange={(e) => {
+                        const selected = e.target.value;
+                        if (selected) {
+                          addCategory(selected);
+                        }
+                      }}
+                    >
+                      <option value="">Add category</option>
+                      {availableCategories
+                        .filter(
+                          (category) => !selectedCategories.includes(category)
+                        )
+                        .map((category, index) => (
+                          <option key={index} value={category}>
+                            {category}
+                          </option>
+                        ))}
+                    </select>
+                  )}
+                </div>
               </div>
             </div>
           </div>

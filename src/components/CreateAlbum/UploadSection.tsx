@@ -24,6 +24,19 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
     "Plants",
     "Freshly sourced",
   ]);
+  const availableCategories = [
+    "Technology",
+    "Health",
+    "Finance",
+    "Education",
+    "Travel",
+  ];
+
+  const addCategory = (category: any) => {
+    if (!selectedCategories.includes(category)) {
+      setSelectedCategories([...selectedCategories, category]);
+    }
+  };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -192,8 +205,8 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
             <label className="block text-[16px] font-semibold mb-2">
               Category
             </label>
-            <div className="border border-[#DBD8D8] rounded-lg p-3">
-              <div className="flex flex-wrap gap-2 mb-2">
+            <div className="border border-[#DBD8D8] rounded-lg p-3 w-full">
+              <div className="flex flex-wrap gap-2">
                 {selectedCategories.map((category, index) => (
                   <span
                     key={index}
@@ -205,6 +218,31 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
                     </button>
                   </span>
                 ))}
+                {availableCategories.filter(
+                  (category) => !selectedCategories.includes(category)
+                ).length > 0 && (
+                  <select
+                    className="border-none outline-none bg-transparent px-3 py-1"
+                    value=""
+                    onChange={(e) => {
+                      const selected = e.target.value;
+                      if (selected) {
+                        addCategory(selected);
+                      }
+                    }}
+                  >
+                    <option value="">Add category</option>
+                    {availableCategories
+                      .filter(
+                        (category) => !selectedCategories.includes(category)
+                      )
+                      .map((category, index) => (
+                        <option key={index} value={category}>
+                          {category}
+                        </option>
+                      ))}
+                  </select>
+                )}
               </div>
             </div>
           </div>
