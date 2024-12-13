@@ -384,20 +384,6 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             Save
           </button>
         </div>
-
-        {/* Right Preview Section */}
-        {/* {uploadedFiles?.length > 0 && (
-          <div className="w-80">
-            <div className="border border-t-0 p-4">
-              <h2 className="text-xl text-center font-semibold py-2">
-                Preview
-              </h2>
-            </div>
-            <div className="flex items-start justify-center border h-full">
-              <PreviewCarousel uploadedFiles={uploadedFiles} />
-            </div>
-          </div>
-        )} */}
       </div>
     </div>
   );
