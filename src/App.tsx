@@ -16,6 +16,7 @@ import {
   PRIVACYPOLICY,
   PRODUCT,
   PRODUCTS,
+  PROFILE,
   SIGNUP,
   SUBSCRIPTIONS,
   VIEWSELLERSGARDEN,
@@ -38,6 +39,7 @@ import SubscriptionsLayout from "./components/Subscriptions/SubscriptionsLayout"
 import CommunityLayout from "./components/Community/Community";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import SellersDashboardLayout from "./components/SellersDashboard/SellersDashboardLayout";
+import ProfileLayout from "./components/Profile/ProfileLayout";
 
 const App: React.FC = () => {
   return (
@@ -74,6 +76,7 @@ const App: React.FC = () => {
             <Route path={PRODUCTS} element={<Products />} />
             <Route path={PRODUCT} element={<ProductDetails />} />
             <Route path={VIEWSELLERSGARDEN} element={<ViewSellersGarden />} />
+            <Route path={PROFILE} element={<ProfileLayout />} />
             <Route path={INBOX} element={<DashboardLayout />} />
             <Route path={CREATEALBUM} element={<CreateAlbumLayout />} />
             <Route path={YOURALBUM} element={<YourAlbumLayout />} />

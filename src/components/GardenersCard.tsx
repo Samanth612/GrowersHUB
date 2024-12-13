@@ -4,7 +4,11 @@ import JP1 from "../assets/JP1.jpg";
 import SG1 from "../assets/SG1.jpg";
 import Icons from "../Utilities/Icons";
 import { useNavigate } from "react-router-dom";
-import { VIEWSELLERSGARDEN } from "../Utilities/constantLinks";
+import {
+  COMMUNITY,
+  INBOX,
+  VIEWSELLERSGARDEN,
+} from "../Utilities/constantLinks";
 
 interface ProductCardProps {
   title: string;
@@ -140,8 +144,6 @@ const GardenersCard: React.FC<ProductCardProps> = ({
           <span className="text-sm">{location}</span>
         </div>
 
-        {/* Price Badge */}
-
         <div className="flex flex-wrap items-center gap-2 mt-2">
           <div
             className="flex items-center cursor-pointer"
@@ -167,6 +169,21 @@ const GardenersCard: React.FC<ProductCardProps> = ({
               </div>
             </div>
           </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-5 mt-5">
+          <button
+            className="px-6 py-2.5 w-64 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50"
+            onClick={() => navigate(COMMUNITY)}
+          >
+            View Album
+          </button>
+          <button
+            className="px-6 py-3 w-64 bg-primary font-medium text-white rounded-lg  hover:bg-green-500"
+            onClick={() => navigate(INBOX)}
+          >
+            Connect
+          </button>
         </div>
       </div>
     </div>

@@ -10,8 +10,14 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
   const seller = true;
-
+  //Profile
   const allMenuItems = [
+    {
+      title: "Update Profile",
+      shortTitle: "Profile",
+      icon: "Profile",
+      route: "profile",
+    },
     {
       title: "Your Listings",
       shortTitle: "Listings",
@@ -83,7 +89,7 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                     }
                   `}
                   >
-                    <span className={`${index === 0 && "-translate-x-0.5"}`}>
+                    <span className={`${index === 1 && "-translate-x-0.5"}`}>
                       <Icons
                         variant={item.icon}
                         strokeColor={
@@ -94,10 +100,10 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                     <span
                       className={`${
                         seller
-                          ? index === 2
+                          ? index === 3
                             ? "ml-5"
                             : "ml-4"
-                          : index === 1
+                          : index === 2
                           ? "ml-3"
                           : "ml-2"
                       } ${
@@ -108,9 +114,12 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                     >
                       {window.innerWidth >= 1180
                         ? item.title
-                        : ["createalbum", "youralbum", "listing"].includes(
-                            item.route
-                          )
+                        : [
+                            "createalbum",
+                            "youralbum",
+                            "listing",
+                            "profile",
+                          ].includes(item.route)
                         ? item.shortTitle
                         : item.title}
                     </span>
@@ -162,9 +171,12 @@ const Dashboard: React.FC<DashboardProps> = ({ children }) => {
                   >
                     {window.innerWidth >= 1180
                       ? item.title
-                      : ["createalbum", "youralbum", "listing"].includes(
-                          item.route
-                        )
+                      : [
+                          "createalbum",
+                          "youralbum",
+                          "listing",
+                          "profile",
+                        ].includes(item.route)
                       ? item.shortTitle
                       : item.title}
                   </span>

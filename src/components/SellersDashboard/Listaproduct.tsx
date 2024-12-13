@@ -11,21 +11,19 @@ interface UploadedFile {
 interface MediaUploadProps {
   setuploadButtonClicked: any;
   editing: any;
+  setFaqSection: any;
 }
 
 const ListProduct: React.FC<MediaUploadProps> = ({
   setuploadButtonClicked,
   editing,
+  setFaqSection,
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
   const [unitsForSale, setUnitsForSale] = useState<number>(5);
   const [pricePerUnit, setPricePerUnit] = useState<number>(0);
-  const [productLocation, setProductLocation] = useState<string>("");
-  const [faqQuestions, setFaqQuestions] = useState<
-    { question: string; answer: string }[]
-  >([]);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([
     "Plants",
     "Freshly sourced",
@@ -58,20 +56,6 @@ const ListProduct: React.FC<MediaUploadProps> = ({
       newFiles.splice(index, 1);
       return newFiles;
     });
-  };
-
-  const addFAQ = () => {
-    setFaqQuestions([...faqQuestions, { question: "", answer: "" }]);
-  };
-
-  const handleFAQChange = (
-    index: number,
-    field: "question" | "answer",
-    value: string
-  ) => {
-    const newFaqs = [...faqQuestions];
-    newFaqs[index][field] = value;
-    setFaqQuestions(newFaqs);
   };
 
   const removeCategory = (category: string) => {
@@ -214,7 +198,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               id="product-name"
               type="text"
               placeholder="Type Product Name"
-              className="w-full border border-[#DBD8D8] rounded-lg p-3"
+              className="w-full border border-[#DBD8D8] rounded-lg p-3 focus:outline-green-500"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
             />
@@ -228,13 +212,13 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             >
               Product Description
             </label>
-            <input
+            <textarea
               id="product-description"
-              type="text"
               placeholder="Type Album name.."
-              className="w-full border border-[#DBD8D8] rounded-lg p-3"
+              className="w-full border border-[#DBD8D8] rounded-lg p-3 resize-none focus:outline-green-500"
               value={productDescription}
               onChange={(e) => setProductDescription(e.target.value)}
+              rows={4}
             />
           </div>
 
@@ -304,13 +288,13 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                   placeholder="Price in $"
                   value={pricePerUnit}
                   onChange={(e) => setPricePerUnit(Number(e.target.value))}
-                  className="w-48 border border-[#DBD8D8] rounded-lg py-3 pl-16 placeholder:text-teritary"
+                  className="w-48 border border-[#DBD8D8] rounded-lg py-3 pl-16 placeholder:text-teritary focus:outline-none"
                 />
               </div>
             </div>
 
             {/* Product Location */}
-            <div className="mb-6">
+            {/* <div className="mb-6">
               <label className="block text-sm font-semibold mb-2">
                 Change product location
               </label>
@@ -321,50 +305,19 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 onChange={(e) => setProductLocation(e.target.value)}
                 className="w-full border border-[#DBD8D8] rounded-lg p-3"
               />
-            </div>
+            </div> */}
           </div>
 
-          <div className="mb-6 text-xl font-semibold">FAQs</div>
-
           {/* FAQs */}
-          <div className="mb-6">
-            {faqQuestions.map((faq, index) => (
-              <div key={index} className="flex flex-col gap-4 mb-4">
-                <label className="block text-sm text-teritary font-semibold mb-0">
-                  QUESTION {index + 1}
-                </label>
-                <div className="">
-                  <label className="block text-sm font-semibold mb-2">
-                    Question {index + 1}
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Question"
-                    value={faq.question}
-                    onChange={(e) =>
-                      handleFAQChange(index, "question", e.target.value)
-                    }
-                    className="w-1/2 border border-[#DBD8D8] rounded-lg p-3"
-                  />
-                </div>
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold mb-2">
-                    Answer
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Answer"
-                    value={faq.answer}
-                    onChange={(e) =>
-                      handleFAQChange(index, "answer", e.target.value)
-                    }
-                    className="w-1/2 border border-[#DBD8D8] rounded-lg p-3"
-                  />
-                </div>
-              </div>
-            ))}
-            <button type="button" onClick={addFAQ} className="text-primary">
-              + Add FAQ
+          <div className="flex items-center justify-between mb-6">
+            <div className="text-xl font-semibold">FAQs</div>
+
+            <button
+              type="button"
+              onClick={() => setFaqSection(true)}
+              className="text-primary font-bold"
+            >
+              + ADD/View FAQs
             </button>
           </div>
 

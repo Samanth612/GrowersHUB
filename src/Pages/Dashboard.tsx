@@ -222,8 +222,6 @@ const DashboardLayout: React.FC = () => {
     },
   ];
 
-  console.log(selectedChat);
-
   return (
     <div>
       <Header />

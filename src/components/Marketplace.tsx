@@ -1,51 +1,253 @@
-import React from "react";
-import MP1 from "../assets/MP1.jpg";
-import MP2 from "../assets/MP2.jpg";
-import MP3 from "../assets/MP3.jpg";
-import MP4 from "../assets/MP4.jpg";
+import React, { useEffect, useRef, useState } from "react";
+import JP1 from "../assets/JP1.jpg";
+import JP2 from "../assets/JP2.jpg";
+import JP3 from "../assets/JP3.jpg";
+import JP4 from "../assets/JP4.jpg";
+import SG1 from "../assets/SG1.jpg";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import ProductCard from "./Products/ProductCard";
+import { useNavigate } from "react-router-dom";
+import { PRODUCTS } from "../Utilities/constantLinks";
 
-interface Product {
-  id: number;
-  name: string;
-  price: string;
-  image: string;
-  badge?: string;
-}
+const Marketplace: React.FC = () => {
+  const products = [
+    {
+      title: "Crassula small leaf plant",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Mint",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP3,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Betel leaf plants",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "unit",
+      stock: "1 Unit left",
+      image: JP4,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Crassula small leaf plant (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Mint",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP3,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Betel leaf plants",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "unit",
+      stock: "1 Unit left",
+      image: JP4,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Crassula small leaf plant (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      unitInfo: "4 unit",
+      stock: "2 units left",
+      image: JP1,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+    {
+      title: "Lemon (Repeat)",
+      location: "San Ramon, California, 20miles away",
+      price: "122",
+      image: JP2,
+      profileImage: SG1,
+      name: "Joanna Wellick",
+      products: [
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+        { image: JP1 },
+      ],
+    },
+  ];
 
-const products: Product[] = [
-  {
-    id: 1,
-    name: "Natural Plants",
-    price: "$122",
-    image: MP1,
-    badge: "Super Grower",
-  },
-  {
-    id: 2,
-    name: "Natural Plants",
-    price: "$122",
-    image: MP2,
-  },
-  {
-    id: 3,
-    name: "Natural Plants",
-    price: "$122",
-    image: MP3,
-  },
-  {
-    id: 4,
-    name: "Natural Plants",
-    price: "$122",
-    image: MP4,
-    badge: "Super Grower",
-  },
-];
+  const navigate = useNavigate();
 
-const Marketplace = () => {
+  // State for the current offset of the products
+  const [currentOffset, setCurrentOffset] = useState(0);
+
+  // Ref to the product container to calculate the width of a single product card
+  const productContainerRef = useRef<HTMLDivElement | null>(null);
+
+  // Dynamically calculate the width of a product card
+  const [productWidth, setProductWidth] = useState(0);
+
+  // Gap size in pixels (based on Tailwind's gap-6)
+  const gap = 24;
+
+  useEffect(() => {
+    // Calculate product width once the component is mounted
+    if (productContainerRef.current) {
+      setProductWidth(
+        productContainerRef.current.children[0].getBoundingClientRect().width
+      );
+    }
+  }, []);
+
+  // Define the number of products visible at once (4 in this case)
+  const visibleCards = 3;
+
+  // Total width of one product card including the gap
+  const totalWidthPerCard = productWidth + gap;
+
+  const maxOffset = -(products.length - visibleCards) * totalWidthPerCard;
+
+  // Move to the next 4 products
+  const nextProducts = () => {
+    if (currentOffset > maxOffset) {
+      setCurrentOffset(currentOffset - totalWidthPerCard);
+    }
+  };
+
+  // Move to the previous 4 products
+  const prevProducts = () => {
+    if (currentOffset < 0) {
+      setCurrentOffset(currentOffset + totalWidthPerCard);
+    }
+  };
+
   return (
     <div className="max-w-full mx-6 md:mx-12 py-12">
       {/* Header Section */}
-      <div className="mb-12 space-y-6">
+      <div className="space-y-6">
         <div className="text-primary font-medium text-xl">Marketplace</div>
         <h1 className="text-4xl md:text-4xl lg:text-5xl font-semibold">
           Where Every Plant Finds a Home
@@ -56,42 +258,54 @@ const Marketplace = () => {
         </p>
       </div>
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="group relative bg-gray-50 rounded-sm overflow-hidden transition-all duration-300 hover:shadow-lg"
-          >
-            {/* Badge */}
-            {product.badge && (
-              <div className="absolute top-4 left-4 z-10">
-                <span className="px-3 py-1 bg-[#00701C11] text-[#517B2C] rounded-full text-sm font-medium">
-                  {product.badge}
-                </span>
-              </div>
-            )}
-
-            {/* Image Container */}
-            <div className="aspect-square relative overflow-hidden">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-              />
-            </div>
-
-            {/* Product Info */}
-            <div className="p-4">
-              <h3 className="text-lg font-medium text-secondary mb-2">
-                {product.name}
-              </h3>
-            </div>
-          </div>
-        ))}
+      {/* Navigation Buttons */}
+      <div className="justify-end gap-10 mb-8 -mt-8 hidden xl:flex">
+        <button
+          className={`p-4 rounded-full ${
+            currentOffset === 0
+              ? "bg-teritary text-white cursor-not-allowed"
+              : "bg-primary hover:bg-primary text-white"
+          }`}
+          onClick={prevProducts}
+          disabled={currentOffset === 0}
+        >
+          <FaChevronLeft className="w-4 h-4" />
+        </button>
+        <button
+          className={`p-4 rounded-full ${
+            currentOffset <= maxOffset
+              ? "bg-teritary text-white cursor-not-allowed"
+              : "bg-primary hover:bg-primary text-white"
+          }`}
+          onClick={nextProducts}
+          disabled={currentOffset <= maxOffset}
+        >
+          <FaChevronRight className="w-4 h-4" />
+        </button>
       </div>
+
+      {/* Cards Grid with Sliding Animation */}
+      <div className="overflow-hidden">
+        <div
+          ref={productContainerRef}
+          className="hidden xl:flex gap-6 transition-transform duration-500 ease-in-out"
+          style={{
+            transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
+          }}
+        >
+          {products.map((product, index) => (
+            <div className="flex-none" key={index}>
+              <ProductCard {...product} />
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="mt-8">
-        <button className="px-6 py-3 font-semibold text-gray-800 border border-gray-800 rounded-md hover:bg-gray-100">
+        <button
+          className="px-6 py-3 font-semibold text-gray-800 border border-gray-800 rounded-md hover:bg-gray-100"
+          onClick={() => navigate(PRODUCTS)}
+        >
           View All
         </button>
       </div>
