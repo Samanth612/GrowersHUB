@@ -40,8 +40,11 @@ import CommunityLayout from "./components/Community/Community";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import SellersDashboardLayout from "./components/SellersDashboard/SellersDashboardLayout";
 import ProfileLayout from "./components/Profile/ProfileLayout";
+import { useSelector } from "react-redux";
 
 const App: React.FC = () => {
+  const userData = useSelector((state: any) => state.userData.data);
+
   return (
     <div className="font-jost">
       <BrowserRouter>
@@ -81,7 +84,12 @@ const App: React.FC = () => {
             <Route path={CREATEALBUM} element={<CreateAlbumLayout />} />
             <Route path={YOURALBUM} element={<YourAlbumLayout />} />
             <Route path={SUBSCRIPTIONS} element={<SubscriptionsLayout />} />
-            <Route path={LISTINGPRODUCT} element={<SellersDashboardLayout />} />
+            {userData?.isSeller && (
+              <Route
+                path={LISTINGPRODUCT}
+                element={<SellersDashboardLayout />}
+              />
+            )}
           </Route>
           <Route path={HOME} element={<Home />} />
           <Route path={COMMUNITY} element={<CommunityLayout />} />

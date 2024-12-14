@@ -1,6 +1,7 @@
 import { ArrowLeft } from "lucide-react";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Icons from "../../Utilities/Icons";
+import { useDispatch, useSelector } from "react-redux";
 
 interface MediaUploadProps {
   editing: any;
@@ -15,8 +16,20 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
 }) => {
   const [faqQuestions, setFaqQuestions] = useState<
     { question: string; answer: string }[]
-  >([{ question: "", answer: "" }]); // Start with one FAQ by default
+  >([]);
   const [productDescription, setProductDescription] = useState<string>("");
+
+  // Accessing faqs data from redux store
+  const faqsData = useSelector((state: any) => state.faqs);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (faqsData && faqsData.length > 0) {
+      setFaqQuestions(faqsData);
+    } else {
+      setFaqQuestions([{ question: "", answer: "" }]);
+    }
+  }, [faqsData]);
 
   const addFAQ = () => {
     setFaqQuestions([...faqQuestions, { question: "", answer: "" }]);
@@ -30,6 +43,37 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
     const newFaqs = [...faqQuestions];
     newFaqs[index][field] = value;
     setFaqQuestions(newFaqs);
+  };
+
+  // Handle the deletion of a FAQ
+  const handleDeleteFAQ = (index: number) => {
+    const updatedFaqs = faqQuestions.filter((_, i) => i !== index);
+    setFaqQuestions(updatedFaqs);
+
+    // Dispatch the updated FAQ list to Redux store
+    dispatch({
+      type: "faqsData",
+      payload: {
+        data: updatedFaqs,
+      },
+    });
+  };
+
+  const handleSave = () => {
+    const updatedFaqsData = faqQuestions.map((faq) => ({
+      question: faq.question,
+      answer: faq.answer,
+    }));
+
+    dispatch({
+      type: "faqsData",
+      payload: {
+        data: updatedFaqsData,
+      },
+    });
+
+    setFaqSection(false);
+    setuploadButtonClicked(true);
   };
 
   return (
@@ -66,9 +110,12 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
           <div key={index} className="flex flex-col gap-4">
             <label className="flex w-1/2 justify-between text-sm text-teritary font-semibold mb-0">
               QUESTION {index + 1}
-              {editing && (
+              {faqsData.length > 0 && (
                 <div>
-                  <button className="flex items-center gap-2">
+                  <button
+                    className="flex items-center gap-2"
+                    onClick={() => handleDeleteFAQ(index)}
+                  >
                     <Icons variant="Delete" />
                     <span className=" text-red-500">Delete Listing</span>
                   </button>
@@ -95,14 +142,15 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
                 id="product-description"
                 placeholder="Type Your Solution..."
                 className="w-1/2 border border-[#DBD8D8] rounded-lg p-3 resize-none focus:outline-green-500"
-                value={productDescription}
-                onChange={(e) => setProductDescription(e.target.value)}
+                value={faq.answer}
+                onChange={(e) =>
+                  handleFAQChange(index, "answer", e.target.value)
+                }
                 rows={4}
               />
             </div>
           </div>
         ))}
-        {/* Render the Add FAQ button only if there's at least one FAQ */}
         {faqQuestions.length > 0 && (
           <button
             type="button"
@@ -114,7 +162,7 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
         )}
         <button
           className="px-6 py-3 w-40 bg-primary font-medium text-white rounded-lg  hover:bg-green-500"
-          //   onClick={() => navigate(INBOX)}
+          onClick={handleSave}
         >
           Save
         </button>

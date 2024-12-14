@@ -1,6 +1,7 @@
 import React, { ReactNode, useEffect, useState } from "react";
 import Icons from "../../Utilities/Icons";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 interface DashboardProps {
   children: ReactNode;
@@ -9,7 +10,9 @@ interface DashboardProps {
 const Dashboard: React.FC<DashboardProps> = ({ children }) => {
   const location = useLocation();
   const navigate = useNavigate();
-  const seller = true;
+  const userData = useSelector((state: any) => state.userData.data);
+
+  const seller = userData?.isSeller;
   //Profile
   const allMenuItems = [
     {

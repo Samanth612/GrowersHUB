@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { AlignJustify } from "lucide-react";
 import SidebarMenu from "./SidebarMenu";
-import { CREATEALBUM, LOGIN } from "../Utilities/constantLinks";
+import { CREATEALBUM, LISTINGPRODUCT, LOGIN } from "../Utilities/constantLinks";
 import JoinWaitList from "./JoinWaitList";
 
 interface WrapperProps {
@@ -17,6 +17,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
   const AuthReducer = useSelector((state: any) => state.auth);
+  const userData = useSelector((state: any) => state.userData.data);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -94,9 +95,11 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
           </button>
           <button
             className="px-6 py-3 text-white bg-primary font-medium rounded-lg hover:bg-green-500"
-            onClick={openModal}
+            onClick={() => {
+              userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
+            }}
           >
-            Become a Seller
+            {userData?.isSeller ? "List a Product" : "Become a Seller"}
           </button>
         </div>
         <div

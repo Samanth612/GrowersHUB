@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Icons from "../../Utilities/Icons";
 import { Eye, EyeOff } from "lucide-react";
+import { useDispatch } from "react-redux";
 
 interface LoginPageProps {
   showPassword: boolean;
@@ -18,6 +19,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const validateEmail = (email: string) => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -52,6 +54,12 @@ const LoginPage: React.FC<LoginPageProps> = ({
 
       if (response.data.status) {
         setLoginSuccess(true);
+        dispatch({
+          type: "userData",
+          payload: {
+            data: response.data,
+          },
+        });
       } else {
         setError(response.data.message || "Login failed.");
       }
@@ -106,7 +114,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
               onClick={() => setShowPassword(!showPassword)}
               className="absolute right-3 top-3 text-gray-400"
             >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              {showPassword ? <Eye size={20} /> : <EyeOff size={20} />}
             </button>
           </div>
         </div>

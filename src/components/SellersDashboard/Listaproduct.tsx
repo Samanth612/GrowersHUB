@@ -3,6 +3,7 @@ import { ArrowLeft, Check, Minus, Plus, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
 import Icons from "../../Utilities/Icons";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 interface UploadedFile {
   file: File;
@@ -21,20 +22,24 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   setFaqSection,
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [imageFiles, setImageFiles] = useState<any[]>([]);
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
   const [unitsForSale, setUnitsForSale] = useState<number>(5);
   const [pricePerUnit, setPricePerUnit] = useState<number>(0);
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "Plants",
-    "Freshly sourced",
-  ]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    { _id: string; categoryName: string }[]
+  >([]);
+  const [availableCategories, setAvailableCategories] = useState<
+    { _id: string; categoryName: string }[]
+  >([]);
   const [isChecked, setIsChecked] = useState(false);
-  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
   const title = editing ? "Edit Listing" : "List a Product";
+  const userData = useSelector((state: any) => state.userData.data);
+  const faqsData = useSelector((state: any) => state.faqs);
 
-  const addCategory = (category: any) => {
-    if (!selectedCategories.includes(category)) {
+  const addCategory = (category: { _id: string; categoryName: string }) => {
+    if (!selectedCategories.find((c) => c._id === category._id)) {
       setSelectedCategories([...selectedCategories, category]);
     }
   };
@@ -45,17 +50,22 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     handleFiles(files);
   };
 
-  const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files ? Array.from(e.target.files) : [];
+  const handleFileInput = (e: any) => {
+    const files: any = e.target.files ? Array.from(e.target.files) : [];
     handleFiles(files);
   };
 
   const handleFiles = (files: File[]) => {
-    const newFiles = files.map((file) => ({
+    const newFiles = Array.from(files);
+
+    // Update the imageFiles state with the array of files
+    setImageFiles((prev) => [...prev, ...newFiles]);
+
+    const filePreviews = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
     }));
-    setUploadedFiles((prev) => [...prev, ...newFiles]);
+    setUploadedFiles((prev) => [...prev, ...filePreviews]);
   };
 
   const removeFile = (index: number) => {
@@ -67,8 +77,8 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     });
   };
 
-  const removeCategory = (category: string) => {
-    setSelectedCategories((prev) => prev.filter((c) => c !== category));
+  const removeCategory = (_id: string) => {
+    setSelectedCategories((prev) => prev.filter((c) => c._id !== _id));
   };
 
   const increment = () => {
@@ -86,68 +96,98 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     }
   };
 
-  const handlePost = async () => {
+  const makeAxiosRequest = (data: any) => {
+    let form = new FormData();
+    for (let i = 0; i < data?.length; i++) {
+      form.append(`files`, data[i]);
+    }
+
+    return axios.post(
+      "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/upload_files",
+      form,
+      {
+        headers: {
+          Authorization: `Bearer ${userData?.access_token}`,
+          "Content-Type": "multipart/form-data", // Ensure multipart headers
+        },
+      }
+    );
+  };
+
+  const handlePost = async (e: any) => {
+    e.preventDefault();
+
     try {
-      const imageUrls = await uploadImages(uploadedFiles);
+      // Send the request
+      const imageUrls: any = await makeAxiosRequest(imageFiles);
 
-      const categories = selectedCategories.map((category) => {
-        return category === "Plants"
-          ? "675b21e29fd8836fdf14305f"
-          : "675b21e29fd8836fdf143060";
-      });
+      const imageLinks = Array.isArray(imageUrls.data.assets)
+        ? imageUrls.data.assets.map((imgLink: any) => imgLink.link)
+        : [];
 
-      const payload = {
-        images: imageUrls,
+      const requestPayload = {
         name: productName,
         description: productDescription,
-        categories: categories,
-        unitSale: unitsForSale.toString(),
-        price: pricePerUnit.toString(),
+        categories: selectedCategories.map((category) => category._id),
+        unitSale: unitsForSale,
+        price: pricePerUnit,
+        images: imageLinks,
+        uploadAsAlbum: false,
+        faqs: [],
       };
 
       const response = await axios.post(
-        "https://your-api-endpoint.com/products",
-        payload
+        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/",
+        requestPayload,
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+          },
+        }
       );
 
-      console.log("Product successfully listed:", response.data);
+      if (response.data.status) {
+        setuploadButtonClicked(false);
+      }
     } catch (error) {
       console.error("Error listing product:", error);
     }
-  };
-
-  const uploadImages = async (files: UploadedFile[]) => {
-    return files.map((file) => {
-      return file.file;
-    });
   };
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products/categories`,
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
           {
             headers: {
-              // Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${userData?.access_token}`,
             },
           }
         );
-        setAvailableCategories(response.data);
+
+        const categories = Array.isArray(response.data.data)
+          ? response.data.data.map((cat: any) => ({
+              _id: cat._id,
+              categoryName: cat.categoryName,
+            }))
+          : [];
+        setAvailableCategories(categories);
       } catch (error) {
         console.error("Error fetching categories:", error);
+
         setAvailableCategories([
-          "Technology",
-          "Health",
-          "Finance",
-          "Education",
-          "Travel",
+          { _id: "1", categoryName: "Technology" },
+          { _id: "2", categoryName: "Health" },
+          { _id: "3", categoryName: "Finance" },
+          { _id: "4", categoryName: "Education" },
+          { _id: "5", categoryName: "Travel" },
         ]);
       }
     };
 
     fetchCategories();
-  }, []);
+  }, [userData]);
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
@@ -179,7 +219,10 @@ const ListProduct: React.FC<MediaUploadProps> = ({
           </div>
         )}
       </div>
-      <div className="flex justify-between px-6 sm:px-12 xll:pl-12 xll:pr-0 gap-8">
+      <form
+        onSubmit={handlePost}
+        className="flex justify-between px-6 sm:px-12 xll:pl-12 xll:pr-0 gap-8"
+      >
         {/* Left Section */}
         <div className="w-full xll:w-[50%] py-6">
           <div className="mb-6 flex items-center">
@@ -221,6 +264,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               <button
                 onClick={() => document.getElementById("fileInput")?.click()}
                 className="text-green-600"
+                type="button"
               >
                 Click here
               </button>
@@ -297,30 +341,31 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             <label className="block text-sm font-semibold mb-2">
               Product Category
             </label>
-
-            {/* Selection Field */}
             <div className="mb-3">
               <div className="border border-[#DBD8D8] rounded-lg p-3 w-full">
                 <div className="flex flex-wrap gap-2">
-                  {selectedCategories.map((category, index) => (
+                  {selectedCategories.map((category) => (
                     <span
-                      key={index}
+                      key={category._id}
                       className="bg-green-50 text-secondary px-3 py-1 rounded-[4px] flex items-center gap-2"
                     >
-                      {category}
-                      <button onClick={() => removeCategory(category)}>
+                      {category.categoryName}
+                      <button onClick={() => removeCategory(category._id)}>
                         <X className="w-4 h-4" />
                       </button>
                     </span>
                   ))}
                   {availableCategories.filter(
-                    (category) => !selectedCategories.includes(category)
+                    (category) =>
+                      !selectedCategories.find((c) => c._id === category._id)
                   ).length > 0 && (
                     <select
                       className="border-none outline-none bg-transparent px-3 py-1"
                       value=""
                       onChange={(e) => {
-                        const selected = e.target.value;
+                        const selected = availableCategories.find(
+                          (cat) => cat._id === e.target.value
+                        );
                         if (selected) {
                           addCategory(selected);
                         }
@@ -329,11 +374,14 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                       <option value="">Add category</option>
                       {availableCategories
                         .filter(
-                          (category) => !selectedCategories.includes(category)
+                          (category) =>
+                            !selectedCategories.find(
+                              (c) => c._id === category._id
+                            )
                         )
-                        .map((category, index) => (
-                          <option key={index} value={category}>
-                            {category}
+                        .map((category) => (
+                          <option key={category._id} value={category._id}>
+                            {category.categoryName}
                           </option>
                         ))}
                     </select>
@@ -438,13 +486,13 @@ const ListProduct: React.FC<MediaUploadProps> = ({
 
           {/* Post Button */}
           <button
+            type="submit"
             className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-semibold hover:bg-green-500"
-            onClick={handlePost}
           >
             Save
           </button>
         </div>
-      </div>
+      </form>
     </div>
   );
 };
