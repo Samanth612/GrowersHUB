@@ -23,6 +23,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   setFaqSection,
 }) => {
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [existingImageLinks, setExistingImageLinks] = useState<string[]>([]);
   const [imageFiles, setImageFiles] = useState<any[]>([]);
   const [productName, setProductName] = useState<string>("");
   const [productDescription, setProductDescription] = useState<string>("");
@@ -85,6 +86,14 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     setSelectedCategories((prev) => prev.filter((c) => c._id !== _id));
   };
 
+  const removeExistingImage = (index: number) => {
+    setExistingImageLinks((prev) => {
+      const updatedLinks = [...prev];
+      updatedLinks.splice(index, 1); // Remove the image link
+      return updatedLinks;
+    });
+  };
+
   const increment = () => {
     setUnitsForSale((prev) => prev + 1);
   };
@@ -122,12 +131,13 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     e.preventDefault();
 
     try {
-      // Send the request
-      const imageUrls: any = await makeAxiosRequest(imageFiles);
+      const uploadedFileUrls: any = await makeAxiosRequest(imageFiles);
 
-      const imageLinks = Array.isArray(imageUrls.data.assets)
-        ? imageUrls.data.assets.map((imgLink: any) => imgLink.link)
+      const newImageLinks = Array.isArray(uploadedFileUrls.data.assets)
+        ? uploadedFileUrls.data.assets.map((imgLink: any) => imgLink.link)
         : [];
+
+      const finalImageLinks = [...existingImageLinks, ...newImageLinks]; // Combine existing and new links
 
       const requestPayload = {
         name: productName,
@@ -135,8 +145,8 @@ const ListProduct: React.FC<MediaUploadProps> = ({
         categories: selectedCategories.map((category) => category._id),
         unitSale: unitsForSale,
         price: pricePerUnit,
-        images: imageLinks,
-        uploadAsAlbum: false,
+        images: finalImageLinks,
+        uploadAsAlbum: isChecked,
         faqs: faqsData || [],
       };
 
@@ -204,12 +214,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
           categoryName: category.categoryName,
         }))
       );
-      setUploadedFiles(
-        SellersProductData.images.map((img: string) => ({
-          file: { name: img },
-          preview: img,
-        }))
-      );
+      setExistingImageLinks(SellersProductData.images || []);
     }
   }, [userData]);
 
@@ -305,11 +310,29 @@ const ListProduct: React.FC<MediaUploadProps> = ({
 
           {/* Uploaded Files Preview */}
           <div className="flex gap-4 mb-6 overflow-x-auto">
+            {/* Existing Images */}
+            {existingImageLinks.map((link, index) => (
+              <div key={`existing-${index}`} className="relative">
+                <img
+                  src={link}
+                  alt={`Existing Image ${index + 1}`}
+                  className="w-32 h-24 object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => removeExistingImage(index)}
+                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+
+            {/* New Uploaded Files */}
             {uploadedFiles.map((file, index) => (
-              <div key={index} className="relative">
+              <div key={`uploaded-${index}`} className="relative">
                 <img
                   src={file.preview}
-                  alt={`Upload ${index + 1}`}
+                  alt={`Uploaded ${index + 1}`}
                   className="w-32 h-24 object-cover rounded-lg"
                 />
                 <button
