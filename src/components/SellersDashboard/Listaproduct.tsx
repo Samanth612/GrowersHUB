@@ -131,13 +131,19 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     e.preventDefault();
 
     try {
-      const uploadedFileUrls: any = await makeAxiosRequest(imageFiles);
+      let finalImageLinks = [...existingImageLinks];
 
-      const newImageLinks = Array.isArray(uploadedFileUrls.data.assets)
-        ? uploadedFileUrls.data.assets.map((imgLink: any) => imgLink.link)
-        : [];
-
-      const finalImageLinks = [...existingImageLinks, ...newImageLinks]; // Combine existing and new links
+      if (imageFiles?.length > 0) {
+        try {
+          const uploadedFileUrls: any = await makeAxiosRequest(imageFiles);
+          const newImageLinks = Array.isArray(uploadedFileUrls.data.assets)
+            ? uploadedFileUrls.data.assets.map((imgLink: any) => imgLink.link)
+            : [];
+          finalImageLinks = [...existingImageLinks, ...newImageLinks];
+        } catch (error) {
+          console.error("Error uploading images:", error);
+        }
+      }
 
       const requestPayload = {
         name: productName,
@@ -169,54 +175,70 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   };
 
   useEffect(() => {
-    if (!editing) {
-      const fetchCategories = async () => {
-        try {
-          const response = await axios.get(
-            `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
-            {
-              headers: {
-                Authorization: `Bearer ${userData?.access_token}`,
-                "Cache-Control": "no-cache",
-              },
-            }
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+
+        const allCategories = Array.isArray(response.data.data)
+          ? response.data.data.map((cat: any) => ({
+              _id: cat._id,
+              categoryName: cat.categoryName,
+            }))
+          : [];
+
+        if (editing && SellersProductData) {
+          const selectedCategories = SellersProductData.categories.map(
+            (category: any) => ({
+              _id: category._id,
+              categoryName: category.categoryName,
+            })
           );
 
-          const categories = Array.isArray(response.data.data)
-            ? response.data.data.map((cat: any) => ({
-                _id: cat._id,
-                categoryName: cat.categoryName,
-              }))
-            : [];
-          setAvailableCategories(categories);
-        } catch (error) {
-          console.error("Error fetching categories:", error);
+          // Set product details
+          setProductName(SellersProductData.name);
+          setProductDescription(SellersProductData.description);
+          setPricePerUnit(SellersProductData.price);
+          setUnitsForSale(SellersProductData.unitSale);
+          setSelectedCategories(selectedCategories);
+          setExistingImageLinks(SellersProductData.images || []);
 
+          // Filter and combine categories
+          const remainingCategories = allCategories.filter(
+            (cat: any) =>
+              !selectedCategories.some((sel: any) => sel._id === cat._id)
+          );
           setAvailableCategories([
-            { _id: "1", categoryName: "Technology" },
-            { _id: "2", categoryName: "Health" },
-            { _id: "3", categoryName: "Finance" },
-            { _id: "4", categoryName: "Education" },
-            { _id: "5", categoryName: "Travel" },
+            ...selectedCategories,
+            ...remainingCategories,
           ]);
+        } else {
+          // If not editing, set all categories
+          setAvailableCategories(allCategories);
         }
-      };
+      } catch (error) {
+        console.error("Error fetching categories:", error);
 
-      fetchCategories();
-    } else if (editing && SellersProductData) {
-      setProductName(SellersProductData.name);
-      setProductDescription(SellersProductData.description);
-      setPricePerUnit(SellersProductData.price);
-      setUnitsForSale(SellersProductData.unitSale);
-      setSelectedCategories(
-        SellersProductData.categories.map((category: any) => ({
-          _id: category._id,
-          categoryName: category.categoryName,
-        }))
-      );
-      setExistingImageLinks(SellersProductData.images || []);
-    }
-  }, [userData]);
+        // Fallback categories
+        setAvailableCategories([
+          { _id: "1", categoryName: "Technology" },
+          { _id: "2", categoryName: "Health" },
+          { _id: "3", categoryName: "Finance" },
+          { _id: "4", categoryName: "Education" },
+          { _id: "5", categoryName: "Travel" },
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, [userData, editing, SellersProductData]);
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
