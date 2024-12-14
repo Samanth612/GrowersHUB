@@ -17,6 +17,8 @@ const ProductListings: React.FC<MediaUploadProps> = ({
   setEditing,
 }) => {
   const [filter, setFilter] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState<string>("");
+
   const products = [
     {
       title: "Crassula small leaf plant",
@@ -27,7 +29,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP1,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Succulent", "Indoor Plant", "Freshly Sourced"], // Added categories
+      categories: ["Succulent", "Indoor Plant", "Freshly Sourced"],
     },
     {
       title: "Lemon",
@@ -36,7 +38,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP2,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Fruit", "Citrus", "Freshly Sourced"], // Added categories
+      categories: ["Fruit", "Citrus", "Freshly Sourced"],
     },
     {
       title: "Mint",
@@ -45,7 +47,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP3,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Herb", "Freshly Sourced"], // Added categories
+      categories: ["Herb", "Freshly Sourced"],
     },
     {
       title: "Betel leaf plants",
@@ -56,7 +58,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP4,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Indoor Plant", "Freshly Sourced"], // Added categories
+      categories: ["Indoor Plant", "Freshly Sourced"],
     },
     {
       title: "Crassula small leaf plant (Repeat)",
@@ -67,7 +69,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP1,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Succulent", "Indoor Plant", "Freshly Sourced"], // Added categories
+      categories: ["Succulent", "Indoor Plant", "Freshly Sourced"],
     },
     {
       title: "Lemon (Repeat)",
@@ -76,17 +78,31 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       image: JP2,
       profileImage: SG1,
       name: "Joanna Wellick",
-      categories: ["Fruit", "Citrus", "Freshly Sourced"], // Added categories
+      categories: ["Fruit", "Citrus", "Freshly Sourced"],
     },
   ];
 
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4); // Fixed at 4 items per page
+  const [itemsPerPage] = useState(4);
 
-  // Calculate the displayed products for the current page
+  const filteredProducts = products.filter((product) => {
+    const matchesSearch =
+      product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      product.categories.some((category) =>
+        category.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+
+    const matchesFilter =
+      filter === "all" ||
+      (filter === "available" && product.stock) ||
+      (filter === "sold out" && !product.stock);
+
+    return matchesSearch && matchesFilter;
+  });
+
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const currentProducts = filteredProducts.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -101,12 +117,14 @@ const ProductListings: React.FC<MediaUploadProps> = ({
               Your Listings
             </h1>
             <span className="ml-2 bg-premiumgray text-secondary text-sm px-2 py-0.5 rounded-full">
-              {products.length}
+              {filteredProducts.length}
             </span>
           </div>
           <input
             type="text"
             placeholder="Search Products"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full max-w-[250px] sm:min-w-[320px] px-4 py-3 bg-premiumgray rounded-lg placeholder:text-tertiary focus:outline-none focus:ring-2 focus:ring-green-500"
           />
         </div>
@@ -156,7 +174,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
           <Pagination
             id={"type2"}
             currentPage={currentPage}
-            totalPages={Math.ceil(products.length / itemsPerPage)}
+            totalPages={Math.ceil(filteredProducts.length / itemsPerPage)}
             onPageChange={handlePageChange}
             displayRange={3}
           />
