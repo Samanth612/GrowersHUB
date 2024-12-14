@@ -133,7 +133,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
         price: pricePerUnit,
         images: imageLinks,
         uploadAsAlbum: false,
-        faqs: [],
+        faqs: faqsData || [],
       };
 
       const response = await axios.post(
