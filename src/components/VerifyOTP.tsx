@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -37,6 +37,25 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
     password: "",
     confirmPassword: "",
   });
+  const [timer, setTimer] = useState(900); // 15 minutes in seconds
+  const [isTimerActive, setIsTimerActive] = useState(true); // Timer starts when OTP is shown
+
+  // Start countdown
+  useEffect(() => {
+    let interval: any;
+
+    if (isTimerActive && timer > 0) {
+      interval = setInterval(() => {
+        setTimer((prev) => prev - 1);
+      }, 1000);
+    }
+
+    if (timer === 0) {
+      setIsTimerActive(false); // Stop timer when it reaches 0
+    }
+
+    return () => clearInterval(interval); // Clean up interval on component unmount
+  }, [isTimerActive, timer]);
 
   const handleChange = (element: any, index: any) => {
     if (isNaN(element.value)) return false;
@@ -115,6 +134,8 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
 
       if (response.data.status) {
         setSuccessMessage("OTP resent successfully! Please check your email.");
+        setTimer(900); // Reset timer for 15 minutes
+        setIsTimerActive(true); // Start the countdown again
       } else {
         setError(response.data.message || "Failed to resend OTP.");
       }
@@ -168,6 +189,14 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
 
     setErrors(newErrors);
     return valid;
+  };
+
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${
+      remainingSeconds < 10 ? `0${remainingSeconds}` : remainingSeconds
+    }`;
   };
 
   return (
@@ -279,16 +308,24 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
           </button>
 
           {/* Resend Link */}
-          <p className="text-sm text-center ml-2 text-secondary">
-            Didn't receive code?{" "}
-            <button
-              onClick={resendOTP}
-              className={`text-primary ${resendLoading ? "opacity-50" : ""}`}
-              disabled={resendLoading}
-            >
-              {resendLoading ? "Resending..." : "Resend OTP"}
-            </button>
-          </p>
+          {isTimerActive ? (
+            <p className="text-sm text-center text-teritary">
+              Time Remaining: {formatTime(timer)}
+            </p>
+          ) : (
+            <p className="text-sm text-center ml-2 text-secondary">
+              Didn't receive code?{" "}
+              <button
+                onClick={resendOTP}
+                className={`text-primary ${
+                  resendLoading || isTimerActive ? "opacity-50" : ""
+                }`}
+                disabled={resendLoading || isTimerActive}
+              >
+                {resendLoading ? "Resending..." : "Resend OTP"}
+              </button>
+            </p>
+          )}
         </div>
       </div>
     </>

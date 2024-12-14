@@ -1,7 +1,8 @@
-import React, { useState, DragEvent, ChangeEvent } from "react";
+import React, { useState, DragEvent, ChangeEvent, useEffect } from "react";
 import { ArrowLeft, Check, Minus, Plus, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
 import Icons from "../../Utilities/Icons";
+import axios from "axios";
 
 interface UploadedFile {
   file: File;
@@ -29,13 +30,8 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     "Freshly sourced",
   ]);
   const [isChecked, setIsChecked] = useState(false);
-  const availableCategories = [
-    "Technology",
-    "Health",
-    "Finance",
-    "Education",
-    "Travel",
-  ];
+  const [availableCategories, setAvailableCategories] = useState<string[]>([]);
+  const title = editing ? "Edit Listing" : "List a Product";
 
   const addCategory = (category: any) => {
     if (!selectedCategories.includes(category)) {
@@ -90,7 +86,68 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     }
   };
 
-  const title = editing ? "Edit Listing" : "List a Product";
+  const handlePost = async () => {
+    try {
+      const imageUrls = await uploadImages(uploadedFiles);
+
+      const categories = selectedCategories.map((category) => {
+        return category === "Plants"
+          ? "675b21e29fd8836fdf14305f"
+          : "675b21e29fd8836fdf143060";
+      });
+
+      const payload = {
+        images: imageUrls,
+        name: productName,
+        description: productDescription,
+        categories: categories,
+        unitSale: unitsForSale.toString(),
+        price: pricePerUnit.toString(),
+      };
+
+      const response = await axios.post(
+        "https://your-api-endpoint.com/products",
+        payload
+      );
+
+      console.log("Product successfully listed:", response.data);
+    } catch (error) {
+      console.error("Error listing product:", error);
+    }
+  };
+
+  const uploadImages = async (files: UploadedFile[]) => {
+    return files.map((file) => {
+      return file.file;
+    });
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products/categories`,
+          {
+            headers: {
+              // Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setAvailableCategories(response.data);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+        setAvailableCategories([
+          "Technology",
+          "Health",
+          "Finance",
+          "Education",
+          "Travel",
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, []);
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
@@ -380,7 +437,10 @@ const ListProduct: React.FC<MediaUploadProps> = ({
           </div>
 
           {/* Post Button */}
-          <button className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-semibold hover:bg-green-500">
+          <button
+            className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-semibold hover:bg-green-500"
+            onClick={handlePost}
+          >
             Save
           </button>
         </div>
