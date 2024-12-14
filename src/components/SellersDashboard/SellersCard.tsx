@@ -1,6 +1,8 @@
 import { MapPin } from "lucide-react";
 import React, { useState } from "react";
 import Icons from "../../Utilities/Icons";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 interface Product {
   title: string;
@@ -8,6 +10,7 @@ interface Product {
   price: string;
   image: string;
   categories: string[];
+  id: string;
 }
 
 const SellersCard: React.FC<{
@@ -17,6 +20,7 @@ const SellersCard: React.FC<{
 }> = ({ product, setEditing, setuploadButtonClicked }) => {
   const [unitsSold, setUnitsSold] = useState(5);
   const maxUnits = 10;
+  const userData = useSelector((state: any) => state.userData.data);
 
   const handleIncrement = () => {
     if (unitsSold < maxUnits) {
@@ -32,6 +36,22 @@ const SellersCard: React.FC<{
 
   const handleMarkAsSold = () => {
     console.log("Marked as sold");
+  };
+
+  const handleEdit = async (productId: any) => {
+    const response = await axios.get(
+      `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products/${productId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${userData?.access_token}`,
+          "Cache-Control": "no-cache",
+        },
+      }
+    );
+    console.log(response.data);
+
+    setEditing(true);
+    setuploadButtonClicked(true);
   };
 
   return (
@@ -82,12 +102,7 @@ const SellersCard: React.FC<{
           <button>
             <Icons variant="Delete" />
           </button>
-          <button
-            onClick={() => {
-              setEditing(true);
-              setuploadButtonClicked(true);
-            }}
-          >
+          <button onClick={() => handleEdit(product.id)}>
             <Icons variant="Edit" />
           </button>
         </div>

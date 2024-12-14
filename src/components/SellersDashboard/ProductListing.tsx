@@ -108,6 +108,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
               profileImage: product.userDetails.profileImage || "",
               name: product.userDetails.name,
               categories: product.categories,
+              id: product._id,
             })
           );
           setProducts(backendProducts);
