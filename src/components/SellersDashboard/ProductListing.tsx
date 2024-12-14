@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import Pagination from "../../Utilities/Pagination";
 import JP1 from "../../assets/JP1.jpg";
 import JP2 from "../../assets/JP2.jpg";
@@ -6,6 +7,7 @@ import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
 import SG1 from "../../assets/SG1.jpg";
 import SellersCard from "./SellersCard";
+import { useSelector } from "react-redux";
 
 interface MediaUploadProps {
   setuploadButtonClicked: any;
@@ -18,8 +20,14 @@ const ProductListings: React.FC<MediaUploadProps> = ({
 }) => {
   const [filter, setFilter] = useState<string>("all");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(4);
+  const userData = useSelector((state: any) => state.userData.data);
 
-  const products = [
+  const staticProducts = [
     {
       title: "Crassula small leaf plant",
       location: "San Ramon, California",
@@ -60,44 +68,69 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       name: "Joanna Wellick",
       categories: ["Indoor Plant", "Freshly Sourced"],
     },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      categories: ["Succulent", "Indoor Plant", "Freshly Sourced"],
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California",
-      price: "122",
-      image: JP2,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      categories: ["Fruit", "Citrus", "Freshly Sourced"],
-    },
   ];
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(4);
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+
+      try {
+        // Map filter to the server's expected status parameter
+        const status =
+          filter === "all"
+            ? "All"
+            : filter === "available"
+            ? "Available"
+            : "Sold";
+
+        const response = await axios.get(
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/?status=${status}`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+
+        if (response.data.status) {
+          const backendProducts = response.data.data.data.map(
+            (product: any) => ({
+              title: product.name,
+              location: product.userDetails.address,
+              price: product.price.toString(),
+              stock:
+                product.noOfUnitsSold > 0
+                  ? `${product.noOfUnitsSold} sold`
+                  : "Available",
+              image: product.images[0],
+              profileImage: product.userDetails.profileImage || "",
+              name: product.userDetails.name,
+              categories: product.categories,
+            })
+          );
+          setProducts(backendProducts);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error as any);
+        setProducts(staticProducts);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [filter, userData?.access_token]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
       product.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      product.categories.some((category) =>
+      product.categories.some((category: string) =>
         category.toLowerCase().includes(searchTerm.toLowerCase())
       );
 
-    const matchesFilter =
-      filter === "all" ||
-      (filter === "available" && product.stock) ||
-      (filter === "sold out" && !product.stock);
-
-    return matchesSearch && matchesFilter;
+    return matchesSearch;
   });
 
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -107,6 +140,27 @@ const ProductListings: React.FC<MediaUploadProps> = ({
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
+
+  const handleFilterChange = (newFilter: string) => {
+    setFilter(newFilter);
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return (
+      <div className="text-center p-6 flex items-center justify-center">
+        Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center p-6 flex items-center justify-center text-red-500">
+        {error}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-full mx-auto bg-white">
@@ -133,7 +187,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
             {["all", "available", "sold out"].map((filterType) => (
               <button
                 key={filterType}
-                onClick={() => setFilter(filterType)}
+                onClick={() => handleFilterChange(filterType)}
                 className={`px-4 py-1 rounded-md ${
                   filter === filterType
                     ? "text-primary font-medium bg-premiumgreen"

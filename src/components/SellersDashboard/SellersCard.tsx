@@ -63,7 +63,7 @@ const SellersCard: React.FC<{
           </div>
 
           {/* Product Location */}
-          <div className="flex items-center gap-1 text-teritary">
+          <div className="flex items-center mt-1 gap-1 text-teritary">
             <MapPin className="w-5 h-5" />
             <span className="text-sm text-teritary">{product.location}</span>
           </div>

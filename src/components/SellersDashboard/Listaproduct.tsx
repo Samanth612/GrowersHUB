@@ -162,6 +162,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
           {
             headers: {
               Authorization: `Bearer ${userData?.access_token}`,
+              "Cache-Control": "no-cache",
             },
           }
         );
