@@ -2,7 +2,8 @@ import { MapPin } from "lucide-react";
 import React, { useState } from "react";
 import Icons from "../../Utilities/Icons";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { store } from "../../../Store/store";
 
 interface Product {
   title: string;
@@ -21,6 +22,7 @@ const SellersCard: React.FC<{
   const [unitsSold, setUnitsSold] = useState(5);
   const maxUnits = 10;
   const userData = useSelector((state: any) => state.userData.data);
+  const dispatch = useDispatch();
 
   const handleIncrement = () => {
     if (unitsSold < maxUnits) {
@@ -48,7 +50,14 @@ const SellersCard: React.FC<{
         },
       }
     );
-    console.log(response.data);
+    if (response.data.status) {
+      dispatch({
+        type: "sellersProductData",
+        payload: {
+          data: response.data.data,
+        },
+      });
+    }
 
     setEditing(true);
     setuploadButtonClicked(true);

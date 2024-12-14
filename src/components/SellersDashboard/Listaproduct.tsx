@@ -4,6 +4,7 @@ import SG1 from "../../assets/SG1.jpg";
 import Icons from "../../Utilities/Icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { store } from "../../../Store/store";
 
 interface UploadedFile {
   file: File;
@@ -37,6 +38,9 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   const title = editing ? "Edit Listing" : "List a Product";
   const userData = useSelector((state: any) => state.userData.data);
   const faqsData = useSelector((state: any) => state.faqs);
+  const SellersProductData = useSelector(
+    (state: any) => state.SellersProductData
+  );
 
   const addCategory = (category: { _id: string; categoryName: string }) => {
     if (!selectedCategories.find((c) => c._id === category._id)) {
@@ -155,39 +159,58 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData?.access_token}`,
-              "Cache-Control": "no-cache",
-            },
-          }
-        );
+    if (!editing) {
+      const fetchCategories = async () => {
+        try {
+          const response = await axios.get(
+            `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
+            {
+              headers: {
+                Authorization: `Bearer ${userData?.access_token}`,
+                "Cache-Control": "no-cache",
+              },
+            }
+          );
 
-        const categories = Array.isArray(response.data.data)
-          ? response.data.data.map((cat: any) => ({
-              _id: cat._id,
-              categoryName: cat.categoryName,
-            }))
-          : [];
-        setAvailableCategories(categories);
-      } catch (error) {
-        console.error("Error fetching categories:", error);
+          const categories = Array.isArray(response.data.data)
+            ? response.data.data.map((cat: any) => ({
+                _id: cat._id,
+                categoryName: cat.categoryName,
+              }))
+            : [];
+          setAvailableCategories(categories);
+        } catch (error) {
+          console.error("Error fetching categories:", error);
 
-        setAvailableCategories([
-          { _id: "1", categoryName: "Technology" },
-          { _id: "2", categoryName: "Health" },
-          { _id: "3", categoryName: "Finance" },
-          { _id: "4", categoryName: "Education" },
-          { _id: "5", categoryName: "Travel" },
-        ]);
-      }
-    };
+          setAvailableCategories([
+            { _id: "1", categoryName: "Technology" },
+            { _id: "2", categoryName: "Health" },
+            { _id: "3", categoryName: "Finance" },
+            { _id: "4", categoryName: "Education" },
+            { _id: "5", categoryName: "Travel" },
+          ]);
+        }
+      };
 
-    fetchCategories();
+      fetchCategories();
+    } else if (editing && SellersProductData) {
+      setProductName(SellersProductData.name);
+      setProductDescription(SellersProductData.description);
+      setPricePerUnit(SellersProductData.price);
+      setUnitsForSale(SellersProductData.unitSale);
+      setSelectedCategories(
+        SellersProductData.categories.map((category: any) => ({
+          _id: category._id,
+          categoryName: category.categoryName,
+        }))
+      );
+      setUploadedFiles(
+        SellersProductData.images.map((img: string) => ({
+          file: { name: img },
+          preview: img,
+        }))
+      );
+    }
   }, [userData]);
 
   return (
@@ -440,20 +463,6 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 />
               </div>
             </div>
-
-            {/* Product Location */}
-            {/* <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2">
-                Change product location
-              </label>
-              <input
-                type="text"
-                placeholder="Enter 5 digit zip code"
-                value={productLocation}
-                onChange={(e) => setProductLocation(e.target.value)}
-                className="w-full border border-[#DBD8D8] rounded-lg p-3"
-              />
-            </div> */}
           </div>
 
           {/* FAQs */}
@@ -462,7 +471,15 @@ const ListProduct: React.FC<MediaUploadProps> = ({
 
             <button
               type="button"
-              onClick={() => setFaqSection(true)}
+              onClick={() => {
+                setFaqSection(true);
+                store.dispatch({
+                  type: "faqsData",
+                  payload: {
+                    data: SellersProductData?.FAQ,
+                  },
+                });
+              }}
               className="text-primary font-bold"
             >
               + ADD/View FAQs
