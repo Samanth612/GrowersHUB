@@ -17,7 +17,9 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
   const [faqQuestions, setFaqQuestions] = useState<
     { question: string; answer: string }[]
   >([]);
-  const [productDescription, setProductDescription] = useState<string>("");
+  const SellersProductData = useSelector(
+    (state: any) => state.SellersProductData
+  );
 
   // Accessing faqs data from redux store
   const faqsData = useSelector((state: any) => state.faqs);
@@ -65,12 +67,21 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
       answer: faq.answer,
     }));
 
-    dispatch({
-      type: "faqsData",
-      payload: {
-        data: updatedFaqsData,
-      },
-    });
+    if (editing) {
+      dispatch({
+        type: "sellersProductData",
+        payload: {
+          data: { ...SellersProductData, FAQ: updatedFaqsData },
+        },
+      });
+    } else {
+      dispatch({
+        type: "faqsData",
+        payload: {
+          data: updatedFaqsData,
+        },
+      });
+    }
 
     setFaqSection(false);
     setuploadButtonClicked(true);
