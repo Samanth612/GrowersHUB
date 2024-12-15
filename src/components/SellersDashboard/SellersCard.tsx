@@ -103,7 +103,7 @@ const SellersCard: React.FC<{
               {product.title}
             </h3>
             <div className="flex gap-2 flex-wrap">
-              {product.categories.map((category, index) => (
+              {product.categories.slice(0, 3).map((category, index) => (
                 <span
                   key={index}
                   className="text-xs text-primary bg-premiumgreen px-2 py-1 rounded-md"

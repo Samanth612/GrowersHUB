@@ -547,7 +547,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 store.dispatch({
                   type: "faqsData",
                   payload: {
-                    data: SellersProductData?.FAQ,
+                    data: editing ? SellersProductData?.FAQ : [],
                   },
                 });
               }}
