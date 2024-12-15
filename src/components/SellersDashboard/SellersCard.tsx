@@ -53,7 +53,7 @@ const SellersCard: React.FC<{
       );
 
       if (response.data.status) {
-        console.log("Mark as Sold successfull:", response.data.data);
+        console.log("Mark as Sold successfull:", response.data.message);
       } else {
         console.error("Unexpected response:", response);
       }
