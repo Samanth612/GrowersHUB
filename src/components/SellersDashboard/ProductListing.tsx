@@ -221,6 +221,11 @@ const ProductListings: React.FC<MediaUploadProps> = ({
                 product={product}
                 setEditing={setEditing}
                 setuploadButtonClicked={setuploadButtonClicked}
+                removeProduct={(id: string) => {
+                  setProducts((prevProducts) =>
+                    prevProducts.filter((product) => product.id !== id)
+                  );
+                }}
               />
             ))}
           </div>

@@ -18,7 +18,8 @@ const SellersCard: React.FC<{
   product: Product;
   setEditing: any;
   setuploadButtonClicked: any;
-}> = ({ product, setEditing, setuploadButtonClicked }) => {
+  removeProduct: (id: string) => void;
+}> = ({ product, setEditing, setuploadButtonClicked, removeProduct }) => {
   const [unitsSold, setUnitsSold] = useState(5);
   const maxUnits = 10;
   const userData = useSelector((state: any) => state.userData.data);
@@ -78,6 +79,7 @@ const SellersCard: React.FC<{
 
       if (response.data.status) {
         console.log("Product deleted successfully:", response.data.data);
+        removeProduct(productId);
       } else {
         console.error("Unexpected response:", response);
       }
