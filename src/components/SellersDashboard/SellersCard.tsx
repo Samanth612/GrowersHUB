@@ -37,8 +37,29 @@ const SellersCard: React.FC<{
     }
   };
 
-  const handleMarkAsSold = () => {
-    console.log("Marked as sold");
+  const handleMarkAsSold = async (productId: string) => {
+    try {
+      const data = { unitsToSell: unitsSold };
+
+      const response = await axios.post(
+        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/${productId}/mark-sold`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+
+      if (response.data.status) {
+        console.log("Mark as Sold successfull:", response.data.data);
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const handleEdit = async (productId: any) => {
@@ -166,7 +187,7 @@ const SellersCard: React.FC<{
 
           {/* Mark as Sold Button */}
           <button
-            onClick={handleMarkAsSold}
+            onClick={() => handleMarkAsSold(product.id)}
             className="bg-white text-sm font-bold text-secondary px-4 py-3 mt-6 rounded-md border border-secondary transition-colors"
           >
             Mark as Sold
@@ -214,7 +235,7 @@ const SellersCard: React.FC<{
 
           {/* Mark as Sold Button */}
           <button
-            onClick={handleMarkAsSold}
+            onClick={() => handleMarkAsSold(product.id)}
             className="bg-white text-sm font-bold text-secondary px-4 py-3 mt-6 mb-2 rounded-md border border-secondary transition-colors"
           >
             Mark as Sold
