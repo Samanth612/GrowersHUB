@@ -11,31 +11,62 @@ interface UploadedFile {
   preview: string;
 }
 
+interface Category {
+  _id: string;
+  categoryName: string;
+}
+
 interface MediaUploadProps {
-  setuploadButtonClicked: any;
-  editing: any;
-  setFaqSection: any;
+  uploadedFiles: UploadedFile[];
+  setUploadedFiles: React.Dispatch<React.SetStateAction<UploadedFile[]>>;
+  existingImageLinks: string[];
+  setExistingImageLinks: React.Dispatch<React.SetStateAction<string[]>>;
+  imageFiles: any[];
+  setImageFiles: React.Dispatch<React.SetStateAction<any[]>>;
+  productName: string;
+  setProductName: React.Dispatch<React.SetStateAction<string>>;
+  productDescription: string;
+  setProductDescription: React.Dispatch<React.SetStateAction<string>>;
+  unitsForSale: number;
+  setUnitsForSale: React.Dispatch<React.SetStateAction<number>>;
+  pricePerUnit: number;
+  setPricePerUnit: React.Dispatch<React.SetStateAction<number>>;
+  selectedCategories: Category[];
+  setSelectedCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  availableCategories: Category[];
+  setAvailableCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  isChecked: boolean;
+  setIsChecked: React.Dispatch<React.SetStateAction<boolean>>;
+  setuploadButtonClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  editing: boolean;
+  setFaqSection: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const ListProduct: React.FC<MediaUploadProps> = ({
+  uploadedFiles,
+  setUploadedFiles,
+  existingImageLinks,
+  setExistingImageLinks,
+  imageFiles,
+  setImageFiles,
+  productName,
+  setProductName,
+  productDescription,
+  setProductDescription,
+  unitsForSale,
+  setUnitsForSale,
+  pricePerUnit,
+  setPricePerUnit,
+  selectedCategories,
+  setSelectedCategories,
+  availableCategories,
+  setAvailableCategories,
+  isChecked,
+  setIsChecked,
   setuploadButtonClicked,
   editing,
   setFaqSection,
 }) => {
-  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
-  const [existingImageLinks, setExistingImageLinks] = useState<string[]>([]);
-  const [imageFiles, setImageFiles] = useState<any[]>([]);
-  const [productName, setProductName] = useState<string>("");
-  const [productDescription, setProductDescription] = useState<string>("");
-  const [unitsForSale, setUnitsForSale] = useState<number>(5);
-  const [pricePerUnit, setPricePerUnit] = useState<number>(0);
-  const [selectedCategories, setSelectedCategories] = useState<
-    { _id: string; categoryName: string }[]
-  >([]);
-  const [availableCategories, setAvailableCategories] = useState<
-    { _id: string; categoryName: string }[]
-  >([]);
-  const [isChecked, setIsChecked] = useState(false);
   const title = editing ? "Edit Listing" : "List a Product";
   const userData = useSelector((state: any) => state.userData.data);
   const faqsData = useSelector((state: any) => state.faqs);
@@ -549,7 +580,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 store.dispatch({
                   type: "faqsData",
                   payload: {
-                    data: editing ? SellersProductData?.FAQ : [],
+                    data: editing ? SellersProductData?.FAQ : faqsData,
                   },
                 });
               }}
