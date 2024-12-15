@@ -94,19 +94,27 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     });
   };
 
-  const handleDelete = (productId: string) => {
-    axios
-      .post(
+  const handleDelete = async (productId: string) => {
+    try {
+      const response = await axios.post(
         `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/delete/${productId}`,
+        {},
         {
           headers: {
             Authorization: `Bearer ${userData?.access_token}`,
             "Cache-Control": "no-cache",
           },
         }
-      )
-      .then((data: any) => console.log(data, "delete"))
-      .catch((err: any) => console.log(err));
+      );
+
+      if (response.data.status) {
+        console.log("Product deleted successfully:", response.data.data);
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
   };
 
   const increment = () => {
