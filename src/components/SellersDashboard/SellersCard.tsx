@@ -201,10 +201,10 @@ const SellersCard: React.FC<{
             <span className="text-lg font-normal text-teritary">/unit</span>
           </div>
           <div className="flex items-center gap-6">
-            <button>
+            <button onClick={() => handleDelete(product.id)}>
               <Icons variant="Delete" />
             </button>
-            <button>
+            <button onClick={() => handleEdit(product.id)}>
               <Icons variant="Edit" />
             </button>
           </div>
