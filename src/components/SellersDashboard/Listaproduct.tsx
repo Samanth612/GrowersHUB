@@ -212,15 +212,15 @@ const ListProduct: React.FC<MediaUploadProps> = ({
         faqs: faqsData || [],
       };
 
-      const response = await axios.post(
-        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/",
-        requestPayload,
-        {
-          headers: {
-            Authorization: `Bearer ${userData?.access_token}`,
-          },
-        }
-      );
+      const APIUrl = editing
+        ? `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/${SellersProductData?._id}`
+        : "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/";
+
+      const response = await axios.post(APIUrl, requestPayload, {
+        headers: {
+          Authorization: `Bearer ${userData?.access_token}`,
+        },
+      });
 
       if (response.data.status) {
         setuploadButtonClicked(false);
@@ -254,7 +254,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
           const selectedCategories = SellersProductData.categories.map(
             (category: any) => ({
               _id: category._id,
-              categoryName: category.categoryName,
+              categoryName: category.name,
             })
           );
 

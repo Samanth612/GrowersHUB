@@ -64,7 +64,7 @@ const SellersCard: React.FC<{
 
   const handleEdit = async (productId: any) => {
     const response = await axios.get(
-      `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products/${productId}`,
+      `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/${productId}`,
       {
         headers: {
           Authorization: `Bearer ${userData?.access_token}`,
