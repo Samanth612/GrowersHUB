@@ -63,6 +63,29 @@ const SellersCard: React.FC<{
     setuploadButtonClicked(true);
   };
 
+  const handleDelete = async (productId: string) => {
+    try {
+      const response = await axios.post(
+        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/delete/${productId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
+
+      if (response.data.status) {
+        console.log("Product deleted successfully:", response.data.data);
+      } else {
+        console.error("Unexpected response:", response);
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
   return (
     <div className="flex flex-wrap items-center justify-between bg-white border border-gray-300 rounded-[20px] shadow-inner">
       <div className="flex gap-3 sm:gap-8 items-center p-2 sm:p-4">
@@ -108,7 +131,7 @@ const SellersCard: React.FC<{
       {/* Units Sold */}
       <div className="hidden flex-col items-end gap-2 sm:flex">
         <div className="flex items-center gap-12 pr-5">
-          <button>
+          <button onClick={() => handleDelete(product.id)}>
             <Icons variant="Delete" />
           </button>
           <button onClick={() => handleEdit(product.id)}>

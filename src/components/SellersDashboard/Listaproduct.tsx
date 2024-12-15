@@ -94,6 +94,21 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     });
   };
 
+  const handleDelete = (productId: string) => {
+    axios
+      .post(
+        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/delete/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Cache-Control": "no-cache",
+          },
+        }
+      )
+      .then((data: any) => console.log(data, "delete"))
+      .catch((err: any) => console.log(err));
+  };
+
   const increment = () => {
     setUnitsForSale((prev) => prev + 1);
   };
@@ -261,9 +276,12 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             <span className="font-semibold text-xl">{title}</span>
           </button>
         </div>
-        {editing && (
+        {editing && SellersProductData && (
           <div>
-            <button className="flex items-center gap-2">
+            <button
+              className="flex items-center gap-2"
+              onClick={() => handleDelete(SellersProductData?._id)}
+            >
               <Icons variant="Delete" />
               <span className=" text-red-500">Delete Listing</span>
             </button>
