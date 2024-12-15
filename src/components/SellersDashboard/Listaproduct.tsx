@@ -109,6 +109,8 @@ const ListProduct: React.FC<MediaUploadProps> = ({
 
       if (response.data.status) {
         console.log("Product deleted successfully:", response.data.data);
+        setuploadButtonClicked(false);
+        setFaqSection(false);
       } else {
         console.error("Unexpected response:", response);
       }
