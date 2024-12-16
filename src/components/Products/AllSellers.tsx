@@ -5,6 +5,8 @@ import JP2 from "../../assets/JP2.jpg";
 import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
 import Pagination from "../../Utilities/Pagination";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 const AllSellers: React.FC = () => {
   const products = [
@@ -88,6 +90,7 @@ const AllSellers: React.FC = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
+  const userData = useSelector((state: any) => state.userData.data);
 
   // Calculate the displayed products for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
@@ -105,6 +108,30 @@ const AllSellers: React.FC = () => {
       setItemsPerPage(8);
     }
   }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const skip = currentPage - 1;
+      const limit = itemsPerPage;
+      try {
+        const response = await axios.get(
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products?skip=${skip}&limit=${limit}&sortBy=price`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+
+        console.log(response?.data);
+      } catch (error) {
+        console.error("Failed to fetch products:", error as any);
+      }
+    };
+
+    fetchProducts();
+  }, [userData?.access_token]);
 
   return (
     <div className="px-6 lg:px-12 py-8 bg-white">
