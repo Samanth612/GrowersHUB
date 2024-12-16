@@ -70,9 +70,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
           <button
             className="w-full mt-4 py-2 bg-primary text-white font-medium rounded-md hover:bg-green-500"
             onClick={() => {
-              userData?.isSeller
-                ? navigate(LISTINGPRODUCT, { state: "List" })
-                : openModal();
+              userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
             }}
           >
             {userData?.isSeller ? "List a Product" : "Become a Seller"}

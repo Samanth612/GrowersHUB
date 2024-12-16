@@ -96,9 +96,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
           <button
             className="px-6 py-3 text-white bg-primary font-medium rounded-lg hover:bg-green-500"
             onClick={() => {
-              userData?.isSeller
-                ? navigate(LISTINGPRODUCT, { state: "List" })
-                : openModal();
+              userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
             }}
           >
             {userData?.isSeller ? "List a Product" : "Become a Seller"}

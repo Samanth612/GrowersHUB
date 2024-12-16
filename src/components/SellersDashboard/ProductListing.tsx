@@ -149,15 +149,15 @@ const ProductListings: React.FC<MediaUploadProps> = ({
 
   if (loading) {
     return (
-      <div className="text-center p-6 flex items-center justify-center">
-        Loading...
+      <div className="flex items-center justify-center h-full">
+        <div className="loader"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center p-6 flex items-center justify-center text-red-500">
+      <div className="text-center p-6 flex items-center h-full justify-center text-red-500">
         {error}
       </div>
     );

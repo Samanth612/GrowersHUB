@@ -5,7 +5,6 @@ import Dashboard from "../Chat/Dashboard";
 import ListProduct from "./Listaproduct";
 import FAQsSection from "./FAQsSection";
 import { store } from "../../../Store/store";
-import { useLocation } from "react-router-dom";
 
 interface UploadedFile {
   file: File;
@@ -13,7 +12,6 @@ interface UploadedFile {
 }
 
 const SellersDashboardLayout: React.FC = () => {
-  const location = useLocation();
   const [uploadButtonClicked, setuploadButtonClicked] = useState(false);
   const [editing, setEditing] = useState(false);
   const [FaqSection, setFaqSection] = useState(false);
@@ -44,12 +42,6 @@ const SellersDashboardLayout: React.FC = () => {
     setAvailableCategories([]);
     setIsChecked(false);
   };
-
-  useEffect(() => {
-    if (location?.state === "List") {
-      setuploadButtonClicked(true);
-    }
-  }, []);
 
   return (
     <div>
