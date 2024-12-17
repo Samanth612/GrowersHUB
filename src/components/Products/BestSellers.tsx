@@ -7,8 +7,15 @@ import JP3 from "../../assets/JP3.jpg";
 import JP4 from "../../assets/JP4.jpg";
 import Carousel from "../Carousel";
 
-const BestSellers: React.FC = () => {
-  const products = [
+interface BestSellerProps {
+  SimilarProductsData?: any[];
+}
+
+const BestSellers: React.FC<BestSellerProps> = ({
+  SimilarProductsData = [],
+}) => {
+  // Fallback products array
+  const fallbackProducts = [
     {
       title: "Crassula small leaf plant",
       location: "San Ramon, California, 20miles away",
@@ -53,6 +60,23 @@ const BestSellers: React.FC = () => {
     },
   ];
 
+  // Determine the products to display
+  const productsToDisplay =
+    SimilarProductsData?.length > 0
+      ? SimilarProductsData.map((product) => ({
+          title: product.name,
+          location: product.address,
+          price: product.price,
+          unitInfo: `${product.unitSale} unit`,
+          stock:
+            product.noOfUnitsSold === 0
+              ? "Out of stock"
+              : `${product.noOfUnitsSold} units sold`,
+          image: product.images[0],
+          id: product._id,
+        }))
+      : fallbackProducts;
+
   // State for the current offset of the products
   const [currentOffset, setCurrentOffset] = useState(0);
 
@@ -80,16 +104,17 @@ const BestSellers: React.FC = () => {
   // Total width of one product card including the gap
   const totalWidthPerCard = productWidth + gap;
 
-  const maxOffset = -(products.length - visibleCards) * totalWidthPerCard;
+  const maxOffset =
+    -(productsToDisplay.length - visibleCards) * totalWidthPerCard;
 
-  // Move to the next 4 products
+  // Move to the next products
   const nextProducts = () => {
     if (currentOffset > maxOffset) {
       setCurrentOffset(currentOffset - totalWidthPerCard);
     }
   };
 
-  // Move to the previous 4 products
+  // Move to the previous products
   const prevProducts = () => {
     if (currentOffset < 0) {
       setCurrentOffset(currentOffset + totalWidthPerCard);
@@ -137,16 +162,16 @@ const BestSellers: React.FC = () => {
           ref={productContainerRef}
           className="hidden xl:flex gap-6 transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
+            transform: `translateX(${currentOffset}px)`,
           }}
         >
-          {products.map((product, index) => (
+          {productsToDisplay.map((product, index) => (
             <div className="flex-none" key={index}>
               <ProductCard {...product} />
             </div>
           ))}
         </div>
-        <Carousel products={products} />
+        <Carousel products={productsToDisplay} />
       </div>
     </div>
   );

@@ -2,43 +2,22 @@ import React, { useEffect, useState } from "react";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import Icons from "../../Utilities/Icons";
 import { Flame, Heart, Share2 } from "lucide-react";
-import JP1 from "../../assets/Product.png";
-import SG1 from "../../assets/SG1.jpg";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { INBOX, VIEWSELLERSGARDEN } from "../../Utilities/constantLinks";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
-const products = [
-  {
-    title: "Crassula small leaf plant",
-    image: JP1,
-  },
-  {
-    title: "Lemon",
-    image: JP1,
-  },
-  {
-    title: "Mint",
-    image: JP1,
-  },
-  {
-    title: "Betel leaf plants",
-    image: JP1,
-  },
-  {
-    title: "Crassula small leaf plant (Repeat)",
-    image: JP1,
-  },
-  {
-    title: "Lemon (Repeat)",
-    image: JP1,
-  },
-];
+interface ProductProps {
+  productData?: any;
+  isLoading?: any;
+}
 
-const Product: React.FC = () => {
+const Product: React.FC<ProductProps> = ({ productData, isLoading }) => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
-  const totalSlides = products.length;
+
+  const totalSlides = productData?.images?.length || 1;
 
   // Navigate to the next slide
   const nextSlide = () => {
@@ -61,12 +40,20 @@ const Product: React.FC = () => {
     return () => clearInterval(intervalId);
   }, [isManualChange, totalSlides]);
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="loader"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="px-6 lg:px-12 py-12 bg-white">
       <a href="/products" className="flex gap-1 mb-4 text-sm text-secondary">
         <span>
           <Icons variant="moveBackArrow" />
-        </span>{" "}
+        </span>
         <span>Back to Product Listing</span>
       </a>
       <div className="grid grid-cols-1 gap-8 md:gap-20 lg:grid-cols-2">
@@ -80,7 +67,7 @@ const Product: React.FC = () => {
                 transform: `translateX(-${activeIndex * 100}%)`,
               }}
             >
-              {products.map((product, index) => (
+              {productData?.images?.map((image: string, index: number) => (
                 <div
                   className="w-full flex-shrink-0 flex items-center justify-center"
                   key={index}
@@ -88,8 +75,8 @@ const Product: React.FC = () => {
                   <div className="relative w-[600px] rounded-lg overflow-hidden bg-white">
                     <div className="relative">
                       <img
-                        src={product?.image}
-                        alt={product?.title}
+                        src={image}
+                        alt={productData?.name || "Product Image"}
                         className="w-full h-96 object-cover"
                       />
 
@@ -110,7 +97,7 @@ const Product: React.FC = () => {
 
             {/* Carousel Indicators */}
             <div className="absolute bottom-0 left-1/2 flex -translate-x-1/2 space-x-3">
-              {products.map((_, index) => (
+              {productData?.images?.map((_: any, index: number) => (
                 <button
                   key={index}
                   className={`h-3 w-3 rounded-full ${
@@ -160,17 +147,16 @@ const Product: React.FC = () => {
         {/* Right Section: Product Details */}
         <div>
           <div className="mb-4 flex space-x-2">
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
-              Indoor
-            </span>
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
-              Plant
-            </span>
-            <span className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]">
-              Freshly Sourced
-            </span>
+            {productData?.categories?.map((category: any) => (
+              <span
+                key={category._id}
+                className="rounded-[4px] bg-[#00701C11] px-3 py-1 text-xs font-medium text-[#00701C]"
+              >
+                {category.categoryName}
+              </span>
+            ))}
           </div>
-          <h1 className="mb-2 text-4xl font-semibold">Marble Queen Pothos</h1>
+          <h1 className="mb-2 text-4xl font-semibold">{productData?.name}</h1>
           <div className="mb-4 flex items-center">
             <div className="text-teritary flex flex-col">
               <span className="flex items-center gap-1">
@@ -195,44 +181,38 @@ const Product: React.FC = () => {
                   />
                 </svg>
                 <span className="text-secondary text-sm font-medium">
-                  San Ramon, California
+                  {productData?.userDetails?.address}
                 </span>
               </span>
               <span>20 Miles away</span>
             </div>
           </div>
           <p className="text-teritary mb-12 w-[75%]">
-            Marble queen pothos is a popular houseplant that is known for its
-            beautiful foliage. It is a relatively easy plant to care for, making
-            it a good choice for beginners.
+            {productData?.description}
           </p>
           <div className="mb-12 flex items-center">
             <div className="w-12 h-12 rounded-full overflow-hidden">
               <img
-                src={SG1}
-                alt={"Gardener"}
+                src={productData?.userDetails?.profileImage || ""}
+                alt={productData?.userDetails?.name || "Gardener"}
                 className="w-full h-full object-cover"
               />
             </div>
             <div className="ml-4">
-              <div className="flex items-center justify-center w-32 rounded-[4px] py-1 gap-2 bg-premiumgreen">
-                {/* <div className="w-2 h-2 bg-green-600 rounded-full" /> */}
-                <Icons variant="SuperGrow" />
-                <span className="text-sm text-primary font-medium">
-                  Super Grower
-                </span>
-              </div>
-              <p className="text-2xl font-semibold">Eko Susiloanto</p>
+              <p className="text-2xl font-semibold">
+                {productData?.userDetails?.name}
+              </p>
             </div>
           </div>
           <div className="mb-8 flex items-center gap-5">
             <span className="text-3xl font-medium">
-              $350<span className="text-teritary font-normal">/unit</span>
+              ${productData?.price}
+              <span className="text-teritary font-normal">/unit</span>
             </span>
             <div className="flex items-center gap-1 text-orange-500 bg-[#FFB02E26] px-3 py-1 border-0 rounded-lg">
               <Flame className="w-4 h-4" />
               <span className="text-xs text-secondary font-medium">
-                Only 2 units left
+                Only {productData?.unitSale} units left
               </span>
             </div>
           </div>

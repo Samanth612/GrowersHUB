@@ -9,84 +9,8 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 
 const AllSellers: React.FC = () => {
-  const products = [
-    {
-      title: "Crassula small leaf plant",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Mint",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP3,
-    },
-    {
-      title: "Betel leaf plants",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "unit",
-      stock: "1 Unit left",
-      image: JP4,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Lemon",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Mint",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP3,
-    },
-    {
-      title: "Betel leaf plants",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "unit",
-      stock: "1 Unit left",
-      image: JP4,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-  ];
+  const [products, setProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -114,6 +38,8 @@ const AllSellers: React.FC = () => {
       const skip = currentPage - 1;
       const limit = itemsPerPage;
       try {
+        setLoading(true);
+
         const response = await axios.get(
           `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products?skip=${skip}&limit=${limit}&sortBy=price`,
           {
@@ -124,9 +50,109 @@ const AllSellers: React.FC = () => {
           }
         );
 
-        console.log(response?.data);
+        if (response?.data?.status) {
+          const fetchedProducts = response?.data?.data?.data || [];
+
+          const transformedProducts = fetchedProducts.map((product: any) => ({
+            title: product.title,
+            location: product.location,
+            price: product.price,
+            unitInfo: `${product.unitInfo} units`,
+            stock:
+              product.stock > 0
+                ? `${product.stock} units left`
+                : "Out of stock",
+            image: product.images || "",
+            isSeller: product.isSeller,
+            isWishlisted: product.isWishlisted,
+            id: product._id,
+          }));
+
+          setProducts(transformedProducts);
+        }
       } catch (error) {
         console.error("Failed to fetch products:", error as any);
+        const products = [
+          {
+            title: "Crassula small leaf plant",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Mint",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP3,
+          },
+          {
+            title: "Betel leaf plants",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "unit",
+            stock: "1 Unit left",
+            image: JP4,
+          },
+          {
+            title: "Crassula small leaf plant (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Lemon",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Mint",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP3,
+          },
+          {
+            title: "Betel leaf plants",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "unit",
+            stock: "1 Unit left",
+            image: JP4,
+          },
+          {
+            title: "Crassula small leaf plant (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+        ];
+        setProducts(products);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -144,18 +170,24 @@ const AllSellers: React.FC = () => {
 
       {/* Product Grid with Smooth Sliding */}
       <div className="flex flex-col justify-between h-full">
-        <div className="w-full transition-all duration-300 ease-in ">
-          <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">
-            {currentProducts.map((product, index) => (
-              <div
-                className="flex items-center justify-center sm:justify-start sm:items-start"
-                key={index}
-              >
-                <ProductCard {...product} />
-              </div>
-            ))}
+        {loading ? (
+          <div className="flex items-center justify-center h-96">
+            <div className="loader"></div>
           </div>
-        </div>
+        ) : (
+          <div className="w-full transition-all duration-300 ease-in ">
+            <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">
+              {currentProducts.map((product, index) => (
+                <div
+                  className="flex items-center justify-center sm:justify-start sm:items-start"
+                  key={index}
+                >
+                  <ProductCard {...product} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         <div className="flex flex-col items-start justify-start gap-3 py-4">
           <Pagination
             id={"type2"}
