@@ -1,9 +1,11 @@
-import React, { useState, DragEvent, ChangeEvent } from "react";
+import React, { useState, DragEvent, ChangeEvent, useEffect } from "react";
 import { ArrowLeft, X } from "lucide-react";
 import SG1 from "../../assets/SG1.jpg";
 import PreviewCarousel from "./PreviewCarousel";
 import { useNavigate } from "react-router-dom";
-import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
+import { SUBSCRIPTIONS, YOURALBUM } from "../../Utilities/constantLinks";
+import axios from "axios";
+import { useSelector } from "react-redux";
 
 interface UploadedFile {
   file: File;
@@ -12,28 +14,29 @@ interface UploadedFile {
 
 interface MediaUploadProps {
   setuploadButtonClicked: any;
+  uploadButtonClicked?: any;
 }
 
 const MediaUpload: React.FC<MediaUploadProps> = ({
   setuploadButtonClicked,
+  uploadButtonClicked,
 }) => {
   const navigate = useNavigate();
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
   const [albumName, setAlbumName] = useState<string>("");
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([
-    "Plants",
-    "Freshly sourced",
-  ]);
-  const availableCategories = [
-    "Technology",
-    "Health",
-    "Finance",
-    "Education",
-    "Travel",
-  ];
+  const [existingImageLinks, setExistingImageLinks] = useState<string[]>([]);
+  const [imageFiles, setImageFiles] = useState<any[]>([]);
+  const [selectedCategories, setSelectedCategories] = useState<
+    { _id: string; categoryName: string }[]
+  >([]);
+  const [availableCategories, setAvailableCategories] = useState<
+    { _id: string; categoryName: string }[]
+  >([]);
+  const userAlbum = useSelector((state: any) => state.userAlbum);
+  const userData = useSelector((state: any) => state.userData.data);
 
-  const addCategory = (category: any) => {
-    if (!selectedCategories.includes(category)) {
+  const addCategory = (category: { _id: string; categoryName: string }) => {
+    if (!selectedCategories.find((c) => c._id === category._id)) {
       setSelectedCategories([...selectedCategories, category]);
     }
   };
@@ -50,11 +53,40 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
   };
 
   const handleFiles = (files: File[]) => {
-    const newFiles = files.map((file) => ({
+    const newFiles = Array.from(files);
+
+    setImageFiles((prev) => [...prev, ...newFiles]);
+
+    const filePreviews = files.map((file) => ({
       file,
       preview: URL.createObjectURL(file),
     }));
-    setUploadedFiles((prev) => [...prev, ...newFiles]);
+    setUploadedFiles((prev) => [...prev, ...filePreviews]);
+  };
+
+  const makeAxiosRequest = async (data: File[]) => {
+    try {
+      const form = new FormData();
+      data.forEach((file) => form.append("files", file));
+
+      const response = await axios.post(
+        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/upload_files",
+        form,
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data; // Return the response data
+    } catch (error) {
+      console.error(
+        "Error uploading files:",
+        (error as any).response || (error as any).message
+      );
+      throw error; // Rethrow the error for handling in the calling function
+    }
   };
 
   const removeFile = (index: number) => {
@@ -66,9 +98,124 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
     });
   };
 
-  const removeCategory = (category: string) => {
-    setSelectedCategories((prev) => prev.filter((c) => c !== category));
+  const removeCategory = (_id: string) => {
+    setSelectedCategories((prev) => prev.filter((c) => c._id !== _id));
   };
+
+  const removeExistingImage = (index: number) => {
+    setExistingImageLinks((prev) => {
+      const updatedLinks = [...prev];
+      updatedLinks.splice(index, 1); // Remove the image link
+      return updatedLinks;
+    });
+  };
+
+  const handlePost = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      let finalImageLinks = [...existingImageLinks];
+
+      if (imageFiles?.length > 0) {
+        try {
+          const uploadedFileUrls: any = await makeAxiosRequest(imageFiles);
+          const newImageLinks = Array.isArray(uploadedFileUrls.assets)
+            ? uploadedFileUrls.assets.map((imgLink: any) => imgLink.link)
+            : [];
+
+          finalImageLinks = [...existingImageLinks, ...newImageLinks];
+        } catch (error) {
+          console.error("Error uploading images:", error);
+        }
+      }
+
+      const requestPayload = {
+        name: albumName,
+        categories: selectedCategories.map((category) => category._id),
+        images: finalImageLinks,
+      };
+
+      const APIUrl =
+        userAlbum && uploadButtonClicked
+          ? `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/album/${userAlbum?._id}`
+          : "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/album/";
+
+      const response = await axios.post(APIUrl, requestPayload, {
+        headers: {
+          Authorization: `Bearer ${userData?.access_token}`,
+        },
+      });
+
+      if (response?.data?.status) {
+        navigate(YOURALBUM);
+      }
+    } catch (error) {
+      console.error("Error listing product:", error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get(
+          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Cache-Control": "no-cache",
+            },
+          }
+        );
+
+        const allCategories = Array.isArray(response.data.data)
+          ? response.data.data.map((cat: any) => ({
+              _id: cat._id,
+              categoryName: cat.categoryName,
+            }))
+          : [];
+
+        if (userAlbum) {
+          const selectedCategories = userAlbum.categories.map(
+            (category: any) => ({
+              _id: category._id,
+              categoryName: category.categoryName,
+            })
+          );
+
+          // Set product details
+          setAlbumName(userAlbum.name);
+          setSelectedCategories(selectedCategories);
+          setExistingImageLinks(userAlbum.images || []);
+
+          // Filter and combine categories
+          const remainingCategories = allCategories.filter(
+            (cat: any) =>
+              !selectedCategories.some((sel: any) => sel._id === cat._id)
+          );
+          setAvailableCategories([
+            ...selectedCategories,
+            ...remainingCategories,
+          ]);
+        } else {
+          // If not editing, set all categories
+          setAvailableCategories(allCategories);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+
+        // Fallback categories
+        setAvailableCategories([
+          { _id: "1", categoryName: "Technology" },
+          { _id: "2", categoryName: "Health" },
+          { _id: "3", categoryName: "Finance" },
+          { _id: "4", categoryName: "Education" },
+          { _id: "5", categoryName: "Travel" },
+        ]);
+      }
+    };
+
+    fetchCategories();
+  }, [userData, userAlbum]);
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
@@ -118,7 +265,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
       </div>
       <div className="flex justify-between px-6 sm:pl-12 gap-8">
         {/* Left Section */}
-        <div className="w-full sm:w-[50%] py-6">
+        <form onSubmit={handlePost} className="w-full sm:w-[50%] py-6">
           <div className="mb-6 flex items-center">
             <div className="w-12 h-12 rounded-full overflow-hidden">
               <img
@@ -156,6 +303,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
                 </svg>
               </div>
               <button
+                type="button"
                 onClick={() => document.getElementById("fileInput")?.click()}
                 className="text-green-600"
               >
@@ -172,8 +320,25 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
             </div>
           </div>
 
-          {/* Uploaded Files Preview */}
           <div className="flex gap-4 mb-6 overflow-x-auto">
+            {/* Render existing images */}
+            {existingImageLinks.map((link, index) => (
+              <div key={index} className="relative">
+                <img
+                  src={link}
+                  alt={`Existing ${index + 1}`}
+                  className="w-32 h-24 object-cover rounded-lg"
+                />
+                <button
+                  onClick={() => removeExistingImage(index)}
+                  className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+
+            {/* Render newly uploaded files */}
             {uploadedFiles.map((file, index) => (
               <div key={index} className="relative">
                 <img
@@ -207,38 +372,47 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
             </label>
             <div className="border border-[#DBD8D8] rounded-lg p-3 w-full">
               <div className="flex flex-wrap gap-2">
+                {/* Display selected categories */}
                 {selectedCategories.map((category, index) => (
                   <span
-                    key={index}
+                    key={category._id} // Correct `key` attribute
                     className="bg-green-50 text-secondary px-3 py-1 rounded-[4px] flex items-center gap-2"
                   >
-                    {category}
-                    <button onClick={() => removeCategory(category)}>
+                    {category.categoryName}
+                    <button onClick={() => removeCategory(category._id)}>
                       <X className="w-4 h-4" />
                     </button>
                   </span>
                 ))}
+
+                {/* Dropdown for adding categories */}
                 {availableCategories.filter(
-                  (category) => !selectedCategories.includes(category)
+                  (category) =>
+                    !selectedCategories.some((sel) => sel._id === category._id) // Match by `_id`
                 ).length > 0 && (
                   <select
                     className="border-none outline-none bg-transparent px-3 py-1"
-                    value=""
+                    value="" // Reset value after selection
                     onChange={(e) => {
-                      const selected = e.target.value;
+                      const selected = availableCategories.find(
+                        (cat) => cat._id === e.target.value
+                      );
                       if (selected) {
-                        addCategory(selected);
+                        addCategory(selected); // Add selected category
                       }
                     }}
                   >
                     <option value="">Add category</option>
                     {availableCategories
                       .filter(
-                        (category) => !selectedCategories.includes(category)
+                        (category) =>
+                          !selectedCategories.some(
+                            (sel) => sel._id === category._id
+                          ) // Match by `_id`
                       )
-                      .map((category, index) => (
-                        <option key={index} value={category}>
-                          {category}
+                      .map((category) => (
+                        <option key={category._id} value={category._id}>
+                          {category.categoryName}
                         </option>
                       ))}
                   </select>
@@ -248,10 +422,13 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           </div>
 
           {/* Post Button */}
-          <button className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500">
+          <button
+            type="submit"
+            className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500"
+          >
             Post
           </button>
-        </div>
+        </form>
 
         {/* Right Preview Section */}
         {uploadedFiles?.length > 0 && (

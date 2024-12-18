@@ -11,15 +11,12 @@ import { useSelector } from "react-redux";
 const AllSellers: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-
+  const [productLength, setProductLength] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const userData = useSelector((state: any) => state.userData.data);
 
-  // Calculate the displayed products for the current page
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const currentProducts = products;
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -69,6 +66,7 @@ const AllSellers: React.FC = () => {
           }));
 
           setProducts(transformedProducts);
+          setProductLength(response?.data?.data?.total);
         }
       } catch (error) {
         console.error("Failed to fetch products:", error as any);
@@ -192,7 +190,7 @@ const AllSellers: React.FC = () => {
           <Pagination
             id={"type2"}
             currentPage={currentPage}
-            totalPages={Math.ceil(products.length / itemsPerPage)}
+            totalPages={Math.ceil(productLength / itemsPerPage)}
             onPageChange={handlePageChange}
             displayRange={3}
           />

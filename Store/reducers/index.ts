@@ -3,13 +3,14 @@ import AuthReducer from "./AuthReducer";
 import userData from "./userData";
 import faqs from "./Faqs";
 import SellersProductData from "./SellerProductData";
+import UserAlbum from "./UserAlbums";
 
-// Create the root reducer
 const rootReducer: any = combineReducers({
   auth: AuthReducer,
   userData: userData,
   faqs: faqs,
   SellersProductData: SellersProductData,
+  userAlbum: UserAlbum,
 });
 
 export default rootReducer;

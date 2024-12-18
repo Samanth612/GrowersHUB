@@ -2,10 +2,10 @@ import React from "react";
 import Icons from "../../Utilities/Icons";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
+import { CREATEALBUM, SUBSCRIPTIONS } from "../../Utilities/constantLinks";
 
 interface CreateAlbumProps {
-  setuploadButtonClicked: any;
+  setuploadButtonClicked?: any;
 }
 
 const CreateAlbum: React.FC<CreateAlbumProps> = ({
@@ -84,7 +84,11 @@ const CreateAlbum: React.FC<CreateAlbumProps> = ({
           </button>
           <button
             className="px-6 py-3 w-40 bg-primary font-medium text-white rounded-lg  hover:bg-green-500"
-            onClick={() => setuploadButtonClicked(true)}
+            onClick={() => {
+              routeName?.includes("createalbum")
+                ? setuploadButtonClicked(true)
+                : navigate(CREATEALBUM, { state: "Edit" });
+            }}
           >
             Upload
           </button>

@@ -49,9 +49,34 @@ const SignupPage: React.FC = () => {
       name: formData.name,
       address: formData.address,
       zipcode: formData.zipcode,
+      latitude: null,
+      longitude: null,
     };
 
     try {
+      if (formData.address) {
+        // Fetch geolocation based on the address
+        const geocodingResponse = await axios.get(
+          `https://maps.googleapis.com/maps/api/geocode/json`,
+          {
+            params: {
+              address: formData.address,
+              key: "YOUR_GOOGLE_MAPS_API_KEY", // Replace with your API key
+            },
+          }
+        );
+
+        const results = geocodingResponse.data.results;
+        if (results && results.length > 0) {
+          const location = results[0].geometry.location;
+          payload.latitude = location.lat;
+          payload.longitude = location.lng;
+        } else {
+          console.error("No geolocation found for the address.");
+        }
+      }
+
+      // Send the payload to the server
       const response = await axios.post(
         "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/auth/signup",
         payload
@@ -61,9 +86,11 @@ const SignupPage: React.FC = () => {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         // Handle Axios error
-        console.error("Signup failed:", error.response?.data || error.message);
+        console.error(
+          "Error fetching geolocation or signup failed:",
+          error.response?.data || error.message
+        );
       } else {
-        // Handle other errors
         console.error("An unexpected error occurred:", error);
       }
     }

@@ -6,85 +6,92 @@ import JP4 from "../../assets/JP4.jpg";
 import Pagination from "../../Utilities/Pagination";
 import SplitCard from "./SplitCard";
 
-const SplitGrid: React.FC = () => {
-  const products = [
-    {
-      title: "Crassula small leaf plant",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Mint",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP3,
-    },
-    {
-      title: "Betel leaf plants",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "unit",
-      stock: "1 Unit left",
-      image: JP4,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Lemon",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-    {
-      title: "Mint",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP3,
-    },
-    {
-      title: "Betel leaf plants",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "unit",
-      stock: "1 Unit left",
-      image: JP4,
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-    },
-  ];
+interface SplitCardProps {
+  productCards?: any;
+}
+
+const SplitGrid: React.FC<SplitCardProps> = ({ productCards }) => {
+  const products =
+    productCards?.length > 0
+      ? productCards
+      : [
+          {
+            title: "Crassula small leaf plant",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Mint",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP3,
+          },
+          {
+            title: "Betel leaf plants",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "unit",
+            stock: "1 Unit left",
+            image: JP4,
+          },
+          {
+            title: "Crassula small leaf plant (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Lemon",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+          {
+            title: "Mint",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP3,
+          },
+          {
+            title: "Betel leaf plants",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "unit",
+            stock: "1 Unit left",
+            image: JP4,
+          },
+          {
+            title: "Crassula small leaf plant (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            unitInfo: "4 unit",
+            stock: "2 units left",
+            image: JP1,
+          },
+          {
+            title: "Lemon (Repeat)",
+            location: "San Ramon, California, 20miles away",
+            price: "122",
+            image: JP2,
+          },
+        ];
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -92,7 +99,7 @@ const SplitGrid: React.FC = () => {
   // Calculate the displayed products for the current page
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentProducts = products.slice(startIndex, endIndex);
+  const currentProducts = products?.slice(startIndex, endIndex);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -111,12 +118,12 @@ const SplitGrid: React.FC = () => {
       <div className="flex flex-col justify-between h-full">
         <div className="w-full transition-all duration-300 ease-in ">
           <div className="grid grid-cols-1 gap-5 pb-4 mb-10 tabsm:grid-cols-2 tabxll:grid-cols-3 xl:grid-cols-4">
-            {currentProducts.map((product, index) => (
+            {currentProducts?.map((product: any, index: any) => (
               <div
                 className="flex items-center justify-center tabsm:justify-start sm:items-start"
                 key={index}
               >
-                <SplitCard />
+                <SplitCard image={product} />
               </div>
             ))}
           </div>
@@ -125,7 +132,7 @@ const SplitGrid: React.FC = () => {
           <Pagination
             id={"type2"}
             currentPage={currentPage}
-            totalPages={Math.ceil(products.length / itemsPerPage)}
+            totalPages={Math.ceil(products?.length / itemsPerPage)}
             onPageChange={handlePageChange}
             displayRange={3}
           />

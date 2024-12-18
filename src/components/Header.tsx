@@ -99,7 +99,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
               userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
             }}
           >
-            {userData?.isSeller ? "List a Product" : "Become a Seller"}
+            {userData?.isSeller ? "View Product" : "Become a Seller"}
           </button>
         </div>
         <div

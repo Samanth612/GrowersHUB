@@ -73,7 +73,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
               userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
             }}
           >
-            {userData?.isSeller ? "List a Product" : "Become a Seller"}
+            {userData?.isSeller ? "View Product" : "Become a Seller"}
           </button>
           <div className="flex items-center justify-between px-6 py-2 mt-6 border-2 rounded-[10px] border-[#EDEDED]  gap-6">
             <div className="flex flex-col items-start text-teritary">
