@@ -32,6 +32,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
   const [availableCategories, setAvailableCategories] = useState<
     { _id: string; categoryName: string }[]
   >([]);
+  const [loading, setLoading] = useState(false);
   const userAlbum = useSelector((state: any) => state.userAlbum);
   const userData = useSelector((state: any) => state.userData.data);
 
@@ -112,6 +113,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
 
   const handlePost = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       let finalImageLinks = [...existingImageLinks];
@@ -151,11 +153,14 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
       }
     } catch (error) {
       console.error("Error listing product:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const fetchCategories = async () => {
+      setLoading(true);
       try {
         const response = await axios.get(
           `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
@@ -211,11 +216,21 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           { _id: "4", categoryName: "Education" },
           { _id: "5", categoryName: "Travel" },
         ]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCategories();
   }, [userData, userAlbum]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-96">
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-full min-h-[88vh] mx-auto bg-white">
@@ -360,7 +375,7 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           <input
             type="text"
             placeholder="Type Album name.."
-            className="w-full border border-[#DBD8D8] rounded-lg p-3 mb-6"
+            className="w-full border border-[#DBD8D8] focus:outline-green-500 rounded-lg p-3 mb-6"
             value={albumName}
             onChange={(e) => setAlbumName(e.target.value)}
           />
@@ -425,13 +440,14 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
           <button
             type="submit"
             className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-medium hover:bg-green-500"
+            disabled={loading}
           >
             Post
           </button>
         </form>
 
         {/* Right Preview Section */}
-        {uploadedFiles?.length > 0 && (
+        {uploadedFiles.length > 0 || existingImageLinks.length > 0 ? (
           <div className="w-80">
             <div className="border p-4">
               <h2 className="text-xl text-center font-semibold py-2">
@@ -439,10 +455,15 @@ const MediaUpload: React.FC<MediaUploadProps> = ({
               </h2>
             </div>
             <div className="flex items-start justify-center border h-[90vh]">
-              <PreviewCarousel uploadedFiles={uploadedFiles} />
+              <PreviewCarousel
+                uploadedFiles={[
+                  ...existingImageLinks.map((link) => ({ preview: link })),
+                  ...uploadedFiles,
+                ]}
+              />
             </div>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );
