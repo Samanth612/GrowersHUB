@@ -1,12 +1,32 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import rootReducer from "./reducers";
+import combineReducers from "./reducers";
 
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ["auth", "userData", "faqs", "SellersProductData", "userAlbum"],
+  whitelist: [
+    "auth",
+    "userData",
+    "faqs",
+    "SellersProductData",
+    "userAlbum",
+    "unreadCount",
+    "chatRoomId",
+    "LatestNotificationData",
+    "AlbumCount",
+    "weatherDetails",
+    "ShareId",
+  ],
+};
+
+const rootReducer = (state: any, action: any) => {
+  if (action.type === "LOGOUT") {
+    storage.removeItem("persist:root");
+    return combineReducers(undefined, action);
+  }
+  return combineReducers(state, action);
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

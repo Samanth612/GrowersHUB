@@ -9,7 +9,7 @@ const Login: React.FC = () => {
   return (
     <>
       {LoginSuccess ? (
-        <LoginSuccessComponent />
+        <LoginSuccessComponent type="Login" title="Logged in Successfully" />
       ) : (
         <LoginPage
           showPassword={showPassword}

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import Icons from "../../Utilities/Icons";
 import OTPVerification from "../VerifyOTP";
+import { CONFIG } from "../../config";
+import toast from "react-hot-toast";
 
 const SignupPage: React.FC = () => {
   const [verifyAccount, setVerifyAccount] = useState(false);
@@ -42,30 +44,51 @@ const SignupPage: React.FC = () => {
       return;
     }
 
-    // Create the payload with only required fields
-    const payload = {
-      email: formData.email,
-      password: formData.password,
-      name: formData.name,
-      address: formData.address,
-      zipcode: formData.zipcode,
-    };
-
     try {
-      const response = await axios.post(
-        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/auth/signup",
+      const coordinatesResponse = await axios.get(
+        `${CONFIG?.API_ENDPOINT}/auth/coordinates`,
+        {
+          params: {
+            address: formData.address,
+          },
+        }
+      );
+
+      const latitude = coordinatesResponse?.data?.data?.location?.lat;
+      const longitude = coordinatesResponse?.data?.data?.location?.lng;
+
+      if (!latitude || !longitude) {
+        throw new Error("Failed to get coordinates");
+      }
+
+      const payload = {
+        email: formData.email,
+        password: formData.password,
+        name: formData.name,
+        location: {
+          address: formData.address,
+          latitude: latitude || "80",
+          longitude: longitude || "80",
+        },
+        zipcode: formData.zipcode,
+      };
+
+      const signupResponse = await axios.post(
+        `${CONFIG?.API_ENDPOINT}/auth/signup`,
         payload
       );
-      console.log("Signup successful:", response.data);
+
       setVerifyAccount(true);
+      console.log("Signup successful:", signupResponse.data);
     } catch (error) {
       if (axios.isAxiosError(error)) {
-        // Handle Axios error
-        console.error("Signup failed:", error.response?.data || error.message);
+        toast.error(
+          (error.response?.data?.message || "An error occurred") as string
+        );
       } else {
-        // Handle other errors
-        console.error("An unexpected error occurred:", error);
+        toast.error("An unexpected error occurred");
       }
+      console.error("Error:", error);
     }
   };
 
@@ -107,6 +130,11 @@ const SignupPage: React.FC = () => {
                   className="w-full p-4 pl-12 rounded-lg border placeholder:text-teritary border-[#DBD8D8] bg-white focus:outline-none focus:border-primary"
                   value={formData.email}
                   onChange={handleChange}
+                  onKeyDown={(e) => {
+                    if (e.key === " ") {
+                      e.preventDefault();
+                    }
+                  }}
                 />
                 <span className="absolute left-3 top-[18px] text-teritary">
                   <Icons variant="Email" />
@@ -124,6 +152,7 @@ const SignupPage: React.FC = () => {
               <input
                 type="text"
                 name="zipcode"
+                maxLength={5}
                 placeholder="Enter 5 digit zip code"
                 className="w-full p-4 rounded-lg border placeholder:text-teritary border-[#DBD8D8] bg-white focus:outline-none focus:border-primary"
                 value={formData.zipcode}
@@ -139,7 +168,7 @@ const SignupPage: React.FC = () => {
 
             <div>
               <label className="block text-lg font-medium mb-2 text-secondary">
-                Address <span className="text-teritary">(Optional)</span>
+                Address
               </label>
               <input
                 type="text"

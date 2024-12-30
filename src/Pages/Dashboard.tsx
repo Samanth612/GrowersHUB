@@ -1,247 +1,212 @@
-import React, { useState } from "react";
-import Header from "../components/Header";
-import Dashboard from "../components/Chat/Dashboard";
-import Chat from "../components/Chat/Chat";
-import JP1 from "../assets/Product.png";
-import InboxMessages from "../components/Chat/InboxMessages";
+import React, { ReactNode, useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import Icons from "../Utilities/Icons";
+import { LOGIN } from "../Utilities/constantLinks";
+import { store } from "../Store/store";
 
-interface MessageAction {
-  type: string;
-  label: string;
+interface DashboardProps {
+  children: ReactNode;
 }
 
-type ChatMessage = {
-  id: number;
-  message: string;
-  timestamp: string;
-  showBadge: boolean;
-  profileImage: string;
-  name: string;
-  unreadCount: number;
-  actions: MessageAction[];
-  messages: { text: string; sender: "user" | "seller" }[];
-};
+const Dashboard: React.FC<DashboardProps> = ({ children }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const userData = useSelector((state: any) => state.userData.data);
 
-const DashboardLayout: React.FC = () => {
-  const [selectedChat, setSelectedChat] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState<number>(1);
-  const chatMessages: ChatMessage[] = [
+  const seller = userData?.isSeller;
+  //Profile
+  const allMenuItems = [
     {
-      id: 1,
-      message: "Do you Have Questions?",
-      timestamp: "12m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Marble Queen Pothos",
-      unreadCount: 3,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        {
-          text: "Hi, I would Like to buy this. Is it Organic?",
-          sender: "user",
-        },
-        { text: "Yes it is", sender: "seller" },
-        {
-          text: "It's Home grown and here are the price details.",
-          sender: "seller",
-        },
-        { text: "You can also check its growth here:", sender: "seller" },
-      ],
+      title: "Update Profile",
+      shortTitle: "Profile",
+      icon: "Profile",
+      route: "profile",
     },
     {
-      id: 2,
-      message: "Here to assist you!",
-      timestamp: "15m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "Snake Plant",
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "How can I help you?", sender: "seller" },
-        { text: "Do you have care instructions?", sender: "user" },
-      ],
+      title: "Your Listings",
+      shortTitle: "Listings",
+      icon: "Listing",
+      route: "listing",
     },
     {
-      id: 3,
-      message: "Let me know your thoughts.",
-      timestamp: "20m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Fiddle Leaf Fig",
-      unreadCount: 1,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "Do you have any bulk discounts?", sender: "user" },
-        {
-          text: "Yes, we offer discounts on orders above $500.",
-          sender: "seller",
-        },
-      ],
+      title: "Inbox",
+      shortTitle: "Inbox",
+      icon: "Inbox",
+      route: "inbox",
     },
     {
-      id: 4,
-      message: "New plant available for purchase!",
-      timestamp: "30m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "Aloe Vera",
-      unreadCount: 2,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "Hello! Is this plant easy to care for?", sender: "user" },
-        { text: "Yes, it's very low maintenance.", sender: "seller" },
-      ],
+      title: "Create Album",
+      shortTitle: "Create",
+      icon: "CreateAlbum",
+      route: "createalbum",
     },
     {
-      id: 5,
-      message: "Order shipped, tracking info",
-      timestamp: "35m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Spider Plant",
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        {
-          text: "My order shipped? Could you share the tracking number?",
-          sender: "user",
-        },
-        {
-          text: "Your order is on the way! Tracking number: 123456789",
-          sender: "seller",
-        },
-      ],
+      title: "Your Album",
+      shortTitle: "Album",
+      icon: "YourAlbum",
+      route: "youralbum",
     },
     {
-      id: 6,
-      message: "Promo code available now!",
-      timestamp: "40m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "Peace Lily",
-      unreadCount: 1,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "Is there a discount on plants?", sender: "user" },
-        { text: "Yes, use code PEACE20 for 20% off!", sender: "seller" },
-      ],
-    },
-    {
-      id: 7,
-      message: "Looking for new arrivals?",
-      timestamp: "45m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "ZZ Plant",
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "Do you have any new plant arrivals?", sender: "user" },
-        { text: "Yes! Our new shipment just arrived today.", sender: "seller" },
-      ],
-    },
-    {
-      id: 8,
-      message: "Customer support is here!",
-      timestamp: "50m",
-      showBadge: true,
-      profileImage: JP1,
-      name: "Cactus",
-      unreadCount: 0,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        { text: "I need help with my order.", sender: "user" },
-        { text: "How can we assist you today?", sender: "seller" },
-      ],
-    },
-    {
-      id: 9,
-      message: "Plant care tips just for you!",
-      timestamp: "55m",
-      showBadge: false,
-      profileImage: JP1,
-      name: "Bird of Paradise",
-      unreadCount: 1,
-      actions: [
-        { type: "archive", label: "Archive" },
-        { type: "mark-read", label: "Mark as Read" },
-        { type: "pin", label: "Pin to top" },
-        { type: "delete", label: "Delete" },
-      ],
-      messages: [
-        {
-          text: "How often should I water my Bird of Paradise?",
-          sender: "user",
-        },
-        {
-          text: "Water it once a week. Make sure the soil is dry before watering.",
-          sender: "seller",
-        },
-      ],
+      title: "Subscriptions",
+      shortTitle: "Subscriptions",
+      icon: "Subscriptions",
+      route: "subscriptions",
     },
   ];
 
+  const menuItems = seller
+    ? allMenuItems
+    : allMenuItems.filter((item) => item.route !== "listing");
+
+  const [selectedIndex, setSelectedIndex] = useState<number>(
+    menuItems.findIndex((item) => location.pathname.includes(item.route))
+  );
+
+  useEffect(() => {
+    const index = menuItems.findIndex((item) =>
+      location.pathname.includes(item.route)
+    );
+    setSelectedIndex(index);
+  }, [location.pathname]);
+
+  const handleLogout = () => {
+    store.dispatch({ type: "LOGOUT" });
+    navigate(LOGIN);
+  };
+
   return (
-    <div>
-      <Header />
-      <Dashboard>
-        {selectedChat ? (
-          <Chat
-            selectedIndex={selectedIndex}
-            setSelectedChat={setSelectedChat}
-            chatMessages={chatMessages}
-          />
-        ) : (
-          <InboxMessages
-            setSelectedChat={setSelectedChat}
-            setSelectedIndex={setSelectedIndex}
-            messages={chatMessages}
-          />
-        )}
-      </Dashboard>
-    </div>
+    <>
+      <div className="bg-white hidden xll:flex">
+        {/* Sidebar */}
+        <aside className="w-[22%] min-h-[88vh] bg-white shadow-inner border-r">
+          <nav className="flex flex-col justify-between p-4">
+            <ul className="space-y-4">
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <a
+                    onClick={(e) => {
+                      e.preventDefault();
+                      scrollTo(0, 0);
+                      navigate(`/${item.route}`);
+                    }}
+                    className={`flex items-center cursor-pointer ${
+                      seller ? "gap-1" : "gap-3"
+                    } p-4 rounded-lg transition-colors duration-200 
+                    ${
+                      location.pathname.includes(item.route)
+                        ? "bg-[#6FEE8F21] text-primary font-semibold"
+                        : "hover:bg-[#6FEE8F21] text-teritary"
+                    }
+                  `}
+                  >
+                    <span className={`${index === 1 && "-translate-x-0.5"}`}>
+                      <Icons
+                        variant={item.icon}
+                        strokeColor={
+                          selectedIndex === index ? "#00701C" : "#808080"
+                        }
+                      />
+                    </span>
+                    <span
+                      className={`${
+                        seller
+                          ? index === 3
+                            ? "ml-5"
+                            : "ml-4"
+                          : index === 2
+                          ? "ml-3"
+                          : "ml-2"
+                      } ${
+                        location.pathname.includes(item.route)
+                          ? "text-primary font-bold"
+                          : "font-medium"
+                      }`}
+                    >
+                      {window.innerWidth >= 1180
+                        ? item.title
+                        : [
+                            "createalbum",
+                            "youralbum",
+                            "listing",
+                            "profile",
+                          ].includes(item.route)
+                        ? item.shortTitle
+                        : item.title}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+            <button
+              onClick={handleLogout}
+              className="flex items-center ml-5 mt-10 gap-3"
+            >
+              <Icons variant="LOGOUT" />
+              <span className="font-bold text-[#FF3B30]">Logout</span>
+            </button>
+          </nav>
+        </aside>
+
+        {/* Main Content */}
+        <main className="w-full">{children}</main>
+      </div>
+      <main className="w-full min-h-screen pb-20 overflow-y-auto xll:hidden">
+        {children}
+      </main>
+      <div className="fixed bottom-0 left-0 right-0 flex items-center justify-center gap-4 sm:gap-8 px-2 md:px-12 py-4 bg-white shadow-lg xll:hidden">
+        <nav>
+          <ul className={`flex items-center ${seller ? "gap-1" : "gap-3"}`}>
+            {menuItems.map((item, index) => (
+              <li key={index}>
+                <a
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollTo(0, 0);
+                    navigate(`/${item.route}`);
+                  }}
+                  className={`flex flex-col items-center cursor-pointer gap-3 p-2 rounded-lg transition-colors duration-200 
+                    ${
+                      location.pathname.includes(item.route)
+                        ? "bg-[#6FEE8F21] text-primary font-semibold"
+                        : "hover:bg-[#6FEE8F21] text-teritary"
+                    }
+                  `}
+                >
+                  <span className={`${index === 0 && "-translate-x-0.5"}`}>
+                    <Icons
+                      variant={item.icon}
+                      strokeColor={
+                        selectedIndex === index ? "#00701C" : "#808080"
+                      }
+                    />
+                  </span>
+                  <span
+                    className={`${
+                      location.pathname.includes(item.route)
+                        ? "text-primary font-bold"
+                        : "font-medium"
+                    } text-xs`}
+                  >
+                    {window.innerWidth >= 1180
+                      ? item.title
+                      : [
+                          "createalbum",
+                          "youralbum",
+                          "listing",
+                          "profile",
+                        ].includes(item.route)
+                      ? item.shortTitle
+                      : item.title}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+    </>
   );
 };
 
-export default DashboardLayout;
+export default Dashboard;

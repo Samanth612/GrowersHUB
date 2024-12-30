@@ -5,6 +5,7 @@ import { CREATEALBUM, SIGNUP } from "../../Utilities/constantLinks";
 
 const CommunityRBAC: React.FC = () => {
   const AuthReducer = useSelector((state: any) => state.auth);
+  const userData = useSelector((state: any) => state.userData?.data || null);
   const navigate = useNavigate();
   return (
     <div className="px-6 lg:px-12 pt-12">
@@ -27,15 +28,24 @@ const CommunityRBAC: React.FC = () => {
             </div>
           ) : (
             <div className="flex flex-col">
-              <h1 className="text-4xl font-bold mb-2 leading-tight">
-                Congrats! You can now upload up to
-              </h1>
-              <h1 className="text-4xl font-black">5 Albums for FREE.</h1>
+              {userData && !userData?.isSeller ? (
+                <>
+                  <h1 className="text-4xl font-bold mb-2 leading-tight">
+                    Congrats! You can now upload up to
+                  </h1>
+                  <h1 className="text-4xl font-black">5 Albums for FREE.</h1>
+                </>
+              ) : (
+                <h1 className="text-4xl font-bold mb-2 leading-tight">
+                  Congrats! You can create unlimited albums
+                </h1>
+              )}
             </div>
           )}
           <button
             className="px-6 py-3 text-lg font-medium text-white bg-primary rounded-lg hover:bg-green-500 transition-colors"
             onClick={() => {
+              scrollTo(0, 0);
               !AuthReducer ? navigate(SIGNUP) : navigate(CREATEALBUM);
             }}
           >

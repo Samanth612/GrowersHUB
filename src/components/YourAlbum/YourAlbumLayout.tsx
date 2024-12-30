@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
-import Dashboard from "../Chat/Dashboard";
 import YourAlbum from "./YourAlbum";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { CONFIG } from "../../config";
+import Dashboard from "../../Pages/Dashboard";
+import { store } from "../../Store/store";
 
 const YourAlbumLayout: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
@@ -14,6 +16,7 @@ const YourAlbumLayout: React.FC = () => {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const userData = useSelector((state: any) => state.userData.data);
+  const albumCount = useSelector((state: any) => state.AlbumCount);
 
   useEffect(() => {
     if (window?.innerWidth < 1490 && window?.innerWidth >= 1000) {
@@ -31,7 +34,7 @@ const YourAlbumLayout: React.FC = () => {
         setLoading(true);
 
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/album/?skip=${skip}&limit=${limit}`,
+          `${CONFIG?.API_ENDPOINT}/user/album/?skip=${skip}&limit=${limit}`,
           {
             headers: {
               Authorization: `Bearer ${userData?.access_token}`,
@@ -47,6 +50,7 @@ const YourAlbumLayout: React.FC = () => {
             title: product.name,
             image: product.images || "",
             id: product._id,
+            video: product?.video,
           }));
 
           setProducts(transformedProducts);
@@ -61,12 +65,12 @@ const YourAlbumLayout: React.FC = () => {
     };
 
     fetchProducts();
-  }, [userData, currentPage, itemsPerPage, refreshKey]); // Added refreshKey as a dependency
+  }, [userData, currentPage, itemsPerPage, refreshKey]);
 
   const handleDelete = async (productId: any) => {
     try {
       const response = await axios.post(
-        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/album/delete/${productId}`,
+        `${CONFIG?.API_ENDPOINT}/user/album/delete/${productId}`,
         {},
         {
           headers: {
@@ -78,6 +82,12 @@ const YourAlbumLayout: React.FC = () => {
 
       const deletedId = response?.data?.data?._id;
       if (deletedId) {
+        store.dispatch({
+          type: "albumCount",
+          payload: {
+            data: albumCount - 1,
+          },
+        });
         setProducts((prevList) =>
           prevList.filter((product) => product.id !== deletedId)
         );
@@ -100,6 +110,7 @@ const YourAlbumLayout: React.FC = () => {
           setCurrentPage={setCurrentPage}
           itemsPerPage={itemsPerPage}
           handleDelete={handleDelete}
+          albumCount={albumCount}
         />
       </Dashboard>
     </div>

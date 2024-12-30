@@ -103,7 +103,7 @@ const Pagination: React.FC<PaginationProps> = ({
         if (page === "ellipsis-left" || page === "ellipsis-right") {
           return (
             <span
-              className={`${id === "type1" ? "mx-2 " : "mx-1 text-[#DB0279]"}`}
+              className={`${id === "type1" ? "mx-2 " : "mx-1 text-primary"}`}
               key={index}
             >
               ....

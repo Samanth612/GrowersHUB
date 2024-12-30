@@ -22,34 +22,49 @@ const Footer: React.FC = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="grid grid-cols-2 md:grid-cols-5 order-2 lg:order-1 items-center justify-center gap-8">
+        <div className="grid grid-cols-2 md:flex order-2 lg:order-1 items-center justify-center gap-8 md:gap-16">
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(PRODUCTS)}
+            onClick={() => {
+              scrollTo(0, 0);
+              navigate(PRODUCTS);
+            }}
           >
             Products
           </a>
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(COMMUNITY)}
+            onClick={() => {
+              scrollTo(0, 0);
+              navigate(COMMUNITY);
+            }}
           >
             Community
           </a>
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(ABOUTUS)}
+            onClick={() => {
+              scrollTo(0, 0);
+              navigate(ABOUTUS);
+            }}
           >
             About
           </a>
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(HELP)}
+            onClick={() => {
+              scrollTo(0, 0);
+              navigate(HELP);
+            }}
           >
             Help
           </a>
           <a
             className="text-secondary hover:text-gray-900 flex items-center justify-center cursor-pointer"
-            onClick={() => navigate(PRIVACYPOLICY)}
+            onClick={() => {
+              scrollTo(0, 0);
+              navigate(PRIVACYPOLICY);
+            }}
           >
             Privacy & Terms
           </a>
@@ -57,13 +72,28 @@ const Footer: React.FC = () => {
 
         {/* Social Media Icons */}
         <div className="flex items-center gap-8 space-x-6 order-1 lg:order-2">
-          <a href="#" className="text-gray-700 hover:text-gray-900">
+          <a
+            onClick={() => {
+              window.open("https://www.facebook.com/", "_blank");
+            }}
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
+          >
             <FaFacebookF className="h-5 w-5" />
           </a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">
+          <a
+            onClick={() => {
+              window.open("https://www.twitter.com/", "_blank");
+            }}
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
+          >
             <FaTwitter className="h-5 w-5" />
           </a>
-          <a href="#" className="text-gray-700 hover:text-gray-900">
+          <a
+            onClick={() => {
+              window.open("https://www.instagram.com/", "_blank");
+            }}
+            className="text-gray-700 hover:text-gray-900 cursor-pointer"
+          >
             <FaInstagram className="h-5 w-5" />
           </a>
         </div>

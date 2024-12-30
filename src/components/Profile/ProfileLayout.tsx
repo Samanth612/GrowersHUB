@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../Header";
-import Dashboard from "../Chat/Dashboard";
 import Profile from "./Profile";
+import Dashboard from "../../Pages/Dashboard";
 
 const ProfileLayout: React.FC = () => {
   return (

@@ -67,13 +67,11 @@ const BestSellers: React.FC<BestSellerProps> = ({
           title: product.name,
           location: product.address,
           price: product.price,
-          unitInfo: `${product.unitSale} unit`,
-          stock:
-            product.noOfUnitsSold === 0
-              ? "Out of stock"
-              : `${product.noOfUnitsSold} units sold`,
+          unitInfo: product.unitSale,
+          stock: product.noOfUnitsSold,
           image: product.images[0],
           id: product._id,
+          isWishlisted: product.isWishlisted,
         }))
       : fallbackProducts;
 

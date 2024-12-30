@@ -13,7 +13,7 @@ const Title: React.FC<TitleProps> = ({ title, description }) => {
           {description && (
             <>
               <div className="mx-6 h-10 w-px bg-black hidden tabmd:block" />
-              <p className="font-normal text-lg tabmd:text-xl text-black">
+              <p className="font-normal mt-2 text-lg tabmd:text-xl text-black">
                 {description}
               </p>
             </>

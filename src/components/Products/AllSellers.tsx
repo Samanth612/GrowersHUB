@@ -7,14 +7,26 @@ import JP4 from "../../assets/JP4.jpg";
 import Pagination from "../../Utilities/Pagination";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { CONFIG } from "../../config";
 
-const AllSellers: React.FC = () => {
+interface AllSellersprops {
+  selectedFilter?: any;
+  sortBy?: any;
+  setTotalProducts?: any;
+}
+
+const AllSellers: React.FC<AllSellersprops> = ({
+  selectedFilter,
+  sortBy,
+  setTotalProducts,
+}) => {
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [productLength, setProductLength] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
   const userData = useSelector((state: any) => state.userData.data);
+  const AuthReducer = useSelector((state: any) => state.auth);
 
   const currentProducts = products;
 
@@ -37,14 +49,20 @@ const AllSellers: React.FC = () => {
       try {
         setLoading(true);
 
+        const headers: Record<string, string> = {
+          "Cache-Control": "no-cache",
+        };
+
+        if (AuthReducer && userData?.access_token) {
+          headers.Authorization = `Bearer ${userData.access_token}`;
+        }
+
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products?skip=${skip}&limit=${limit}&sortBy=price`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData?.access_token}`,
-              "Cache-Control": "no-cache",
-            },
-          }
+          `${
+            CONFIG?.API_ENDPOINT
+          }/user/products?skip=${skip}&limit=${limit}&sortBy=${sortBy.toLowerCase()}&categoryId=${selectedFilter}`,
+
+          { headers }
         );
 
         if (response?.data?.status) {
@@ -54,11 +72,8 @@ const AllSellers: React.FC = () => {
             title: product.title,
             location: product.location,
             price: product.price,
-            unitInfo: `${product.unitInfo} units`,
-            stock:
-              product.stock > 0
-                ? `${product.stock} units left`
-                : "Out of stock",
+            unitInfo: product.unitInfo,
+            stock: product.stock,
             image: product.images || "",
             isSeller: product.isSeller,
             isWishlisted: product.isWishlisted,
@@ -66,7 +81,12 @@ const AllSellers: React.FC = () => {
           }));
 
           setProducts(transformedProducts);
-          setProductLength(response?.data?.data?.total);
+          if (transformedProducts?.length > 0) {
+            setProductLength(response.data.data.total);
+            setTotalProducts(response.data.data.total);
+          } else {
+            setProductLength(0);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch products:", error as any);
@@ -155,7 +175,7 @@ const AllSellers: React.FC = () => {
     };
 
     fetchProducts();
-  }, [userData?.access_token]);
+  }, [userData?.access_token, currentPage, selectedFilter, sortBy]);
 
   return (
     <div className="px-6 lg:px-12 py-8 bg-white">
@@ -186,15 +206,21 @@ const AllSellers: React.FC = () => {
             </div>
           </div>
         )}
-        <div className="flex flex-col items-start justify-start gap-3 py-4">
-          <Pagination
-            id={"type2"}
-            currentPage={currentPage}
-            totalPages={Math.ceil(productLength / itemsPerPage)}
-            onPageChange={handlePageChange}
-            displayRange={3}
-          />
-        </div>
+        {productLength > 0 ? (
+          <div className="flex flex-col items-start justify-start gap-3 py-4">
+            <Pagination
+              id={"type2"}
+              currentPage={currentPage}
+              totalPages={Math.ceil(productLength / itemsPerPage)}
+              onPageChange={handlePageChange}
+              displayRange={3}
+            />
+          </div>
+        ) : (
+          <div className="text-xl text-center text-secondary font-semibold">
+            No Products Available
+          </div>
+        )}
       </div>
     </div>
   );

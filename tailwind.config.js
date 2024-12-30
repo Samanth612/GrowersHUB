@@ -15,6 +15,8 @@ module.exports = {
       },
       screens: {
         xl: "1490px",
+        laptopView: "1370px",
+        laptopviewxll: "1190px",
         xll: "1180px",
         tabxl: "1070px",
         tabxll: "1000px",

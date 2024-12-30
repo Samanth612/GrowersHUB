@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { CREATEALBUM, LISTINGPRODUCT, LOGIN } from "../Utilities/constantLinks";
 import Modal from "./Modal";
 import JoinWaitList from "./JoinWaitList";
+import Icons from "../Utilities/Icons";
+import { store } from "../Store/store";
 
 interface SidebarMenuProps {
   isOpen: boolean;
@@ -23,9 +25,18 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
   ];
   const AuthReducer = useSelector((state: any) => state.auth);
   const userData = useSelector((state: any) => state.userData.data);
+  const weatherDetails = useSelector((state: any) => state.weatherDetails);
+  const date = new Date();
+  const options: any = { day: "2-digit", month: "long", year: "numeric" };
+  const formattedDate = date.toLocaleDateString("en-GB", options);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
+
+  const handleLogout = () => {
+    store.dispatch({ type: "LOGOUT" });
+    navigate(LOGIN);
+  };
 
   return (
     <>
@@ -58,6 +69,7 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
           <button
             className="w-full py-2 font-medium border border-secondary rounded-md text-secondary hover:bg-gray-100"
             onClick={() => {
+              scrollTo(0, 0);
               if (!AuthReducer) {
                 navigate(LOGIN);
               } else {
@@ -70,14 +82,15 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
           <button
             className="w-full mt-4 py-2 bg-primary text-white font-medium rounded-md hover:bg-green-500"
             onClick={() => {
+              scrollTo(0, 0);
               userData?.isSeller ? navigate(LISTINGPRODUCT) : openModal();
             }}
           >
-            {userData?.isSeller ? "View Product" : "Become a Seller"}
+            {userData?.isSeller ? "View Products" : "Become a Seller"}
           </button>
           <div className="flex items-center justify-between px-6 py-2 mt-6 border-2 rounded-[10px] border-[#EDEDED]  gap-6">
             <div className="flex flex-col items-start text-teritary">
-              <span className="text-xs whitespace-nowrap">04 August 2024</span>
+              <span className="text-xs whitespace-nowrap">{formattedDate}</span>
               <span className="flex items-center gap-1">
                 <svg
                   width="12"
@@ -100,16 +113,34 @@ const SidebarMenu: React.FC<SidebarMenuProps> = ({ isOpen, setIsOpen }) => {
                   />
                 </svg>
                 <span className="text-secondary text-sm xl:text-xl font-medium">
-                  California,
+                  {weatherDetails?.location?.name || "California"},
                 </span>
               </span>
             </div>
-            <span className="font-semibold text-2xl">18°C</span>
+            <span className="font-semibold text-2xl">
+              {`${
+                weatherDetails?.current?.temp_f
+                  ? weatherDetails?.current?.temp_f
+                  : "18"
+              }°F`}
+            </span>
           </div>
+          {AuthReducer && (
+            <button
+              onClick={handleLogout}
+              className="flex items-center ml-1 mt-10 gap-3"
+            >
+              <Icons variant="LOGOUT" />
+              <span className="font-bold text-[#FF3B30]">Logout</span>
+            </button>
+          )}
         </div>
       </div>
       {isModalOpen && (
-        <Modal children={<JoinWaitList onClose={closeModal} />} />
+        <Modal
+          children={<JoinWaitList onClose={closeModal} />}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

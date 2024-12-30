@@ -22,5 +22,5 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src", "Store/store.ts", "Store/reducers"]
+  "include": ["src", "src/Store/store.ts", "src/Store/reducers"]
 }

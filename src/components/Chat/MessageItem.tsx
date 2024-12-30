@@ -1,5 +1,6 @@
 import { MoreVertical } from "lucide-react";
 import React from "react";
+import pin from "../../assets/pin.png";
 
 interface MessageAction {
   type: string;
@@ -14,8 +15,12 @@ type ChatMessage = {
   profileImage: string;
   name: string;
   unreadCount: number;
+  productId: string;
   actions: MessageAction[];
+  unpin?: any;
   messages: { text: string; sender: "user" | "seller" }[];
+  chatType?: string;
+  user?: any;
 };
 
 interface MessageItemProps {
@@ -35,7 +40,11 @@ const MessageItem: React.FC<MessageItemProps> = ({
     {/* Image */}
     <div className="flex-shrink-0 mr-4">
       <img
-        src={message.profileImage || "/api/placeholder/48/48"}
+        src={
+          message?.chatType === "User"
+            ? message?.user?.image
+            : message.profileImage || "/api/placeholder/48/48"
+        }
         alt={message.name}
         className="w-12 h-12 rounded-full object-cover"
       />
@@ -43,7 +52,15 @@ const MessageItem: React.FC<MessageItemProps> = ({
     {/* Message Content */}
     <div className="flex-1 min-w-0">
       <div className="flex items-center">
-        <h3 className="text-sm font-medium text-secondary">{message.name}</h3>
+        <h3 className="text-sm flex font-medium text-secondary">
+          {message?.chatType === "User" ? message?.user?.name : message.name}
+
+          {message.unpin && (
+            <span className="ml-2">
+              <img src={pin} alt="pin" className="w-5 h-5" />
+            </span>
+          )}
+        </h3>
         {message.unreadCount > 0 && (
           <span className="ml-2 bg-premiumgreen text-primary text-xs font-medium px-2 py-0.5 rounded-full">
             {message.unreadCount}
@@ -69,12 +86,25 @@ const MessageItem: React.FC<MessageItemProps> = ({
             {message.actions.map((action) => (
               <button
                 key={action.label}
-                onClick={() => onAction(message.id, action.type)}
+                onClick={() =>
+                  onAction(
+                    message.id,
+                    action.type === "pin"
+                      ? message.unpin
+                        ? "unpin"
+                        : "pin"
+                      : action.type
+                  )
+                }
                 className={`block w-full font-medium text-left px-4 py-2 text-sm ${
                   action.type === "delete" ? "text-red-600" : "text-teritary"
                 }`}
               >
-                {action.label}
+                {action.label === "Pin to top"
+                  ? message.unpin
+                    ? "Unpin"
+                    : "Pin to top"
+                  : action.label}
               </button>
             ))}
           </div>

@@ -3,11 +3,14 @@ import axios from "axios";
 import Icons from "../../Utilities/Icons";
 import { Eye, EyeOff } from "lucide-react";
 import { useDispatch } from "react-redux";
+import { CONFIG } from "../../config";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import toast from "react-hot-toast";
 
 interface LoginPageProps {
   showPassword: boolean;
-  setShowPassword: any;
-  setLoginSuccess: any;
+  setShowPassword: (value: boolean) => void;
+  setLoginSuccess: (value: boolean) => void;
 }
 
 const LoginPage: React.FC<LoginPageProps> = ({
@@ -21,44 +24,42 @@ const LoginPage: React.FC<LoginPageProps> = ({
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const validateEmail = (email: string) => {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  // Helper functions
+  const validateEmail = (email: string) =>
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const handleInputChange =
+    (setter: React.Dispatch<React.SetStateAction<string>>) =>
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setter(e.target.value);
+    };
+
+  const navigateUrl = (url: string) => {
+    window.location.href = url;
   };
 
+  // Form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    // Reset previous errors
     setError("");
 
-    // Validations
-    if (!email) {
-      setError("Email is required.");
-      return;
-    }
-    if (!validateEmail(email)) {
-      setError("Invalid email format.");
-      return;
-    }
-    if (!password) {
-      setError("Password is required.");
-      return;
-    }
+    // Validation
+    if (!email) return setError("Email is required.");
+    if (!validateEmail(email)) return setError("Invalid email format.");
+    if (!password) return setError("Password is required.");
 
     try {
       setLoading(true);
-      const response = await axios.post(
-        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/auth/login",
-        { email, password }
-      );
+      const response = await axios.post(`${CONFIG?.API_ENDPOINT}/auth/login`, {
+        email,
+        password,
+      });
 
       if (response.data.status) {
         setLoginSuccess(true);
         dispatch({
           type: "userData",
-          payload: {
-            data: response.data,
-          },
+          payload: { data: response.data },
         });
       } else {
         setError(response.data.message || "Login failed.");
@@ -70,12 +71,39 @@ const LoginPage: React.FC<LoginPageProps> = ({
     }
   };
 
+  const handleGoogleSuccess = async (credentialResponse: any) => {
+    const { credential } = credentialResponse;
+    try {
+      const response = await axios.post(
+        `${CONFIG?.API_ENDPOINT}/auth/google-signup`,
+        { googleToken: credential }
+      );
+      if (response.data.status) {
+        setLoginSuccess(true);
+        dispatch({
+          type: "userData",
+          payload: { data: response.data },
+        });
+        toast.success("Google login successful");
+      } else {
+        setError(response.data.message || "Login failed.");
+      }
+    } catch (error) {
+      toast.error("Google login failed. Please try again.");
+    }
+  };
+
+  const handleGoogleError = () => {
+    toast.error("Google login failed");
+  };
+
   return (
     <>
       <h1 className="text-4xl font-bold mb-2 text-secondary">Login</h1>
       <p className="text-teritary mb-8">Login to continue</p>
 
       <form className="space-y-6" onSubmit={handleSubmit}>
+        {/* Email Input */}
         <div>
           <label className="block text-lg font-medium mb-2 text-secondary">
             Email/User ID
@@ -84,7 +112,8 @@ const LoginPage: React.FC<LoginPageProps> = ({
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleInputChange(setEmail)}
+              onKeyDown={(e) => e.key === " " && e.preventDefault()}
               placeholder="Enter registered email"
               className="w-full p-3 pl-10 rounded-lg border border-[#DBD8D8] focus:outline-none focus:border-primary"
             />
@@ -94,6 +123,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
+        {/* Password Input */}
         <div>
           <label className="block text-lg font-medium mb-2 text-secondary">
             Password
@@ -102,7 +132,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
             <input
               type={showPassword ? "text" : "password"}
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleInputChange(setPassword)}
               placeholder="Enter Password"
               className="w-full p-3 pl-10 pr-10 rounded-lg border border-[#DBD8D8] focus:outline-none focus:border-primary"
             />
@@ -119,8 +149,10 @@ const LoginPage: React.FC<LoginPageProps> = ({
           </div>
         </div>
 
+        {/* Error Message */}
         {error && <p className="text-red-500 text-sm">{error}</p>}
 
+        {/* Keep Me Logged In */}
         <div className="flex items-center justify-between">
           <label className="flex items-center">
             <input
@@ -134,6 +166,7 @@ const LoginPage: React.FC<LoginPageProps> = ({
           </a>
         </div>
 
+        {/* Submit Button */}
         <button
           type="submit"
           disabled={loading}
@@ -144,20 +177,16 @@ const LoginPage: React.FC<LoginPageProps> = ({
           {loading ? "Logging in..." : "Log in"}
         </button>
 
+        {/* Google OAuth */}
         <div className="text-center text-teritary">Or</div>
-
-        <button
-          type="button"
-          className="w-full flex items-center justify-center font-medium text-xl gap-2 p-3 border-2 border-[#E2E8F0] rounded-lg hover:bg-gray-50"
-        >
-          <img
-            src="https://www.google.com/favicon.ico"
-            alt="Google"
-            className="w-10 h-10"
+        <GoogleOAuthProvider clientId={`${CONFIG?.CLIENT_ID}`}>
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={handleGoogleError}
           />
-          Sign in with Google
-        </button>
+        </GoogleOAuthProvider>
 
+        {/* Sign Up Link */}
         <p className="text-start font-medium">
           New User?{" "}
           <a href="/signup" className="text-primary">

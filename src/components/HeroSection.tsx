@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import heroPlant from "../assets/HeroPlant.png";
 import Modal from "./Modal";
 import JoinWaitList from "./JoinWaitList";
+import { useSelector } from "react-redux";
 
 const HeroSection: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userData = useSelector((state: any) => state.userData.data);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -26,7 +28,7 @@ const HeroSection: React.FC = () => {
         </div>
 
         {/* Right half - Text and Buttons */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-green-600 via-green-500 to-green-300 z-0"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-tr from-green-600 via-green-500 to-green-300 z-0"></div> */}
         <img
           src={heroPlant}
           alt="Plant"
@@ -40,17 +42,22 @@ const HeroSection: React.FC = () => {
           >
             Start Shopping
           </button>
-          <button
-            type="button"
-            className="px-12 py-3 text-lg font-medium border border-secondary text-secondary bg-white rounded-lg transition-colors"
-            onClick={openModal}
-          >
-            Join the Waitlist
-          </button>
+          {userData && !userData?.isSeller && (
+            <button
+              type="button"
+              className="px-12 py-3 text-lg font-medium border border-secondary text-secondary bg-white rounded-lg transition-colors"
+              onClick={openModal}
+            >
+              Join the Waitlist
+            </button>
+          )}
         </div>
       </section>
       {isModalOpen && (
-        <Modal children={<JoinWaitList onClose={closeModal} />} />
+        <Modal
+          children={<JoinWaitList onClose={closeModal} />}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

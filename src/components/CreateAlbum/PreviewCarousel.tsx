@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
-import JP1 from "../../assets/JP1.jpg";
 import SG1 from "../../assets/SG1.jpg";
+import { useSelector } from "react-redux";
 
 interface PreviewCarouselProps {
   uploadedFiles: any;
+  userName?: any;
 }
 
-const PreviewCarousel: React.FC<PreviewCarouselProps> = ({ uploadedFiles }) => {
+const PreviewCarousel: React.FC<PreviewCarouselProps> = ({
+  uploadedFiles,
+  userName,
+}) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
   const totalSlides = uploadedFiles.length;
+  const userData = useSelector((state: any) => state.userData.data);
 
   // Navigate to the next slide
   const nextSlide = () => {
@@ -41,14 +46,16 @@ const PreviewCarousel: React.FC<PreviewCarouselProps> = ({ uploadedFiles }) => {
       <div className="mb-6 flex items-center">
         <div className="w-12 h-12 rounded-full overflow-hidden">
           <img
-            src={SG1}
+            src={userData?.image || SG1}
             alt={"Gardener"}
             className="w-full h-full object-cover"
           />
         </div>
         <div className="ml-4 flex flex-col">
-          <p className="text-xl font-medium">Eko Susiloanto</p>
-          <p className="text-sm text-teritary">User</p>
+          <p className="text-xl font-medium">{userName}</p>
+          <p className="text-sm text-teritary">
+            {userData?.isSeller ? "Seller" : "User"}
+          </p>
         </div>
       </div>
       <div className="relative">

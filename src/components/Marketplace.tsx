@@ -8,9 +8,27 @@ import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import ProductCard from "./Products/ProductCard";
 import { useNavigate } from "react-router-dom";
 import { PRODUCTS } from "../Utilities/constantLinks";
+import Carousel from "./Carousel";
 
-const Marketplace: React.FC = () => {
-  const products = [
+interface Product {
+  title: string;
+  location: string;
+  price: string;
+  unitInfo?: string;
+  stock?: string;
+  image: string;
+  profileImage: string;
+  id?: string;
+}
+
+interface MarketplaceProps {
+  products: Product[];
+}
+
+const Marketplace: React.FC<MarketplaceProps> = ({ products }) => {
+  const navigate = useNavigate();
+
+  const fallbackProducts = [
     {
       title: "Crassula small leaf plant",
       location: "San Ramon, California, 20miles away",
@@ -18,48 +36,18 @@ const Marketplace: React.FC = () => {
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
     {
       title: "Lemon",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
     {
       title: "Mint",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP3,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
     {
       title: "Betel leaf plants",
@@ -68,16 +56,6 @@ const Marketplace: React.FC = () => {
       unitInfo: "unit",
       stock: "1 Unit left",
       image: JP4,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
     {
       title: "Crassula small leaf plant (Repeat)",
@@ -86,120 +64,28 @@ const Marketplace: React.FC = () => {
       unitInfo: "4 unit",
       stock: "2 units left",
       image: JP1,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
     {
       title: "Lemon (Repeat)",
       location: "San Ramon, California, 20miles away",
       price: "122",
       image: JP2,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
-    },
-    {
-      title: "Lemon",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
-    },
-    {
-      title: "Mint",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP3,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
-    },
-    {
-      title: "Betel leaf plants",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "unit",
-      stock: "1 Unit left",
-      image: JP4,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
-    },
-    {
-      title: "Crassula small leaf plant (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      unitInfo: "4 unit",
-      stock: "2 units left",
-      image: JP1,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
-    },
-    {
-      title: "Lemon (Repeat)",
-      location: "San Ramon, California, 20miles away",
-      price: "122",
-      image: JP2,
-      profileImage: SG1,
-      name: "Joanna Wellick",
-      products: [
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-        { image: JP1 },
-      ],
     },
   ];
 
-  const navigate = useNavigate();
+  const productsToDisplay =
+    products?.length > 0
+      ? products.map((product: any) => ({
+          title: product.title,
+          location: product.location,
+          price: product.price,
+          unitInfo: product.unitInfo,
+          stock: product.stock,
+          image: product.image,
+          id: product.id,
+          isWishlisted: product.isWishlisted,
+        }))
+      : fallbackProducts;
 
   // State for the current offset of the products
   const [currentOffset, setCurrentOffset] = useState(0);
@@ -228,16 +114,17 @@ const Marketplace: React.FC = () => {
   // Total width of one product card including the gap
   const totalWidthPerCard = productWidth + gap;
 
-  const maxOffset = -(products.length - visibleCards) * totalWidthPerCard;
+  const maxOffset =
+    -(productsToDisplay.length - visibleCards) * totalWidthPerCard;
 
-  // Move to the next 4 products
+  // Move to the next products
   const nextProducts = () => {
     if (currentOffset > maxOffset) {
       setCurrentOffset(currentOffset - totalWidthPerCard);
     }
   };
 
-  // Move to the previous 4 products
+  // Move to the previous products
   const prevProducts = () => {
     if (currentOffset < 0) {
       setCurrentOffset(currentOffset + totalWidthPerCard);
@@ -290,10 +177,10 @@ const Marketplace: React.FC = () => {
           ref={productContainerRef}
           className="hidden xl:flex gap-6 transition-transform duration-500 ease-in-out"
           style={{
-            transform: `translateX(${currentOffset}px)`, // Move the grid of products horizontally
+            transform: `translateX(${currentOffset}px)`,
           }}
         >
-          {products.map((product, index) => (
+          {productsToDisplay.map((product, index) => (
             <div className="flex-none" key={index}>
               <ProductCard {...product} />
             </div>
@@ -301,10 +188,17 @@ const Marketplace: React.FC = () => {
         </div>
       </div>
 
+      <div className="mt-14">
+        <Carousel products={productsToDisplay} />
+      </div>
+
       <div className="mt-8">
         <button
           className="px-6 py-3 font-semibold text-gray-800 border border-gray-800 rounded-md hover:bg-gray-100"
-          onClick={() => navigate(PRODUCTS)}
+          onClick={() => {
+            scrollTo(0, 0);
+            navigate(PRODUCTS);
+          }}
         >
           View All
         </button>

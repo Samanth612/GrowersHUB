@@ -1,4 +1,11 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { CONFIG } from "../config";
+import { store } from "../Store/store";
+import { INBOX, LOGIN } from "../Utilities/constantLinks";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 interface FAQ {
   _id?: string;
@@ -9,13 +16,18 @@ interface FAQ {
 interface FAQSectionProps {
   FAQSData?: FAQ[]; // Optional array of FAQs
   isLoading?: boolean; // Optional loading state
+  product_Id?: any;
 }
 
 const FAQSection: React.FC<FAQSectionProps> = ({
   FAQSData = [],
   isLoading = false,
+  product_Id,
 }) => {
   const [openQuestion, setOpenQuestion] = useState<number | null>(null);
+  const navigate = useNavigate();
+  const userData = useSelector((state: any) => state.userData.data);
+  const AuthReducer = useSelector((state: any) => state.auth);
 
   const toggleQuestion = (index: number) => {
     setOpenQuestion(openQuestion === index ? null : index);
@@ -62,7 +74,40 @@ const FAQSection: React.FC<FAQSectionProps> = ({
           <div className="font-medium text-[16px] text-secondary mb-4">
             Got more questions?
           </div>
-          <button className="bg-primary text-[16px] rounded-lg px-12 py-2 text-white hover:bg-green-500">
+          <button
+            className="bg-primary text-[16px] rounded-lg px-12 py-2 text-white hover:bg-green-500"
+            onClick={() => {
+              if (!AuthReducer) {
+                scrollTo(0, 0);
+                navigate(LOGIN);
+                return;
+              }
+
+              const productId = product_Id;
+              axios
+                .post(
+                  `${CONFIG?.CHAT_BASE_URL}/chat/join`,
+                  { id: productId, type: "Product" },
+                  {
+                    headers: {
+                      Authorization: `Bearer ${userData?.access_token}`,
+                      "Content-Type": "application/json",
+                    },
+                  }
+                )
+                .then((res) => {
+                  store.dispatch({
+                    type: "chatRoomId",
+                    payload: {
+                      data: res?.data?.data?.chatRoomId,
+                    },
+                  });
+                  scrollTo(0, 0);
+                  navigate(INBOX, { state: res?.data?.data?.chatRoomId });
+                })
+                .catch((err: any) => toast.error(err?.response?.data?.message));
+            }}
+          >
             Ask a Question
           </button>
         </div>

@@ -7,7 +7,8 @@ import Modal from "../Modal";
 import ShareAlbumModal from "../ShareAlbumModal";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { store } from "../../../Store/store";
+import { store } from "../../Store/store";
+import { CONFIG } from "../../config";
 
 interface Product {
   image: string;
@@ -21,6 +22,7 @@ interface ProductCardProps {
   setProductCards?: any;
   id?: any;
   handleDelete?: any;
+  video?: any;
 }
 
 const PlantCard: React.FC<ProductCardProps> = ({
@@ -31,16 +33,26 @@ const PlantCard: React.FC<ProductCardProps> = ({
   setProductCards,
   id,
   handleDelete,
+  video,
 }) => {
   const navigate = useNavigate();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectVideo, setSelectedVideo] = useState<any>(null);
 
   const totalSlides = products?.length;
   const userData = useSelector((state: any) => state.userData.data);
 
-  const openModal = () => setIsModalOpen(true);
+  const openModal = () => {
+    setSelectedVideo({
+      src: video ? video : products[0],
+      title: title,
+      type: video ? "video" : "image",
+    });
+    setIsModalOpen(true);
+  };
+
   const closeModal = () => setIsModalOpen(false);
 
   // Navigate to the next slide
@@ -55,10 +67,11 @@ const PlantCard: React.FC<ProductCardProps> = ({
   };
 
   const hanldeEdit = async (productId: any) => {
+    scrollTo(0, 0);
     navigate(CREATEALBUM, { state: "Edit" });
     try {
       const response = await axios.get(
-        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/album/${productId}`,
+        `${CONFIG?.API_ENDPOINT}/user/album/${productId}`,
         {
           headers: {
             Authorization: `Bearer ${userData?.access_token}`,
@@ -174,7 +187,12 @@ const PlantCard: React.FC<ProductCardProps> = ({
         </div>
       </div>
       {isModalOpen && (
-        <Modal children={<ShareAlbumModal onClose={closeModal} />} />
+        <Modal
+          children={
+            <ShareAlbumModal onClose={closeModal} selectVideo={selectVideo} />
+          }
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

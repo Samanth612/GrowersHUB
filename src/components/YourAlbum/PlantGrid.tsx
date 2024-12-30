@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Pagination from "../../Utilities/Pagination";
 import PlantCard from "./PlantCard";
 import CreateAlbum from "../CreateAlbum/CreateAlbum";
+import { useSelector } from "react-redux";
 
 interface PlantGridProps {
   setSplitCards: any;
@@ -31,6 +32,7 @@ const PlantGrid: React.FC<PlantGridProps> = ({
 }) => {
   const [currentProductsList, setCurrentProducts] = useState<any[]>([]);
   const currentProducts = currentProductsList;
+  const albumCount = useSelector((state: any) => state.AlbumCount);
 
   useEffect(() => {
     setCurrentProducts(products);
@@ -63,6 +65,7 @@ const PlantGrid: React.FC<PlantGridProps> = ({
                       products={product?.image}
                       setProductCards={setProductCards}
                       id={product?.id}
+                      video={product?.video}
                       handleDelete={handleDelete}
                     />
                   </div>
@@ -81,7 +84,7 @@ const PlantGrid: React.FC<PlantGridProps> = ({
           </div>
         </div>
       ) : (
-        <CreateAlbum />
+        <CreateAlbum albumCount={albumCount} />
       )}
     </>
   );

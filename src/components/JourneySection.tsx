@@ -5,6 +5,7 @@ import JP3 from "../assets/JP3.jpg";
 import JP4 from "../assets/JP4.jpg";
 import Modal from "./Modal";
 import JoinWaitList from "./JoinWaitList";
+import { useSelector } from "react-redux";
 
 const stages = [
   {
@@ -31,6 +32,7 @@ const stages = [
 
 const JourneySection = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const userData = useSelector((state: any) => state.userData.data);
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -73,15 +75,20 @@ const JourneySection = () => {
         </div>
 
         {/* CTA Button */}
-        <button
-          className="bg-primary text-white px-8 py-3 rounded-md hover:bg-green-500 transition-colors text-lg font-medium"
-          onClick={openModal}
-        >
-          Join Waitlist
-        </button>
+        {userData && !userData?.isSeller && (
+          <button
+            className="bg-primary text-white px-8 py-3 rounded-md hover:bg-green-500 transition-colors text-lg font-medium"
+            onClick={openModal}
+          >
+            Join Waitlist
+          </button>
+        )}
       </div>
       {isModalOpen && (
-        <Modal children={<JoinWaitList onClose={closeModal} />} />
+        <Modal
+          children={<JoinWaitList onClose={closeModal} />}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

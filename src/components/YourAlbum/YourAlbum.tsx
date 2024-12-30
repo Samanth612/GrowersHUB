@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { SUBSCRIPTIONS } from "../../Utilities/constantLinks";
 import Modal from "../Modal";
 import ShareAlbumModal from "../ShareAlbumModal";
+import { useSelector } from "react-redux";
 
 interface YourAlbumProps {
   products: any[];
@@ -15,6 +16,7 @@ interface YourAlbumProps {
   setCurrentPage: (page: number) => void;
   itemsPerPage: number;
   handleDelete?: any;
+  albumCount: any;
 }
 
 const YourAlbum: React.FC<YourAlbumProps> = ({
@@ -25,14 +27,13 @@ const YourAlbum: React.FC<YourAlbumProps> = ({
   setCurrentPage,
   itemsPerPage,
   handleDelete,
+  albumCount,
 }) => {
   const navigate = useNavigate();
   const [splitCards, setSplitCards] = useState(false);
   const [productCards, setProductCards] = useState<any[]>();
   const [cardName, setCardName] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const closeModal = () => setIsModalOpen(false);
+  const userData = useSelector((state: any) => state.userData.data);
 
   return (
     <>
@@ -80,32 +81,42 @@ const YourAlbum: React.FC<YourAlbumProps> = ({
                     {productLength || 3}
                   </span>
                 </div>
-                <div className="flex flex-col items-start gap-2">
-                  <div className="flex items-center">
-                    <div className="w-60 h-2 bg-green-100 rounded">
-                      <div className="w-full bg-premiumgreen rounded-full h-2.5">
-                        <div
-                          className="bg-primary h-2.5 rounded-full"
-                          style={{ width: "45%" }}
-                        ></div>
+                {userData && !userData?.isSeller && (
+                  <div className="flex flex-col items-start gap-2">
+                    <div className="flex items-center">
+                      <div className="w-60 h-2 bg-green-100 rounded">
+                        <div className="w-full bg-premiumgreen rounded-full h-2.5">
+                          <div
+                            className="bg-primary h-2.5 rounded-full"
+                            style={{
+                              width: `${Math.min(
+                                (albumCount / 5) * 100,
+                                100
+                              )}%`,
+                            }}
+                          ></div>
+                        </div>
                       </div>
+                      <span className="ml-2 text-[16px]">
+                        {albumCount} / 5 Free Albums left
+                      </span>
                     </div>
-                    <span className="ml-2 text-[16px]">
-                      5 / 5 Free Albums left
-                    </span>
+                    <div className="flex items-center gap-1 font-semibold">
+                      <span className="text-[16px]">
+                        Get Unlimited albums & more.
+                      </span>
+                      <a
+                        className="text-[16px] text-primary font-medium hover:text-green-500"
+                        onClick={() => {
+                          scrollTo(0, 0);
+                          navigate(SUBSCRIPTIONS);
+                        }}
+                      >
+                        Subscribe
+                      </a>
+                    </div>
                   </div>
-                  <div className="flex items-center gap-1 font-semibold">
-                    <span className="text-[16px]">
-                      Get Unlimited albums & more.
-                    </span>
-                    <a
-                      className="text-[16px] text-primary font-medium hover:text-green-500"
-                      onClick={() => navigate(SUBSCRIPTIONS)}
-                    >
-                      Subscribe
-                    </a>
-                  </div>
-                </div>
+                )}
               </div>
             )}
             <PlantGrid
@@ -124,9 +135,6 @@ const YourAlbum: React.FC<YourAlbumProps> = ({
           </>
         )}
       </div>
-      {isModalOpen && (
-        <Modal children={<ShareAlbumModal onClose={closeModal} />} />
-      )}
     </>
   );
 };

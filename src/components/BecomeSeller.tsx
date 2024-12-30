@@ -37,7 +37,10 @@ const BecomeSeller: React.FC = () => {
         </div>
       </section>
       {isModalOpen && (
-        <Modal children={<JoinWaitList onClose={closeModal} />} />
+        <Modal
+          children={<JoinWaitList onClose={closeModal} />}
+          onClose={() => setIsModalOpen(false)}
+        />
       )}
     </>
   );

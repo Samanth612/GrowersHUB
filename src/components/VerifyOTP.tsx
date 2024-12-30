@@ -3,6 +3,7 @@ import axios from "axios";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LOGIN } from "../Utilities/constantLinks";
+import { CONFIG } from "../config";
 
 interface OTPVerificationProps {
   placeholder: string;
@@ -57,7 +58,18 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
     return () => clearInterval(interval); // Clean up interval on component unmount
   }, [isTimerActive, timer]);
 
-  const handleChange = (element: any, index: any) => {
+  const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").trim();
+
+    if (pastedData.length === otp.length && /^\d+$/.test(pastedData)) {
+      setOtp(pastedData.split(""));
+    } else {
+      setError("Invalid OTP format.");
+    }
+  };
+
+  const handleChange = (element: any, index: number) => {
     if (isNaN(element.value)) return false;
 
     setOtp([...otp.map((d, idx) => (idx === index ? element.value : d))]);
@@ -102,12 +114,13 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
         : { email: email, otp: otpCode };
 
       const response = await axios.post(
-        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000${endpoint}`,
+        `${CONFIG?.API_ENDPOINT}${endpoint}`,
         payload
       );
 
       if (response.data.status || (validateForm() && placeholder === "OTP")) {
         setSuccessMessage("OTP verified successfully!");
+        scrollTo(0, 0);
         navigate(LOGIN);
       } else {
         setError(response.data.message || "OTP verification failed.");
@@ -205,7 +218,10 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
         {/* Back Button */}
         <button
           className="flex items-center text-secondary mb-8"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            scrollTo(0, 0);
+            navigate(-1);
+          }}
         >
           <ArrowLeft className="w-5 h-5 mr-1" />
           <span>Back</span>
@@ -228,7 +244,7 @@ const OTPVerification: React.FC<OTPVerificationProps> = ({
           </p>
 
           {/* OTP Input Group */}
-          <div className="flex justify-around gap-4">
+          <div className="flex justify-around gap-4" onPaste={handlePaste}>
             {otp.map((data, index) => (
               <input
                 key={index}

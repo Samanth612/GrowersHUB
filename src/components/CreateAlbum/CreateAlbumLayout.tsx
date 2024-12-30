@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
-import Dashboard from "../Chat/Dashboard";
 import CreateAlbum from "./CreateAlbum";
 import MediaUpload from "./UploadSection";
 import { useLocation } from "react-router-dom";
-import { store } from "../../../Store/store";
+import { store } from "../../Store/store";
+import Dashboard from "../../Pages/Dashboard";
+import { useSelector } from "react-redux";
 
 const CreateAlbumLayout: React.FC = () => {
   const [uploadButtonClicked, setuploadButtonClicked] = useState(false);
   const location = useLocation();
+  const albumCount = useSelector((state: any) => state.AlbumCount);
 
   useEffect(() => {
     if (location?.state === "Edit") {
@@ -31,9 +33,13 @@ const CreateAlbumLayout: React.FC = () => {
           <MediaUpload
             setuploadButtonClicked={setuploadButtonClicked}
             uploadButtonClicked={uploadButtonClicked}
+            albumCount={albumCount}
           />
         ) : (
-          <CreateAlbum setuploadButtonClicked={setuploadButtonClicked} />
+          <CreateAlbum
+            setuploadButtonClicked={setuploadButtonClicked}
+            albumCount={albumCount}
+          />
         )}
       </Dashboard>
     </div>

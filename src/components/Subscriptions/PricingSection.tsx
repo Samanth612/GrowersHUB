@@ -1,6 +1,10 @@
 // PricingSection.tsx
 import React from "react";
 import PricingCard from "./PricingCard";
+import { loadStripe } from "@stripe/stripe-js";
+import { CONFIG } from "../../config";
+import { useSelector } from "react-redux";
+import axios from "axios";
 
 type Feature = string | { highlight: string };
 
@@ -50,12 +54,42 @@ const PricingSection: React.FC = () => {
       isRecommended: true,
     },
   ];
+  const userData = useSelector((state: any) => state.userData.data);
+
+  const handleSubscription = async () => {
+    const stripePromise: any = await loadStripe(`${CONFIG?.STRIPE_KEY}`);
+    const response: any = await axios.post(
+      `${CONFIG?.API_ENDPOINT}/user/stripe/create-stripe-session-subscription`,
+      {
+        auth0UserId: userData?.userId,
+        userEmail: userData?.email,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${userData?.access_token}`,
+          "Content-Type": "Application/JSON",
+        },
+      }
+    );
+
+    if (response.status === 409) {
+      window.location.href = response?.data?.redirectUrl; // redirect to billing portal if user is already subscribed
+    } else {
+      stripePromise.redirectToCheckout({
+        sessionId: response?.data?.id,
+      });
+    }
+  };
 
   return (
     <div className="max-w-5xl mx-6 lg:mx-20 py-16">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {pricingData.map((plan, index) => (
-          <PricingCard key={index} {...plan} />
+          <PricingCard
+            key={index}
+            {...plan}
+            handleSubscription={handleSubscription}
+          />
         ))}
       </div>
     </div>

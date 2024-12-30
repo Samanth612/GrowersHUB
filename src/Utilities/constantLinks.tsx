@@ -12,6 +12,6 @@ export const CREATEALBUM = "/createalbum";
 export const YOURALBUM = "/youralbum";
 export const SUBSCRIPTIONS = "/subscriptions";
 export const PRODUCT = "/product";
-export const VIEWSELLERSGARDEN = "/sellersgarden";
+export const VIEWSELLERSGARDEN = "/share/album";
 export const LISTINGPRODUCT = "/listing";
 export const PROFILE = "/profile";

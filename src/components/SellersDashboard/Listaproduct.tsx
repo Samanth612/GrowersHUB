@@ -4,8 +4,10 @@ import SG1 from "../../assets/SG1.jpg";
 import Icons from "../../Utilities/Icons";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { store } from "../../../Store/store";
+import { store } from "../../Store/store";
 import SellersModal from "../SellersModal";
+import { CONFIG } from "../../config";
+import toast from "react-hot-toast";
 
 interface UploadedFile {
   file: File;
@@ -132,7 +134,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   const handleDelete = async (productId: string) => {
     try {
       const response = await axios.post(
-        `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/delete/${productId}`,
+        `${CONFIG?.API_ENDPOINT}/seller/products/delete/${productId}`,
         {},
         {
           headers: {
@@ -143,7 +145,6 @@ const ListProduct: React.FC<MediaUploadProps> = ({
       );
 
       if (response.data.status) {
-        console.log("Product deleted successfully:", response.data.data);
         setuploadButtonClicked(false);
         setFaqSection(false);
       } else {
@@ -175,20 +176,49 @@ const ListProduct: React.FC<MediaUploadProps> = ({
       form.append(`files`, data[i]);
     }
 
-    return axios.post(
-      "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/upload_files",
-      form,
-      {
-        headers: {
-          Authorization: `Bearer ${userData?.access_token}`,
-          "Content-Type": "multipart/form-data", // Ensure multipart headers
-        },
-      }
-    );
+    form.append("type", "Products");
+
+    return axios.post(`${CONFIG?.API_ENDPOINT}/upload_files`, form, {
+      headers: {
+        Authorization: `Bearer ${userData?.access_token}`,
+        "Content-Type": "multipart/form-data", // Ensure multipart headers
+      },
+    });
   };
 
   const handlePost = async (e: any) => {
     e.preventDefault();
+
+    if (!productName || productName.trim() === "") {
+      toast.error("Product name is required.");
+      return;
+    }
+
+    if (!productDescription || productDescription.trim() === "") {
+      toast.error("Product description is required.");
+      return;
+    }
+
+    if (!selectedCategories || selectedCategories.length === 0) {
+      toast.error("Please select at least one category.");
+      return;
+    }
+
+    if (!unitsForSale || unitsForSale <= 0) {
+      toast.error("Please enter a valid number of units for sale.");
+      return;
+    }
+
+    if (!pricePerUnit || pricePerUnit <= 0) {
+      toast.error("Please enter a valid price.");
+      return;
+    }
+
+    if (imageFiles && imageFiles.length > 5) {
+      // Example limit
+      toast.error("You can upload a maximum of 5 images.");
+      return;
+    }
 
     try {
       let finalImageLinks = [...existingImageLinks];
@@ -213,12 +243,12 @@ const ListProduct: React.FC<MediaUploadProps> = ({
         price: pricePerUnit,
         images: finalImageLinks,
         uploadAsAlbum: isChecked,
-        faqs: faqsData || [],
+        faqs: editing ? SellersProductData?.FAQ : faqsData,
       };
 
       const APIUrl = editing
-        ? `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/${SellersProductData?._id}`
-        : "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/";
+        ? `${CONFIG?.API_ENDPOINT}/seller/products/${SellersProductData?._id}`
+        : `${CONFIG?.API_ENDPOINT}/seller/products/`;
 
       const response = await axios.post(APIUrl, requestPayload, {
         headers: {
@@ -228,6 +258,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
 
       if (response.data.status) {
         setuploadButtonClicked(false);
+        scrollTo(0, 0);
       }
     } catch (error) {
       console.error("Error listing product:", error);
@@ -242,7 +273,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
     const fetchCategories = async () => {
       try {
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/categories`,
+          `${CONFIG?.API_ENDPOINT}/seller/products/categories`,
           {
             headers: {
               Authorization: `Bearer ${userData?.access_token}`,
@@ -355,14 +386,18 @@ const ListProduct: React.FC<MediaUploadProps> = ({
             <div className="mb-6 flex items-center">
               <div className="w-12 h-12 rounded-full overflow-hidden">
                 <img
-                  src={SG1}
+                  src={userData?.image || SG1}
                   alt={"Gardener"}
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="ml-4 flex flex-col">
-                <p className="text-xl font-medium">Eko Susiloanto</p>
-                <p className="text-sm text-teritary">User</p>
+                <p className="text-xl font-medium">
+                  {SellersProductData
+                    ? SellersProductData?.userDetails[0]?.name
+                    : "Eko Susiloanto"}
+                </p>
+                <p className="text-sm text-teritary">Super Grower</p>
               </div>
             </div>
 
@@ -373,7 +408,10 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               onDragOver={(e) => e.preventDefault()}
             >
               <div className="mb-4">
-                <div className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2">
+                <div
+                  className="w-12 h-12 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-2 cursor-pointer"
+                  onClick={() => document.getElementById("fileInput")?.click()}
+                >
                   <svg
                     className="w-6 h-6 text-green-600"
                     fill="none"
@@ -399,6 +437,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 <input
                   id="fileInput"
                   type="file"
+                  accept=".jpg, .jpeg, .png"
                   multiple
                   className="hidden"
                   onChange={handleFileInput}
@@ -418,6 +457,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                   />
                   <button
                     onClick={() => removeExistingImage(index)}
+                    type="button"
                     className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
                   >
                     <X className="w-4 h-4" />
@@ -435,6 +475,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                   />
                   <button
                     onClick={() => removeFile(index)}
+                    type="button"
                     className="absolute -top-2 -right-2 bg-white rounded-full p-1 shadow-md"
                   >
                     <X className="w-4 h-4" />
@@ -495,7 +536,10 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                         className="bg-green-50 text-secondary px-3 py-1 rounded-[4px] flex items-center gap-2"
                       >
                         {category.categoryName}
-                        <button onClick={() => removeCategory(category._id)}>
+                        <button
+                          onClick={() => removeCategory(category._id)}
+                          type="button"
+                        >
                           <X className="w-4 h-4" />
                         </button>
                       </span>
@@ -545,6 +589,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 <div className="flex items-center">
                   <button
                     onClick={decrement}
+                    type="button"
                     className="border border-[#DBD8D8] border-r-0 rounded-l-lg px-3 py-4"
                     aria-label="Decrease quantity"
                   >
@@ -558,6 +603,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                   />
                   <button
                     onClick={increment}
+                    type="button"
                     className="border border-[#DBD8D8] border-l-0 rounded-r-lg px-3 py-4"
                     aria-label="Increase quantity"
                   >
@@ -578,8 +624,13 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                   <input
                     type="number"
                     placeholder="Price in $"
-                    value={pricePerUnit}
-                    onChange={(e) => setPricePerUnit(Number(e.target.value))}
+                    value={pricePerUnit || ""}
+                    onChange={(e) => {
+                      const value = Number(e.target.value);
+                      if (value >= 0) {
+                        setPricePerUnit(value);
+                      }
+                    }}
                     className="w-48 border border-[#DBD8D8] rounded-lg py-3 pl-16 placeholder:text-teritary focus:outline-none"
                   />
                 </div>
@@ -615,6 +666,7 @@ const ListProduct: React.FC<MediaUploadProps> = ({
                 }`}
                 aria-checked={isChecked}
                 role="checkbox"
+                type="button"
               >
                 {isChecked && <Check className="text-white" size={16} />}
               </button>
@@ -628,6 +680,36 @@ const ListProduct: React.FC<MediaUploadProps> = ({
               type="button"
               className="w-full sm:w-44 bg-primary text-white rounded-lg py-3 mb-14 font-semibold hover:bg-green-500"
               onClick={() => {
+                if (!productName || productName.trim() === "") {
+                  toast.error("Product name is required.");
+                  return;
+                }
+
+                if (!productDescription || productDescription.trim() === "") {
+                  toast.error("Product description is required.");
+                  return;
+                }
+
+                if (!selectedCategories || selectedCategories.length === 0) {
+                  toast.error("Please select at least one category.");
+                  return;
+                }
+
+                if (!unitsForSale || unitsForSale <= 0) {
+                  toast.error("Please enter a valid number of units for sale.");
+                  return;
+                }
+
+                if (!pricePerUnit || pricePerUnit <= 0) {
+                  toast.error("Please enter a valid price.");
+                  return;
+                }
+
+                if (imageFiles && imageFiles.length > 5) {
+                  // Example limit
+                  toast.error("You can upload a maximum of 5 images.");
+                  return;
+                }
                 setIsOpenModal(true);
                 if (editing) {
                   setModalTitle(

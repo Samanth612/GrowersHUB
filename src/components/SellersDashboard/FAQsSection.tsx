@@ -1,7 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import React, { useState, useEffect } from "react";
-import Icons from "../../Utilities/Icons";
 import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-hot-toast";
+import Icons from "../../Utilities/Icons";
 
 interface MediaUploadProps {
   editing: any;
@@ -17,11 +18,13 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
   const [faqQuestions, setFaqQuestions] = useState<
     { question: string; answer: string }[]
   >([]);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const SellersProductData = useSelector(
     (state: any) => state.SellersProductData
   );
 
-  // Accessing faqs data from redux store
+  // Accessing FAQs data from redux store
   const faqsData = useSelector((state: any) => state.faqs);
   const dispatch = useDispatch();
 
@@ -34,6 +37,11 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
   }, [faqsData]);
 
   const addFAQ = () => {
+    const lastFAQ = faqQuestions[faqQuestions.length - 1];
+    if (!lastFAQ.question.trim() || !lastFAQ.answer.trim()) {
+      toast.error("Please complete the current FAQ before adding a new one.");
+      return;
+    }
     setFaqQuestions([...faqQuestions, { question: "", answer: "" }]);
   };
 
@@ -47,12 +55,10 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
     setFaqQuestions(newFaqs);
   };
 
-  // Handle the deletion of a FAQ
   const handleDeleteFAQ = (index: number) => {
     const updatedFaqs = faqQuestions.filter((_, i) => i !== index);
     setFaqQuestions(updatedFaqs);
 
-    // Dispatch the updated FAQ list to Redux store
     dispatch({
       type: "faqsData",
       payload: {
@@ -62,6 +68,17 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
   };
 
   const handleSave = () => {
+    const isValid = faqQuestions.every(
+      (faq) => faq.question.trim() !== "" && faq.answer.trim() !== ""
+    );
+
+    if (!isValid) {
+      setErrorMessage("Please provide at least one FAQ.");
+      return;
+    }
+
+    setErrorMessage("");
+
     const updatedFaqsData = faqQuestions.map((faq) => ({
       question: faq.question,
       answer: faq.answer,
@@ -166,10 +183,18 @@ const FAQsSection: React.FC<MediaUploadProps> = ({
           <button
             type="button"
             onClick={addFAQ}
-            className="text-primary self-start font-semibold"
+            disabled={!faqQuestions[faqQuestions.length - 1]?.question.trim()}
+            className={`text-primary self-start font-semibold ${
+              !faqQuestions[faqQuestions.length - 1]?.question.trim()
+                ? "opacity-50 cursor-not-allowed"
+                : ""
+            }`}
           >
             + ADD MORE
           </button>
+        )}
+        {errorMessage && (
+          <div className="text-red-500 text-sm font-medium">{errorMessage}</div>
         )}
         <button
           className="px-6 py-3 w-40 bg-primary font-medium text-white rounded-lg  hover:bg-green-500"

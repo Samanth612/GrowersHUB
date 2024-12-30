@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useMemo } from "react";
 import MessageItem from "./MessageItem";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { CONFIG } from "../../config";
+import { useLocation } from "react-router";
+import toast from "react-hot-toast";
 
 interface MessageAction {
   type: string;
@@ -14,24 +19,38 @@ type ChatMessage = {
   profileImage: string;
   name: string;
   unreadCount: number;
+  productId: string;
+  unpin?: any;
   actions: MessageAction[];
   messages: { text: string; sender: "user" | "seller" }[];
+  chatType?: string;
+  user?: any;
 };
 
 interface InboxMessagesProps {
   setSelectedChat: any;
   setSelectedIndex: any;
   messages: ChatMessage[];
+  setChatMessages: any;
+  setChatFrom: any;
+  setLoading: any;
+  setFilter: any;
+  filter: any;
 }
 
 const InboxMessages: React.FC<InboxMessagesProps> = ({
   setSelectedChat,
   setSelectedIndex,
   messages,
+  setChatFrom,
+  setFilter,
+  filter,
+  setChatMessages,
 }) => {
   const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
-  const [filter, setFilter] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const userData = useSelector((state: any) => state.userData.data);
+  const totalUnreadCount = useSelector((state: any) => state.unreadCount);
 
   // Close the menu on clicking outside
   useEffect(() => {
@@ -49,34 +68,109 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
     setMenuOpenId(menuOpenId === messageId ? null : messageId);
   };
 
-  const handleAction = (messageId: number, actionType: string) => {
-    console.log(`Performing ${actionType} on message ${messageId}`);
-    setMenuOpenId(null); // Close the menu after action
+  const handleAction = (roomId: number, action: string) => {
+    if (action === "delete") {
+      axios
+        .post(
+          `${CONFIG?.CHAT_BASE_URL}/chat/clear/`,
+          { roomId: roomId },
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res?.status) {
+            const updatedChats = messages.filter((chat) => chat.id !== roomId);
+            setChatMessages(updatedChats);
+            toast.success("Chat room deleted successfully");
+          }
+        })
+        .catch((err: any) => {
+          toast.error(
+            err?.response?.data?.message || "Failed to delete chat room"
+          );
+        });
+    } else if (action === "pin") {
+      axios
+        .post(
+          `${CONFIG?.CHAT_BASE_URL}/chat/pin/${roomId}`,
+          { roomId: roomId },
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res?.status) {
+            const pinnedChat = messages.find((chat) => chat.id === roomId);
+            const remainingChats = messages.filter(
+              (chat) => chat.id !== roomId
+            );
+            const updatedChats = pinnedChat
+              ? [pinnedChat, ...remainingChats]
+              : messages;
+
+            setChatMessages(updatedChats);
+            toast.success("Chat room pinned to the top successfully");
+          }
+        })
+        .catch((err: any) => {
+          toast.error(
+            err?.response?.data?.message || "Failed to pin chat room"
+          );
+        });
+    } else if (action === "unpin") {
+      axios
+        .post(
+          `${CONFIG?.CHAT_BASE_URL}/chat/unpin/${roomId}`,
+          { roomId: roomId },
+          {
+            headers: {
+              Authorization: `Bearer ${userData?.access_token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          if (res?.status) {
+            const unpinnedChat = messages.find((chat) => chat.id === roomId);
+            if (unpinnedChat) {
+              delete unpinnedChat.unpin; // Remove the `unpin` flag if present
+            }
+
+            const updatedChats = messages
+              .filter((chat) => chat.id !== roomId)
+              .concat(unpinnedChat ? [{ ...unpinnedChat }] : []);
+
+            setChatMessages(updatedChats);
+
+            toast.success(
+              res?.data?.message || "Chat room unpinned successfully"
+            );
+          }
+        })
+        .catch((err: any) => {
+          toast.error(
+            err?.response?.data?.message || "Failed to unpin chat room"
+          );
+        });
+    }
+
+    setMenuOpenId(null);
   };
 
-  const filteredMessages = useMemo(() => {
-    let filtered = messages;
-    if (filter !== "all") {
-      filtered = messages.filter((message) =>
-        filter === "buying"
-          ? message.name.toLowerCase().includes("buy")
-          : message.name.toLowerCase().includes("sell")
-      );
-    }
-    return filtered.filter((message) =>
-      message.name.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-  }, [filter, searchQuery, messages]);
+  const searchedMessages = messages.filter((chat) => {
+    const matchesSearch = chat.name
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
 
-  const searchedMessages = filteredMessages.filter((message) =>
-    message.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
-  // Calculate total unread count
-  const totalUnreadCount = messages.reduce(
-    (total, message) => total + message.unreadCount,
-    0
-  );
+    return matchesSearch;
+  });
 
   return (
     <div className="max-w-full mx-auto bg-white">
@@ -86,7 +180,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
           <div className="flex">
             <h1 className="text-xl text-secondary font-semibold">Inbox</h1>
             <span className="ml-2 bg-premiumgray text-secondary text-sm px-2 py-0.5 rounded-full">
-              {totalUnreadCount} {/* Show total unread count */}
+              {totalUnreadCount}
             </span>
           </div>
           {/* Search Bar */}
@@ -101,7 +195,7 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
 
         {/* Filter Buttons */}
         <div className="flex gap-2">
-          {["all", "buying", "selling"].map((filterType) => (
+          {["all", "buying", "selling", "user"].map((filterType) => (
             <button
               key={filterType}
               onClick={() => setFilter(filterType)}
@@ -118,12 +212,12 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
       </div>
 
       {/* Message List */}
-      <div className="px-0 sm:px-8 max-h-[75vh] h-full overflow-y-auto">
+      <div className="px-0 sm:px-8 min-h-[75vh] h-full overflow-y-auto">
         {searchedMessages.map((message, index) => (
           <div
             onClick={() => {
               setSelectedChat(true);
-              setSelectedIndex(index);
+              setSelectedIndex(message.id);
             }}
             key={index}
           >

@@ -9,26 +9,32 @@ import BestSellers from "./BestSellers";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
+import { CONFIG } from "../../config";
 
 const ProductDetails: React.FC = () => {
   const [productData, setProductData] = useState<any>(null);
   const [SimilarProductsData, setSimilarProductsData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const userData = useSelector((state: any) => state.userData.data);
+  const AuthReducer = useSelector((state: any) => state.auth);
   const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const productId = queryParams.get("id");
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         setIsLoading(true);
+        const headers: Record<string, string> = {
+          "Cache-Control": "no-cache",
+        };
+
+        if (AuthReducer && userData?.access_token) {
+          headers.Authorization = `Bearer ${userData.access_token}`;
+        }
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/user/products/${location?.state}`,
-          {
-            headers: {
-              Authorization: `Bearer ${userData?.access_token}`,
-              "Cache-Control": "no-cache",
-            },
-          }
+          `${CONFIG?.API_ENDPOINT}/user/products/${productId}`,
+          { headers }
         );
         setSimilarProductsData(response?.data?.data?.similarProducts);
         setProductData(response?.data?.data?.product);
@@ -40,16 +46,23 @@ const ProductDetails: React.FC = () => {
     };
 
     fetchProducts();
-  }, [userData?.access_token, location?.state]);
+  }, [userData?.access_token, productId]);
 
   return (
     <div>
       <Header />
-      <Title title={"Product"} description={"Marble Queen Pothos"} />
+      <Title
+        title={"Product"}
+        description={productData?.name || "Marble Queen Pothos"}
+      />
       <Product productData={productData} isLoading={isLoading} />
-      <FAQSection FAQSData={productData?.FAQ} isLoading={isLoading} />
+      <FAQSection
+        FAQSData={productData?.FAQ}
+        isLoading={isLoading}
+        product_Id={productData?._id}
+      />
       <BestSellers SimilarProductsData={SimilarProductsData} />
-      <BecomeSeller />
+      {userData && !userData?.isSeller && <BecomeSeller />}
       <Footer />
     </div>
   );

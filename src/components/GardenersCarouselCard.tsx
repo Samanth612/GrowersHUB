@@ -18,11 +18,17 @@ interface Product {
 interface CarouselProps {
   products: Product[];
   setSelectedAlbum: any;
+  isModalOpen?: any;
+  setIsModalOpen?: any;
+  setSelectedVideo?: any;
 }
 
 const GardenersCarouselCard: React.FC<CarouselProps> = ({
   products,
   setSelectedAlbum,
+  isModalOpen,
+  setIsModalOpen,
+  setSelectedVideo,
 }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isManualChange, setIsManualChange] = useState(false); // Track manual interactions
@@ -64,7 +70,13 @@ const GardenersCarouselCard: React.FC<CarouselProps> = ({
               className="w-full flex-shrink-0 flex items-center justify-center"
               key={index}
             >
-              <GardenersCard {...product} setSelectedAlbum={setSelectedAlbum} />
+              <GardenersCard
+                {...product}
+                setSelectedAlbum={setSelectedAlbum}
+                isModalOpen={isModalOpen}
+                setIsModalOpen={setIsModalOpen}
+                setSelectedVideo={setSelectedVideo}
+              />
             </div>
           ))}
         </div>

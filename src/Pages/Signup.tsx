@@ -5,7 +5,15 @@ import SignupPage from "../components/Signup/SignupPage";
 const Signup: React.FC = () => {
   const [SignupSuccess, setSignupSuccess] = useState(false);
 
-  return <>{SignupSuccess ? <LoginSuccessComponent /> : <SignupPage />}</>;
+  return (
+    <>
+      {SignupSuccess ? (
+        <LoginSuccessComponent type="Login" title="Logged in Successfully" />
+      ) : (
+        <SignupPage />
+      )}
+    </>
+  );
 };
 
 export default Signup;

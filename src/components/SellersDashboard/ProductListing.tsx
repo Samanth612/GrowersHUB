@@ -8,6 +8,7 @@ import JP4 from "../../assets/JP4.jpg";
 import SG1 from "../../assets/SG1.jpg";
 import SellersCard from "./SellersCard";
 import { useSelector } from "react-redux";
+import { CONFIG } from "../../config";
 
 interface MediaUploadProps {
   setuploadButtonClicked: any;
@@ -25,6 +26,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(4);
+  const [productLength, setProductLength] = useState(0);
   const userData = useSelector((state: any) => state.userData.data);
 
   const staticProducts = [
@@ -74,6 +76,8 @@ const ProductListings: React.FC<MediaUploadProps> = ({
     const fetchProducts = async () => {
       setLoading(true);
       setError(null);
+      const skip = currentPage - 1;
+      const limit = itemsPerPage;
 
       try {
         // Map filter to the server's expected status parameter
@@ -85,7 +89,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
             : "Sold";
 
         const response = await axios.get(
-          `http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/seller/products/?status=${status}`,
+          `${CONFIG?.API_ENDPOINT}/seller/products?skip=${skip}&limit=${limit}&status=${status}`,
           {
             headers: {
               Authorization: `Bearer ${userData?.access_token}`,
@@ -100,18 +104,21 @@ const ProductListings: React.FC<MediaUploadProps> = ({
               title: product.name,
               location: product.userDetails.address,
               price: product.price.toString(),
-              stock:
-                product.noOfUnitsSold > 0
-                  ? `${product.noOfUnitsSold} sold`
-                  : "Available",
+              stock: product.noOfUnitsSold,
               image: product.images[0],
               profileImage: product.userDetails.profileImage || "",
               name: product.userDetails.name,
               categories: product.categories,
+              unitSale: product.unitSale,
               id: product._id,
             })
           );
           setProducts(backendProducts);
+          if (backendProducts?.length > 0) {
+            setProductLength(response.data.data.total);
+          } else {
+            setProductLength(0);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch products:", error as any);
@@ -122,7 +129,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
     };
 
     fetchProducts();
-  }, [filter, userData?.access_token]);
+  }, [filter, userData?.access_token, currentPage]);
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
@@ -172,7 +179,7 @@ const ProductListings: React.FC<MediaUploadProps> = ({
               Your Listings
             </h1>
             <span className="ml-2 bg-premiumgray text-secondary text-sm px-2 py-0.5 rounded-full">
-              {filteredProducts.length}
+              {productLength}
             </span>
           </div>
           <input
@@ -215,30 +222,38 @@ const ProductListings: React.FC<MediaUploadProps> = ({
       <div className="flex flex-col justify-between h-full p-4 sm:p-10">
         <div className="w-full transition-all duration-300 ease-in">
           <div className="grid grid-rows-1 sm:grid-rows-2 lg:grid-rows-4 gap-5 pb-4 mb-10">
-            {currentProducts.map((product, index) => (
-              <SellersCard
-                key={index}
-                product={product}
-                setEditing={setEditing}
-                setuploadButtonClicked={setuploadButtonClicked}
-                removeProduct={(id: string) => {
-                  setProducts((prevProducts) =>
-                    prevProducts.filter((product) => product.id !== id)
-                  );
-                }}
-              />
-            ))}
+            {currentProducts.length > 0 ? (
+              currentProducts.map((product, index) => (
+                <SellersCard
+                  key={index}
+                  product={product}
+                  setEditing={setEditing}
+                  setuploadButtonClicked={setuploadButtonClicked}
+                  removeProduct={(id: string) => {
+                    setProducts((prevProducts) =>
+                      prevProducts.filter((product) => product.id !== id)
+                    );
+                  }}
+                />
+              ))
+            ) : (
+              <div className="text-center text-lg text-secondary font-semibold py-20">
+                No Products Available
+              </div>
+            )}
           </div>
         </div>
-        <div className="flex flex-col items-center justify-center gap-3 py-4">
-          <Pagination
-            id={"type2"}
-            currentPage={currentPage}
-            totalPages={Math.ceil(filteredProducts.length / itemsPerPage)}
-            onPageChange={handlePageChange}
-            displayRange={3}
-          />
-        </div>
+        {currentProducts.length > 0 && (
+          <div className="flex flex-col items-center justify-center gap-3 py-4">
+            <Pagination
+              id={"type2"}
+              currentPage={currentPage}
+              totalPages={Math.ceil(productLength / itemsPerPage)}
+              onPageChange={handlePageChange}
+              displayRange={3}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../Header";
-import Dashboard from "../Chat/Dashboard";
 import Subscriptions from "./Subscriptions";
+import Dashboard from "../../Pages/Dashboard";
 
 const SubscriptionsLayout: React.FC = () => {
   return (

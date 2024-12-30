@@ -4,6 +4,8 @@ import Icons from "../../Utilities/Icons";
 import { useNavigate } from "react-router-dom";
 import OTPVerification from "../VerifyOTP";
 import axios from "axios";
+import { CONFIG } from "../../config";
+import { LOGIN } from "../../Utilities/constantLinks";
 
 const ForgotPassword: React.FC = () => {
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const ForgotPassword: React.FC = () => {
 
     try {
       const response = await axios.post(
-        "http://ec2-54-208-71-137.compute-1.amazonaws.com:4000/auth/forgot-password",
+        `${CONFIG?.API_ENDPOINT}/auth/forgot-password`,
         {
           email,
         }
@@ -61,7 +63,10 @@ const ForgotPassword: React.FC = () => {
           <div className="mb-8">
             <button
               className="flex items-center text-secondary"
-              onClick={() => navigate("/login")}
+              onClick={() => {
+                scrollTo(0, 0);
+                navigate(LOGIN);
+              }}
             >
               <ArrowLeft className="w-5 h-5 mr-2" />
               Back to Login

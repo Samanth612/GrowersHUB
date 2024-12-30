@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import Header from "../Header";
 import ProductListings from "./ProductListing";
-import Dashboard from "../Chat/Dashboard";
 import ListProduct from "./Listaproduct";
 import FAQsSection from "./FAQsSection";
-import { store } from "../../../Store/store";
+import { store } from "../../Store/store";
+import Dashboard from "../../Pages/Dashboard";
 
 interface UploadedFile {
   file: File;
