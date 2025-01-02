@@ -183,6 +183,11 @@ const LoginPage: React.FC<LoginPageProps> = ({
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
             onError={handleGoogleError}
+            useOneTap={false} 
+            theme="outline" // Customize the button theme
+            size="large"    // Customize button size
+            width={"100%"}
+            text="signin_with" 
           />
         </GoogleOAuthProvider>
 

@@ -29,6 +29,8 @@ type ChatListProps = {
   loading: any;
   filter: any;
   setFilter: any;
+  searchQuery: any;
+  setSearchQuery: any;
 };
 
 const ChatList: React.FC<ChatListProps> = ({
@@ -39,8 +41,9 @@ const ChatList: React.FC<ChatListProps> = ({
   setFilter,
   setChatMessages,
   loading,
+  searchQuery,
+  setSearchQuery,
 }) => {
-  const [searchQuery, setSearchQuery] = useState<string>(""); // State for search query
   const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
   const userData = useSelector((state: any) => state.userData.data);
 

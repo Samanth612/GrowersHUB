@@ -57,7 +57,11 @@ const CommunityDetails: React.FC<CommunityDetailsProps> = ({
         }
 
         const response = await axios.get(
-          `${CONFIG?.API_ENDPOINT}/user/album/community?skip=${skip}&limit=${limit}&categoryId=${selectedFilter}`,
+          `${
+            CONFIG?.API_ENDPOINT
+          }/user/album/community?skip=${skip}&limit=${limit}&categoryId=${
+            selectedFilter === "all" ? "" : selectedFilter
+          }`,
           { headers }
         );
 

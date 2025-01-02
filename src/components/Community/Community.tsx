@@ -15,7 +15,7 @@ const CommunityLayout: React.FC = () => {
   const [selectedAlbum, setSelectedAlbum] = useState([]);
   const userData = useSelector((state: any) => state.userData?.data || null);
   const AuthReducer = useSelector((state: any) => state.auth);
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const [selectedCategories, setSelectedCategories] = useState<
     { _id: string; categoryName: string }[]
   >([]);
@@ -50,6 +50,8 @@ const CommunityLayout: React.FC = () => {
               categoryName: cat.categoryName,
             }))
           : [];
+
+        allCategories.unshift({ _id: "all", categoryName: "All" });
 
         setSelectedCategories(allCategories);
       } catch (error) {

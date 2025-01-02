@@ -38,6 +38,7 @@ const DashboardLayout: React.FC = () => {
   const [msgLoading, setMsgLoading] = useState(false);
   const [filter, setFilter] = useState<string>("all");
   const [selectedIndex, setSelectedIndex] = useState<number>(1);
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
     // Initial state here (your mock data)
   ]);
@@ -212,7 +213,7 @@ const DashboardLayout: React.FC = () => {
               : filter === "selling"
               ? "Seller"
               : "User"
-          }`,
+          }&name=${searchQuery}`,
           {
             headers: {
               Authorization: `Bearer ${userData?.access_token}`,
@@ -230,7 +231,7 @@ const DashboardLayout: React.FC = () => {
       }
     };
     fetchAndTransformData();
-  }, [userData, filter]);
+  }, [userData, filter, searchQuery]);
 
   useEffect(() => {
     const messageId = location.state;
@@ -394,6 +395,8 @@ const DashboardLayout: React.FC = () => {
             setFilter={setFilter}
             msgLoading={msgLoading}
             setSelectedChat={setSelectedChat}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         ) : (
           <InboxMessages
@@ -405,6 +408,8 @@ const DashboardLayout: React.FC = () => {
             setLoading={setLoading}
             setFilter={setFilter}
             filter={filter}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
           />
         )}
       </Dashboard>

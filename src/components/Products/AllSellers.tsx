@@ -25,6 +25,9 @@ const AllSellers: React.FC<AllSellersprops> = ({
   const [productLength, setProductLength] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(8);
+  const [location, setLocation] = useState<{ lat: number; lng: number } | null>(
+    null
+  );
   const userData = useSelector((state: any) => state.userData.data);
   const AuthReducer = useSelector((state: any) => state.auth);
 
@@ -43,8 +46,31 @@ const AllSellers: React.FC<AllSellersprops> = ({
   }, []);
 
   useEffect(() => {
+    // Fetch user's current location
+    const fetchLocation = () => {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            setLocation({
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            });
+          },
+          (error) => {
+            console.error("Error fetching location:", error);
+          }
+        );
+      } else {
+        console.error("Geolocation is not supported by this browser.");
+      }
+    };
+
+    fetchLocation();
+  }, []);
+
+  useEffect(() => {
     const fetchProducts = async () => {
-      const skip = currentPage - 1;
+      const skip = (currentPage - 1) * itemsPerPage;
       const limit = itemsPerPage;
       try {
         setLoading(true);
@@ -57,11 +83,15 @@ const AllSellers: React.FC<AllSellersprops> = ({
           headers.Authorization = `Bearer ${userData.access_token}`;
         }
 
+        const latParam = location?.lat || "";
+        const lngParam = location?.lng || "";
+
         const response = await axios.get(
           `${
             CONFIG?.API_ENDPOINT
-          }/user/products?skip=${skip}&limit=${limit}&sortBy=${sortBy.toLowerCase()}&categoryId=${selectedFilter}`,
-
+          }/user/products?skip=${skip}&limit=${limit}&sortBy=${sortBy.toLowerCase()}&categoryId=${
+            selectedFilter === "all" ? "" : selectedFilter
+          }&lat=${latParam}&lng=${lngParam}`,
           { headers }
         );
 
@@ -90,92 +120,13 @@ const AllSellers: React.FC<AllSellersprops> = ({
         }
       } catch (error) {
         console.error("Failed to fetch products:", error as any);
-        const products = [
-          {
-            title: "Crassula small leaf plant",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            unitInfo: "4 unit",
-            stock: "2 units left",
-            image: JP1,
-          },
-          {
-            title: "Lemon",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP2,
-          },
-          {
-            title: "Mint",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP3,
-          },
-          {
-            title: "Betel leaf plants",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            unitInfo: "unit",
-            stock: "1 Unit left",
-            image: JP4,
-          },
-          {
-            title: "Crassula small leaf plant (Repeat)",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            unitInfo: "4 unit",
-            stock: "2 units left",
-            image: JP1,
-          },
-          {
-            title: "Lemon (Repeat)",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP2,
-          },
-          {
-            title: "Lemon",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP2,
-          },
-          {
-            title: "Mint",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP3,
-          },
-          {
-            title: "Betel leaf plants",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            unitInfo: "unit",
-            stock: "1 Unit left",
-            image: JP4,
-          },
-          {
-            title: "Crassula small leaf plant (Repeat)",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            unitInfo: "4 unit",
-            stock: "2 units left",
-            image: JP1,
-          },
-          {
-            title: "Lemon (Repeat)",
-            location: "San Ramon, California, 20miles away",
-            price: "122",
-            image: JP2,
-          },
-        ];
-        setProducts(products);
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [userData?.access_token, currentPage, selectedFilter, sortBy]);
+  }, [userData?.access_token, currentPage, selectedFilter, sortBy, location]);
 
   return (
     <div className="px-6 lg:px-12 py-8 bg-white">

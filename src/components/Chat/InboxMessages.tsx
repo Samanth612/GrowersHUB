@@ -36,6 +36,8 @@ interface InboxMessagesProps {
   setLoading: any;
   setFilter: any;
   filter: any;
+  searchQuery: any;
+  setSearchQuery: any;
 }
 
 const InboxMessages: React.FC<InboxMessagesProps> = ({
@@ -46,9 +48,10 @@ const InboxMessages: React.FC<InboxMessagesProps> = ({
   setFilter,
   filter,
   setChatMessages,
+  searchQuery,
+  setSearchQuery,
 }) => {
   const [menuOpenId, setMenuOpenId] = useState<number | null>(null);
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const userData = useSelector((state: any) => state.userData.data);
   const totalUnreadCount = useSelector((state: any) => state.unreadCount);
 

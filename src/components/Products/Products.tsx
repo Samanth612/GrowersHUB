@@ -13,7 +13,7 @@ const Products: React.FC = () => {
   const [selectedCategories, setSelectedCategories] = useState<
     { _id: string; categoryName: string }[]
   >([]);
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
   const [sortBy, setSortBy] = useState("Popularity");
   const userData = useSelector((state: any) => state.userData.data);
   const [totalProducts, setTotalProducts] = useState(0);
@@ -49,6 +49,8 @@ const Products: React.FC = () => {
               categoryName: cat.categoryName,
             }))
           : [];
+
+        allCategories.unshift({ _id: "all", categoryName: "All" });
 
         setSelectedCategories(allCategories);
       } catch (error) {

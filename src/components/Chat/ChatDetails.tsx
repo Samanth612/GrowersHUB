@@ -52,7 +52,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({
           />
           <div>
             <h2 className="font-semibold text-lg">
-              {chat?.chatType === "User" ? chat?.user?.name : chat.name}
+              {chat?.chatType == "User" ? chat?.user?.name : chat.name}
             </h2>
             <div className="flex items-center gap-1 text-teritary">
               <MapPin className="w-4 h-4" />
@@ -83,7 +83,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({
           </div>
         </div>
       </div>
-      <button
+     { chat.chatType != "User" && <button
         className="px-6 py-3 font-medium text-secondary border-2 border-secondary rounded-lg hover:bg-gray-50 hidden xll:block"
         onClick={() => {
           scrollTo(0, 0);
@@ -93,7 +93,7 @@ const ChatDetails: React.FC<ChatDetailsProps> = ({
         }}
       >
         More Details
-      </button>
+      </button>}
     </div>
   );
 };

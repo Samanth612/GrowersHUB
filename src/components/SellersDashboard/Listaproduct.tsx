@@ -100,14 +100,27 @@ const ListProduct: React.FC<MediaUploadProps> = ({
   const handleFiles = (files: File[]) => {
     const newFiles = Array.from(files);
 
-    // Update the imageFiles state with the array of files
-    setImageFiles((prev) => [...prev, ...newFiles]);
+    // Validate file size before proceeding
+    const validFiles = newFiles.filter((file) => {
+      if (file.size > 1048576) {
+        // 1 MB = 1048576 bytes
+        toast.error(
+          `${file.name} is too large. Please upload files less than 1 MB.`
+        );
+        return false; // Filter out invalid files
+      }
+      return true; // Keep valid files
+    });
 
-    const filePreviews = files.map((file) => ({
-      file,
-      preview: URL.createObjectURL(file),
-    }));
-    setUploadedFiles((prev) => [...prev, ...filePreviews]);
+    if (validFiles.length > 0) {
+      setImageFiles((prev) => [...prev, ...validFiles]);
+
+      const filePreviews = validFiles.map((file) => ({
+        file,
+        preview: URL.createObjectURL(file),
+      }));
+      setUploadedFiles((prev) => [...prev, ...filePreviews]);
+    }
   };
 
   const removeFile = (index: number) => {

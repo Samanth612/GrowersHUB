@@ -5,6 +5,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { CONFIG } from "../../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 type Feature = string | { highlight: string };
 
@@ -58,11 +59,12 @@ const PricingSection: React.FC = () => {
 
   const handleSubscription = async () => {
     const stripePromise: any = await loadStripe(`${CONFIG?.STRIPE_KEY}`);
+   try {
     const response: any = await axios.post(
       `${CONFIG?.API_ENDPOINT}/user/stripe/create-stripe-session-subscription`,
       {
-        auth0UserId: userData?.userId,
-        userEmail: userData?.email,
+        type: "Pro",
+        userEmail: "divya@gmmaiail.io",
       },
       {
         headers: {
@@ -71,14 +73,20 @@ const PricingSection: React.FC = () => {
         },
       }
     );
-
-    if (response.status === 409) {
-      window.location.href = response?.data?.redirectUrl; // redirect to billing portal if user is already subscribed
-    } else {
+    console.log("🚀 ~ handleSubscription ~ response:", response.data)
+    if(response.data.statusCode == 409){
+          console.log("🚀 ~ handleCheckout ~ response.data.:", response.data)
+          toast.error(response?.data?.message);
+        }
+    if (response.status !== 409) { 
       stripePromise.redirectToCheckout({
         sessionId: response?.data?.id,
       });
     }
+   } catch (error : any) {
+    console.log("🚀 ~ handleSubscription ~ error:", error)
+    toast.error(error?.response?.data?.message)
+   }
   };
 
   return (

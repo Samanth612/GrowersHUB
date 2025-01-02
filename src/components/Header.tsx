@@ -31,6 +31,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [weatherLoading, setweatherLoading] = useState(false);
+  const [isLocationDenied, setIsLocationDenied] = useState(false);
   const navigate = useNavigate();
   const AuthReducer = useSelector((state: any) => state.auth);
   const userData = useSelector((state: any) => state.userData.data);
@@ -72,6 +73,7 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
 
   const fetchWeatherDetails = async () => {
     setweatherLoading(true);
+    setIsLocationDenied(false);
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
@@ -95,17 +97,25 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
               },
             });
           } catch (error) {
-            console.error("Failed to fetch products:", error);
+            console.error("Failed to fetch weather details:", error);
           } finally {
             setweatherLoading(false);
           }
         },
         (error) => {
+          if (error.code === error.PERMISSION_DENIED) {
+            setIsLocationDenied(true);
+            alert(
+              "Location access is denied. Please enable location services for better recommendations."
+            );
+          }
           console.error("Error getting location:", error);
+          setweatherLoading(false);
         }
       );
     } else {
       console.error("Geolocation is not supported by this browser.");
+      setweatherLoading(false);
     }
   };
 
@@ -193,6 +203,8 @@ const Header: React.FC<WrapperProps> = ({ children }) => {
             <div className="flex items-center justify-center">
               <div className="weatherloader"></div>
             </div>
+          ) : isLocationDenied ? (
+            <></>
           ) : (
             <div className="flex items-center justify-center px-6 py-0 border-2 rounded-[10px] border-[#EDEDED] gap-6">
               <div className="flex flex-col items-start text-teritary">

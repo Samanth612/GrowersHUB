@@ -3,6 +3,7 @@ import { CONFIG } from "../config";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import Profile from "../assets/NotificationProfile.png";
+import NotifictaionIcon from "../assets/notifictaionIcon.png";
 import { INBOX } from "../Utilities/constantLinks";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -22,7 +23,11 @@ const NotificationItem: React.FC<
   }
 > = ({ icon, title, subtitle, actionButton, time, onActionClick }) => (
   <div className="flex items-center gap-4 p-4 border-b border-gray-100">
-    <img src={icon} alt="icon" />
+    <img
+      src={icon}
+      alt="icon"
+      className="w-12 h-12 rounded-full object-cover"
+    />
     <div className="flex-1">
       <p className="text-secondary font-medium">
         {title?.replace("undefined", "Jack")}
@@ -73,7 +78,11 @@ const NotificationsPanel: React.FC = () => {
       if (response.data.status) {
         const transformedNotifications = response.data.data.data.map(
           (item: any) => ({
-            icon: Profile,
+            icon: ["View Chat", "Connect"].includes(item.type)
+              ? item.image
+                ? item.image
+                : Profile
+              : NotifictaionIcon,
             title: item.message,
             actionButton: item.type,
             time: item.createdAt ? getTimeAgo(item.createdAt) : "Unknown time",
@@ -100,13 +109,20 @@ const NotificationsPanel: React.FC = () => {
   useEffect(() => {
     if (LatestNotification) {
       const latestNotif = {
-        icon: Profile,
+        icon: NotifictaionIcon,
         title: LatestNotification.message,
         actionButton: LatestNotification.type,
         time: getTimeAgo(LatestNotification.createdAt),
         link: LatestNotification.link,
         id: LatestNotification._id,
       };
+
+      if (["View Chat", "Connect"].includes(LatestNotification.type)) {
+        latestNotif.icon = LatestNotification.image || Profile;
+      }
+
+      // Perform actions with latestNotif (if any)
+      console.log("Latest Notification:", latestNotif);
 
       setNotifications((prevNotifications) => [
         latestNotif,
@@ -187,12 +203,33 @@ const NotificationsPanel: React.FC = () => {
       .catch((err: any) => toast.error(err?.response?.data?.message));
   };
 
+  const handleMarkasRead = () => {
+    axios
+      .post(
+        `${CONFIG?.CHAT_BASE_URL}/notification/all-read`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${userData?.access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((res) => {
+        console.log(res, "mark as read");
+      })
+      .catch((err: any) => toast.error(err?.response?.data?.message));
+  };
+
   return (
     <div className="scale-75">
       <div className="absolute top-0 mt-2 -right-20 min-w-[420px] bg-white shadow-lg rounded-lg z-30 max-h-[720px] overflow-hidden laptopviewxll:right-0">
         <div className="flex justify-between items-center p-4 border-b border-gray-100 bg-white sticky top-0 z-10">
           <h1 className="text-xl font-semibold">Notifications</h1>
-          <button className="inline-flex gap-0.5 items-center text-sm font-medium text-secondary">
+          <button
+            className="inline-flex gap-0.5 items-center text-sm font-medium text-secondary"
+            onClick={handleMarkasRead}
+          >
             Mark all as read
             <svg
               width="16"

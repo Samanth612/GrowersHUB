@@ -55,9 +55,7 @@ const ProductFilterBar: React.FC<ProductFilterProps> = ({
             >
               <option value="Popularity">Popularity</option>
               <option value="Newest">Newest</option>
-              {userData && !userData?.isSeller && (
-                <option value="Price">Price</option>
-              )}
+              <option value="Price">Price</option>
               <option value="Location">Location</option>
             </select>
           </div>

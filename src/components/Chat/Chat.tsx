@@ -17,6 +17,8 @@ interface ChatProps {
   setFilter: any;
   msgLoading: any;
   setSelectedChat: any;
+  searchQuery: any;
+  setSearchQuery: any;
 }
 
 interface MessageAction {
@@ -53,6 +55,8 @@ const Chat: React.FC<ChatProps> = ({
   setFilter,
   msgLoading,
   setSelectedChat,
+  searchQuery,
+  setSearchQuery,
 }) => {
   const [messages, setMessages] = useState<any[]>(
     chatMessages[selectedIndex]?.messages || []
@@ -113,6 +117,8 @@ const Chat: React.FC<ChatProps> = ({
           loading={loading}
           filter={filter}
           setFilter={setFilter}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
         />
       </div>
 
@@ -162,9 +168,7 @@ const Chat: React.FC<ChatProps> = ({
             <h1 className="text-xl font-semibold text-secondary mb-2">
               Your messages
             </h1>
-            <p className="text-teritary mb-6">
-              Send a message to start a chat.
-            </p>
+            <p className="text-teritary mb-6">Start a Conversation</p>
             <button
               type="button"
               className="bg-primary hover:bg-green-500 text-white px-4 py-2 rounded transition-colors duration-200"

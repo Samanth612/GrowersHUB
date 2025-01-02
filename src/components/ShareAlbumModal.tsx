@@ -72,7 +72,7 @@ const ShareAlbumModal: React.FC<ModalProps> = ({ onClose, selectVideo }) => {
                 className={""}
               >
                 <button className="flex flex-col items-center text-gray-500 hover:text-gray-800">
-                  <span>
+                  <span> {`${CONFIG?.API_ENDPOINT}/share/${ShareType}?id=${ShareId}`}
                     <Icons variant="Twitter" />
                   </span>
                   <span className="text-sm mt-1">Twitter</span>
